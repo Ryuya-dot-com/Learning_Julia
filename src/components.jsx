@@ -33,7 +33,8 @@ function T({ children }) {
   );
 }
 
-function CodeBlock({ code, output, error }) {
+function CodeBlock({ code, output, error, lang }) {
+  // lang: ヘッダのラベル。省略時は "Julia"。ターミナルコマンドには "ターミナル" 等を渡す
   const lines = code.split("\n");
   return (
     <div className="my-4 overflow-hidden rounded-xl" style={{ border: "1px solid " + C.line }}>
@@ -42,7 +43,7 @@ function CodeBlock({ code, output, error }) {
         <span className="h-2 w-2 rounded-full" style={{ background: C.green }} />
         <span className="h-2 w-2 rounded-full" style={{ background: C.purple }} />
         <span className="ml-2 text-xs font-semibold tracking-wide" style={{ color: "#8F86A3" }}>
-          Julia
+          {lang || "Julia"}
         </span>
       </div>
       <pre

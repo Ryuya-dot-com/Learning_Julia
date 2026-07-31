@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { C, JP, GLOBAL_CSS } from "./theme.js";
-import { LessonView, Home, CheatSheet } from "./views.jsx";
+import { LessonView, Home, CheatSheet, Sidebar } from "./views.jsx";
 import { LESSONS } from "./data/lessons/index.js";
 
 /* ============================================================
@@ -81,7 +81,17 @@ export default function JuliaLearningApp() {
             C.purple + " 66.7%, " + C.purple + " 100%)",
         }}
       />
-      <div className="mx-auto w-full max-w-2xl px-4 py-6 sm:py-10">{body}</div>
+      <div className="mx-auto flex w-full max-w-5xl justify-center gap-10 px-4 py-6 sm:py-10">
+        <Sidebar
+          progress={progress}
+          viewName={view.name}
+          currentId={view.name === "lesson" ? view.id : null}
+          onOpen={(id) => setView({ name: "lesson", id })}
+          onCheat={() => setView({ name: "cheat" })}
+          onHome={() => setView({ name: "home" })}
+        />
+        <div className="w-full min-w-0 max-w-2xl">{body}</div>
+      </div>
     </div>
   );
 }

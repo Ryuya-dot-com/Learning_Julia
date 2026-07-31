@@ -149,6 +149,14 @@ export const CHEATS = [
     ],
   },
   {
+    title: "パッケージ(REPLで ] を押す)",
+    rows: [
+      ["] add CSV", "パッケージを追加する(初回のみ)"],
+      ["using CSV", "入れたパッケージを読みこむ"],
+      ["Backspace", "パッケージモードから julia> に戻る"],
+    ],
+  },
+  {
     title: "統計(using Statistics)",
     rows: [
       [

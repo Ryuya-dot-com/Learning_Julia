@@ -217,7 +217,7 @@ function LessonView({ lesson, doneSet, onSolve, onHome, onNextLesson, hasNext, o
                 <T>{s}</T>
               </p>
             ))}
-            {cur.p.code && <CodeBlock code={cur.p.code} output={cur.p.out} error={cur.p.err} />}
+            {cur.p.code && <CodeBlock code={cur.p.code} output={cur.p.out} error={cur.p.err} lang={cur.p.lang} />}
             {(cur.p.a || []).map((s, i) => (
               <p key={i} className="mb-3 text-sm leading-7" style={{ color: C.body }}>
                 <T>{s}</T>
@@ -359,7 +359,7 @@ function Home({ progress, onOpen, onCheat, onReset }) {
         はじめてのJulia
       </h1>
       <p className="mb-6 text-sm leading-6" style={{ color: C.sub }}>
-        ゼロから学ぶ、研究のためのプログラミング。{LESSONS.length}つのレッスンで、データ解析の入り口まで案内します。
+        ゼロから学ぶ、研究のためのプログラミング。全{LESSONS.length}レッスンで、データ解析の入り口まで案内します。
       </p>
 
       <div className="mb-6 rounded-2xl bg-white p-5" style={{ border: "1px solid " + C.line }}>
@@ -490,6 +490,107 @@ function Home({ progress, onOpen, onCheat, onReset }) {
 }
 
 /* ============================================================
+   サイドパネル(レッスンの目次)
+   lg以上の画面幅でのみ表示する。モバイルはホーム画面が目次を兼ねる
+   ============================================================ */
+
+function Sidebar({ progress, currentId, viewName, onOpen, onCheat, onHome }) {
+  return (
+    <nav
+      aria-label="レッスンの目次"
+      className="hidden w-60 shrink-0 lg:block"
+      style={{
+        position: "sticky",
+        top: 24,
+        alignSelf: "flex-start",
+        maxHeight: "calc(100vh - 48px)",
+        overflowY: "auto",
+      }}
+    >
+      <button
+        onClick={onHome}
+        className="mb-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold"
+        style={{ color: viewName === "home" ? C.purpleDeep : C.ink }}
+        aria-current={viewName === "home" ? "page" : undefined}
+      >
+        <TriDots filled={3} size={8} />
+        はじめてのJulia
+      </button>
+
+      <div className="flex flex-col gap-4 pb-4">
+        {SECTIONS.map((sec) => {
+          const ls = LESSONS.filter((l) => l.section === sec.dir);
+          if (ls.length === 0) return null;
+          return (
+            <div key={sec.dir}>
+              <div className="mb-1 flex items-center gap-1.5">
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ background: sec.color }}
+                  aria-hidden="true"
+                />
+                <span className="text-xs font-bold" style={{ color: C.sub }}>
+                  {sec.title}
+                </span>
+              </div>
+              <div className="flex flex-col">
+                {ls.map((l) => {
+                  const got = (progress.done[l.id] || []).length;
+                  const all = got === l.ex.length;
+                  const current = viewName === "lesson" && l.id === currentId;
+                  const badge = l.num != null ? String(l.num).padStart(2, "0") : (sec.mark || "") + l.numInSection;
+                  return (
+                    <button
+                      key={l.id}
+                      onClick={() => onOpen(l.id)}
+                      aria-current={current ? "page" : undefined}
+                      className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs"
+                      style={
+                        current
+                          ? { background: C.purpleSoft, color: C.purpleDeep, fontWeight: 700 }
+                          : { color: C.body }
+                      }
+                    >
+                      <span className="w-6 shrink-0 text-right" style={{ fontFamily: MONO, color: current ? C.purpleDeep : C.faint }}>
+                        {badge}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate">{l.title}</span>
+                      {all && (
+                        <span aria-label="修了" style={{ color: C.greenText }}>
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="flex flex-col border-t pt-3" style={{ borderColor: C.line }}>
+        <button
+          onClick={onCheat}
+          aria-current={viewName === "cheat" ? "page" : undefined}
+          className="inline-flex min-h-11 items-center rounded-lg px-2 text-xs font-bold"
+          style={viewName === "cheat" ? { background: C.purpleSoft, color: C.purpleDeep } : { color: C.purpleDeep }}
+        >
+          チートシート
+        </button>
+        <a
+          href={import.meta.env.BASE_URL + "roadmap.html"}
+          className="inline-flex min-h-11 items-center rounded-lg px-2 text-xs font-bold"
+          style={{ color: C.purpleDeep }}
+        >
+          学習ロードマップ
+        </a>
+      </div>
+    </nav>
+  );
+}
+
+/* ============================================================
    チートシート画面
    ============================================================ */
 
@@ -549,4 +650,4 @@ function CheatSheet({ onHome }) {
 }
 
 
-export { LessonView, Home, CheatSheet };
+export { LessonView, Home, CheatSheet, Sidebar };

@@ -30,6 +30,12 @@ body{
 .wrap{max-width:880px; margin:0 auto; padding:44px 22px 72px}
 
 /* ---------- ヒーロー ---------- */
+.backlink{margin:0 0 6px}
+.backlink a{
+  display:inline-flex; align-items:center; min-height:44px;
+  font-size:13px; font-weight:700; color:var(--purple-deep);
+}
+.backlink a:hover{text-decoration:underline}
 .eyebrow{
   margin:0 0 10px; font-size:12px; font-weight:700; color:var(--purple);
   letter-spacing:.04em;
@@ -208,10 +214,11 @@ html.js .reveal.in{opacity:1; transform:none}
 <main class="wrap">
 
   <header class="reveal">
+    <p class="backlink"><a href="./">← アプリにもどる</a></p>
     <p class="eyebrow">学習アプリ「はじめてのJulia」続編構想</p>
     <h1>学習ロードマップ</h1>
     <p class="lede">文法の土台(基礎編)から、データハンドリング・可視化・シミュレーション、相関・回帰・重回帰、そして GLMM・潜在変数モデリングまで。R との連携ルートも備え、シミュレーションを縦糸に統計を「体験」で積み上げるロードマップです。</p>
-    <p class="meta"><span>基礎編 9レッスン公開中</span><span class="sep">/</span><span>続編 20レッスン+R連携・補講(構想)</span><span class="sep">/</span><span>対象:プログラミング未経験〜</span></p>
+    <p class="meta"><span>基礎編+環境構築 全10レッスン公開中</span><span class="sep">/</span><span>続編 19レッスン+R連携・補講(構想)</span><span class="sep">/</span><span>対象:プログラミング未経験〜</span></p>
   </header>
 
   <div class="route">
@@ -241,9 +248,9 @@ html.js .reveal.in{opacity:1; transform:none}
 
     <!-- STEP 0 環境構築 -->
     <section class="phase reveal" style="--pc:#E8A33D; --ps:#FBF3E0;">
-      <span class="node" aria-hidden="true"></span>
+      <span class="node node-done" aria-hidden="true">✓</span>
       <div>
-        <span class="pstep">STEP 0 / 環境構築</span>
+        <span class="pstep">STEP 0 / 環境構築・公開中</span>
         <h2>レッスン 10 <span class="psub">Juliaを手元に</span></h2>
         <p class="ptag">ここが最初の実機作業。あなたのPCにJuliaを入れて、以降のすべてのレッスンを「自分でも試せる」状態にします。</p>
       </div>
@@ -519,6 +526,7 @@ println(<span class="str">"検定力: $(power_sim(20, 0.5)) %"</span>)</pre>
   <footer class="foot reveal">
     <span class="dots"><i class="r"></i><i class="g"></i><i class="p"></i></span>
     <p>はじめてのJulia — 研究室のためのプログラミング入門</p>
+    <p class="backlink" style="margin-top:8px"><a href="./">← アプリにもどる</a></p>
   </footer>
 
 </main>
