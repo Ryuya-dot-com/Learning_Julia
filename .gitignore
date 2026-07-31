@@ -1,0 +1,13 @@
+# 依存とビルド成果物
+node_modules/
+dist/
+
+# 設計文書・監査レポート(ローカル管理。Dropboxがバックアップを担う)
+/docs/
+
+# 移行前の原本(分割の検証用にローカル保持。検証完了後にユーザー判断で削除)
+/julia-learning-app.jsx
+/julia-roadmap.html
+
+# OS
+.DS_Store

@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>はじめてのJulia — 学習ロードマップ</title>
+<style>
+:root{
+  --paper:#FBFAF7; --ink:#2A2733; --body:#4A4454; --sub:#6E6879; --faint:#A79FB0;
+  --purple:#9558B2; --purple-deep:#6D3E86; --purple-soft:#F3ECF7;
+  --green:#389826; --green-soft:#EAF6E6;
+  --red:#CB3C33; --red-soft:#FBEDEC;
+  --night:#272134; --line:#E8E4DC; --track:#EFEBE2;
+  --jp:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic",Meiryo,system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--jp);
+  line-height:1.75; -webkit-font-smoothing:antialiased;
+}
+.bar-tri{
+  height:4px; width:100%;
+  background:linear-gradient(90deg,
+    var(--red) 0%, var(--red) 33.4%,
+    var(--green) 33.4%, var(--green) 66.7%,
+    var(--purple) 66.7%, var(--purple) 100%);
+}
+.wrap{max-width:880px; margin:0 auto; padding:44px 22px 72px}
+
+/* ---------- ヒーロー ---------- */
+.eyebrow{
+  margin:0 0 10px; font-size:12px; font-weight:700; color:var(--purple);
+  letter-spacing:.04em;
+}
+h1{
+  margin:0 0 14px; font-size:44px; line-height:1.15; letter-spacing:-.02em; font-weight:700;
+}
+.lede{margin:0 0 14px; max-width:600px; font-size:15px; color:var(--body)}
+.meta{margin:0; font-size:12.5px; color:var(--faint); font-weight:600}
+.meta .sep{margin:0 8px; color:var(--line)}
+
+/* ---------- ルート(タイムライン) ---------- */
+.route{position:relative; margin-top:52px}
+.route::before{
+  content:""; position:absolute; left:22px; top:10px; bottom:26px;
+  width:2px; background:var(--line);
+}
+.phase{position:relative; padding:0 0 56px 64px}
+.phase:last-child{padding-bottom:0}
+.node{
+  position:absolute; left:12px; top:4px; width:22px; height:22px; border-radius:50%;
+  background:var(--pc); box-shadow:0 0 0 5px var(--paper);
+}
+.node-done{
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:12px; font-weight:700;
+}
+.node-hollow{
+  width:16px; height:16px; left:15px; top:7px;
+  background:var(--paper); border:3px solid var(--pc);
+}
+.pstep{
+  display:inline-block; font-family:var(--mono); font-size:11px; font-weight:700;
+  letter-spacing:.08em; color:var(--pc); background:var(--ps);
+  padding:4px 12px; border-radius:999px;
+}
+.phase h2{margin:12px 0 4px; font-size:22px; letter-spacing:-.01em}
+.psub{font-size:13px; color:var(--sub); font-weight:600; margin-left:8px}
+.ptag{margin:0; font-size:13.5px; color:var(--sub)}
+
+/* ---------- 基礎編 ---------- */
+.base-card{
+  margin-top:16px; background:#fff; border:1px solid var(--line);
+  border-radius:16px; padding:16px 20px;
+}
+.base-list{
+  margin:0; padding:0; list-style:none;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:8px 18px;
+}
+.base-list li{font-size:13px; color:var(--body); white-space:nowrap}
+.base-list b{
+  font-family:var(--mono); font-size:11.5px; color:var(--green);
+  margin-right:7px; font-weight:700;
+}
+
+/* ---------- レッスンカード ---------- */
+.lessons{
+  margin-top:18px; display:grid; grid-template-columns:repeat(2,1fr); gap:14px;
+}
+.lesson{
+  background:#fff; border:1px solid var(--line); border-radius:16px;
+  padding:16px 18px; display:flex; flex-direction:column;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.lesson:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(42,39,51,.07)}
+.lnum{
+  align-self:flex-start; font-family:var(--mono); font-size:11.5px; font-weight:700;
+  color:var(--pc); background:var(--ps); padding:2px 9px; border-radius:999px;
+}
+.lesson h3{margin:9px 0 4px; font-size:15px}
+.lesson p{margin:0 0 12px; font-size:13px; color:var(--sub); flex:1}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chips code{
+  font-family:var(--mono); font-size:11.5px; background:#F5F2EC; color:#5A4470;
+  padding:3px 8px; border-radius:6px;
+}
+
+/* ---------- フィーチャー(シミュレーション) ---------- */
+.featured{
+  grid-column:1/-1; background:var(--night); border:1px solid #3A3350;
+  padding:20px 22px;
+  color:#ECEAF2;
+}
+.featured:hover{box-shadow:0 8px 24px rgba(39,33,52,.28)}
+.badge{
+  display:inline-block; align-self:flex-start; background:var(--purple); color:#fff;
+  font-size:11px; font-weight:700; letter-spacing:.06em;
+  padding:4px 11px; border-radius:999px;
+}
+.featured h3{color:#fff; font-size:18px; margin:12px 0 5px}
+.featured p{color:#B8B2C8; font-size:13.5px}
+.featured .chips code{background:#352E47; color:#D9CFE8}
+.code{margin:16px 0 12px; border:1px solid #3A3350; border-radius:12px; overflow:hidden}
+.codehead{display:flex; align-items:center; gap:6px; background:#1F1A2B; padding:10px 14px 0}
+.cd{width:8px; height:8px; border-radius:50%}
+.cd.r{background:var(--red)} .cd.g{background:var(--green)} .cd.p{background:var(--purple)}
+.codehead span{margin-left:6px; font-family:var(--mono); font-size:10.5px; font-weight:700; color:#8F86A3; letter-spacing:.06em}
+.code pre{
+  margin:0; background:#1F1A2B; padding:8px 16px 16px; overflow-x:auto;
+  font-family:var(--mono); font-size:12.5px; line-height:1.9; color:#ECEAF2;
+}
+.kw{color:#C792EA; font-weight:600}
+.str{color:#A8D8A0}
+.num{color:#8AB4F8}
+.com{color:#7A7290; font-style:italic}
+.result{
+  background:rgba(255,255,255,.05); border-top:1px solid #3A3350; padding:10px 16px 12px;
+  font-family:var(--mono); font-size:12.5px;
+}
+.result .rl{display:block; font-size:10.5px; font-weight:700; letter-spacing:.06em; color:#8FCB84; margin-bottom:2px}
+.result .rv{color:#A8D8A0}
+.fnote{margin-top:2px; font-size:12px; color:#8F86A3}
+.fnote code{font-family:var(--mono); background:#352E47; color:#D9CFE8; padding:1px 6px; border-radius:5px; font-size:11px}
+
+/* ---------- サイドクエスト ---------- */
+.sideg{margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px}
+.sq{border:1.5px dashed var(--line); border-radius:14px; padding:14px 16px; background:transparent}
+.sq h3{margin:0 0 4px; font-size:13.5px; color:var(--body)}
+.sq p{margin:0; font-size:12.5px; color:var(--faint)}
+.sq code{font-family:var(--mono); font-size:11px; background:#F5F2EC; color:#5A4470; padding:1px 6px; border-radius:5px}
+
+/* ---------- ゴール ---------- */
+.goal-card{
+  margin-top:16px; background:var(--purple-soft); border:1px solid #DCC9E8;
+  border-radius:18px; padding:26px 26px 24px;
+}
+.dots{display:inline-flex; align-items:center; gap:7px}
+.dots i{display:inline-block; width:13px; height:13px; border-radius:50%}
+.dots .r{background:var(--red)} .dots .g{background:var(--green)} .dots .p{background:var(--purple)}
+.goal-card h2{margin:12px 0 6px; font-size:21px; color:var(--purple-deep)}
+.goal-card p{margin:0; font-size:13.5px; color:#5A3B6E}
+
+/* ---------- フッター ---------- */
+.foot{margin-top:64px; text-align:center}
+.foot p{margin:10px 0 0; font-size:12px; color:var(--faint)}
+
+/* ---------- アニメーション ---------- */
+html.js .reveal{opacity:0; transform:translateY(12px); transition:opacity .55s ease, transform .55s ease}
+html.js .reveal.in{opacity:1; transform:none}
+@media (prefers-reduced-motion: reduce){
+  html.js .reveal{opacity:1; transform:none; transition:none}
+  .lesson, .lesson:hover{transform:none; transition:none}
+}
+
+/* ---------- モバイル ---------- */
+@media (max-width:640px){
+  .wrap{padding:32px 16px 56px}
+  h1{font-size:33px}
+  .route::before{left:15px}
+  .phase{padding-left:46px}
+  .node{left:5px; width:20px; height:20px}
+  .node-hollow{left:8px; width:14px; height:14px}
+  .lessons{grid-template-columns:1fr}
+  .sideg{grid-template-columns:1fr}
+  .base-list{grid-template-columns:repeat(2,1fr)}
+  .base-list li{white-space:normal}
+}
+
+/* ---------- 印刷 ---------- */
+@media print{
+  html.js .reveal{opacity:1; transform:none; transition:none}
+  .phase{break-inside:avoid}
+  .featured{background:#fff; color:var(--ink); border:1px solid var(--line)}
+  .featured p{color:var(--sub)}
+  .featured h3{color:var(--ink)}
+  .code, .code pre, .codehead{background:#fff !important}
+  .code pre, .code pre span{color:var(--ink) !important}
+  .result{background:#fff; border-top:1px solid var(--line)}
+  .result .rl, .result .rv{color:var(--green)}
+}
+</style>
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+<div class="bar-tri"></div>
+<main class="wrap">
+
+  <header class="reveal">
+    <p class="eyebrow">学習アプリ「はじめてのJulia」続編構想</p>
+    <h1>学習ロードマップ</h1>
+    <p class="lede">文法の土台(基礎編)から、データハンドリング・可視化・シミュレーション、相関・回帰・重回帰、そして GLMM・潜在変数モデリングまで。R との連携ルートも備え、シミュレーションを縦糸に統計を「体験」で積み上げるロードマップです。</p>
+    <p class="meta"><span>基礎編 9レッスン公開中</span><span class="sep">/</span><span>続編 20レッスン+R連携・補講(構想)</span><span class="sep">/</span><span>対象:プログラミング未経験〜</span></p>
+  </header>
+
+  <div class="route">
+
+    <!-- 基礎編(公開中) -->
+    <section class="phase reveal" style="--pc:#2A2733; --ps:#EFEBE2;">
+      <span class="node node-done" aria-hidden="true">✓</span>
+      <div>
+        <span class="pstep">基礎編・公開中</span>
+        <h2>レッスン 1–9 <span class="psub">文法の土台</span></h2>
+        <p class="ptag">変数から関数まで、1画面1トピックで。最後は反応時間データの平均・SD・外れ値カウントを体験して修了します。</p>
+      </div>
+      <div class="base-card">
+        <ol class="base-list">
+          <li><b>01</b>Juliaってなに?</li>
+          <li><b>02</b>変数と計算</li>
+          <li><b>03</b>データの型</li>
+          <li><b>04</b>文字列</li>
+          <li><b>05</b>配列</li>
+          <li><b>06</b>条件分岐</li>
+          <li><b>07</b>くり返し</li>
+          <li><b>08</b>関数</li>
+          <li><b>09</b>データ解析に挑戦</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- STEP 0 環境構築 -->
+    <section class="phase reveal" style="--pc:#E8A33D; --ps:#FBF3E0;">
+      <span class="node" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">STEP 0 / 環境構築</span>
+        <h2>レッスン 10 <span class="psub">Juliaを手元に</span></h2>
+        <p class="ptag">ここが最初の実機作業。あなたのPCにJuliaを入れて、以降のすべてのレッスンを「自分でも試せる」状態にします。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson">
+          <span class="lnum">L10</span>
+          <h3>Juliaを手元に入れる</h3>
+          <p>juliaup でのインストール(macOS / Windows別)、REPLの使い方、パッケージの追加、Pluto.jl の起動。REPLとファイル実行のちがいも、ここでていねいに扱います。</p>
+          <div class="chips"><code>juliaup</code><code>] add CSV</code><code>Pluto.jl</code></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- STEP 1 データ操作編 -->
+    <section class="phase reveal" style="--pc:#CB3C33; --ps:#FBEDEC;">
+      <span class="node" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">STEP 1 / データ操作編</span>
+        <h2>レッスン 11–16 <span class="psub">実データを読み、整える</span></h2>
+        <p class="ptag">研究データ分析でいちばん時間を使う「前処理」の道具をそろえるシリーズです。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson">
+          <span class="lnum">L11</span>
+          <h3>ドット記法(ブロードキャスト)</h3>
+          <p>配列をまるごと一括変換するJulia特有の書き方。RTの単位換算や対数変換の定番です。</p>
+          <div class="chips"><code>rt .+ 100</code><code>log.(rt)</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L12</span>
+          <h3>辞書と欠損値</h3>
+          <p>条件名と値の対応表、そして実データにつきものの欠損。つまずきやすい所を早めにケアします。</p>
+          <div class="chips"><code>Dict</code><code>missing</code><code>skipmissing</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L13</span>
+          <h3>内包表記</h3>
+          <p>「ループしながら配列をつくる」を1行で書く、Juliaらしいイディオムです。</p>
+          <div class="chips"><code>[x^2 for x in 1:10]</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L14</span>
+          <h3>CSV.jl &amp; DataFrames.jl 入門</h3>
+          <p>ファイルの読みこみ、列の選択、行の絞りこみ。データフレームという「表」の基本操作をそろえます(Excel は XLSX.jl)。</p>
+          <div class="chips"><code>CSV.read</code><code>select</code><code>subset</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L15</span>
+          <h3>グループ集計と結合</h3>
+          <p>条件×参加者の平均を groupby → combine で一撃。参加者属性の表とは leftjoin で合体。パイプ(@chain)で上から下へ読める書き方も。</p>
+          <div class="chips"><code>groupby</code><code>combine</code><code>leftjoin</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L16</span>
+          <h3>縦横変換と一括読み込み</h3>
+          <p>SPSS 的な横持ちと解析用の縦持ちを行き来し、30人分のログファイルを一気に読んで連結。研究室の定番作業を自動化します。</p>
+          <div class="chips"><code>stack</code><code>unstack</code><code>vcat</code></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- STEP 2 統計・可視化編 -->
+    <section class="phase reveal" style="--pc:#389826; --ps:#EAF6E6;">
+      <span class="node" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">STEP 2 / 統計・可視化編</span>
+        <h2>レッスン 17–20 <span class="psub">数字と図で、結果を語る</span></h2>
+        <p class="ptag">記述統計の深掘りから検定・作図まで。Rとの対応も併記して、研究室の共通言語につなげます。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson">
+          <span class="lnum">L17</span>
+          <h3>記述統計の深掘り</h3>
+          <p>中央値・四分位・分布の要約。データを開いて最初にやることを固めます。</p>
+          <div class="chips"><code>median</code><code>quantile</code><code>describe</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L18</span>
+          <h3>検定入門</h3>
+          <p>HypothesisTests.jl による t 検定と p 値の取り出し。R の t.test に相当します。</p>
+          <div class="chips"><code>OneSampleTTest</code><code>pvalue</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L19</span>
+          <h3>探索の可視化(Plots・StatsPlots)</h3>
+          <p>ヒストグラム・箱ひげ・散布図を最小の学習コストで。@df でデータフレームの列名からそのまま描けます。</p>
+          <div class="chips"><code>histogram</code><code>boxplot</code><code>@df</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L20</span>
+          <h3>論文品質の可視化(Makie)</h3>
+          <p>CairoMakie で出版クオリティの図へ。AlgebraOfGraphics なら ggplot2 風の文法で、エラーバー付きの条件比較図も宣言的に組めます。</p>
+          <div class="chips"><code>CairoMakie</code><code>AlgebraOfGraphics</code></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- STEP 3 シミュレーション・研究実践編 -->
+    <section class="phase reveal" style="--pc:#9558B2; --ps:#F3ECF7;">
+      <span class="node" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">STEP 3 / シミュレーション基礎編</span>
+        <h2>レッスン 21–22 <span class="psub">乱数で統計を「体験」する土台</span></h2>
+        <p class="ptag">検定力分析を自作して、シミュレーションという道具を手に入れます。この先の統計レッスンすべてを貫く縦糸です。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson">
+          <span class="lnum">L21</span>
+          <h3>乱数と再現性</h3>
+          <p>刺激リストのランダム化、カウンターバランス、シードの固定。実験心理の実務に直結する回です。</p>
+          <div class="chips"><code>rand</code><code>shuffle</code><code>Random.seed!</code></div>
+        </article>
+        <article class="lesson featured">
+          <span class="badge">Juliaの真骨頂</span>
+          <h3>L22 モンテカルロ・シミュレーション</h3>
+          <p>「n=20・効果量 d=0.5 の実験、何%有意になる?」——1万回の仮想実験を数秒で回して、検定力分析を自作します。ブートストラップや順列検定への入り口にも。</p>
+          <div class="code">
+            <div class="codehead"><i class="cd r"></i><i class="cd g"></i><i class="cd p"></i><span>Julia</span></div>
+            <pre><span class="kw">using</span> Random, HypothesisTests
+
+<span class="kw">function</span> power_sim(n, d; nsim = <span class="num">10_000</span>)  <span class="com"># nsim回の仮想実験</span>
+    hits = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="num">1</span>:nsim
+        a = randn(n)                 <span class="com"># 統制群</span>
+        b = randn(n) .+ d            <span class="com"># 実験群(効果量 d)</span>
+        <span class="kw">if</span> pvalue(EqualVarianceTTest(a, b)) &lt; <span class="num">0.05</span>
+            hits += <span class="num">1</span>
+        <span class="kw">end</span>
+    <span class="kw">end</span>
+    <span class="kw">return</span> <span class="num">100</span> * hits / nsim
+<span class="kw">end</span>
+
+Random.seed!(<span class="num">2026</span>)                   <span class="com"># 再現性の確保</span>
+println(<span class="str">"検定力: $(power_sim(20, 0.5)) %"</span>)</pre>
+            <div class="result"><span class="rl">▶ 実行結果(Julia 1.12)</span><span class="rv">検定力: 32.93 %</span></div>
+          </div>
+          <p class="fnote">※ L11 のドット記法 <code>.+</code> がここで効いてきます。関数にしておけば n や d を変えて何度でも呼べて、ファイルでもノートブックでもそのまま動きます。この「生成→検定→集計」の型を、STEP 4 以降のすべてのモデルに広げていきます。乱数の結果はJuliaのバージョンによりわずかに変わります。</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- STEP 4 統計モデリング編 -->
+    <section class="phase reveal" style="--pc:#4063D8; --ps:#EBF0FB;">
+      <span class="node" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">STEP 4 / 統計モデリング編</span>
+        <h2>レッスン 23–26 <span class="psub">生成 → 推定 → 復元、の一本線</span></h2>
+        <p class="ptag">どの回も「真の値からデータを生成し、モデルで推定し、どこまで復元できたかを確かめる」流れ。統計の意味を、公式ではなく体験から理解します。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson">
+          <span class="lnum">L23</span>
+          <h3>相関のシミュレーション</h3>
+          <p>「n=20 の r はどれだけ揺れる?」——相関係数の標本分布を1万回の仮想実験で描き、r の信用度を体感します。</p>
+          <div class="chips"><code>cor</code><code>MvNormal</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L24</span>
+          <h3>単回帰</h3>
+          <p>真の傾き 0.5 のデータを生成し、GLM.jl で推定。切片・傾き・残差の意味を、パラメータ復元で確かめます。</p>
+          <div class="chips"><code>@formula</code><code>lm</code><code>coeftable</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L25</span>
+          <h3>重回帰と交絡</h3>
+          <p>第3の変数 z を仕込んだデータで、z を入れる/入れないで係数がどう変わるかを目撃。「統制する」の意味がわかる回です。</p>
+          <div class="chips"><code>y ~ x + z</code><code>r2</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L26</span>
+          <h3>ロジスティック回帰</h3>
+          <p>正答/誤答(0/1)データの世界へ。オッズ比の読み方と、確率で生まれるデータのシミュレーション。GLMM への助走です。</p>
+          <div class="chips"><code>glm</code><code>Binomial()</code><code>LogitLink()</code></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- STEP 5 発展編 -->
+    <section class="phase reveal" style="--pc:#6D3E86; --ps:#F3ECF7;">
+      <span class="node" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">STEP 5 / 発展編:マルチレベルと潜在変数</span>
+        <h2>レッスン 27–29 <span class="psub">研究の現場レベルへ</span></h2>
+        <p class="ptag">反復測定と測定誤差——心理データの2つの現実に、モデルで正面から向き合います。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson">
+          <span class="lnum">L27</span>
+          <h3>GLMM(混合モデル)</h3>
+          <p>被験者と項目のランダム効果を入れて、試行レベルのデータをそのまま分析。MixedModels.jl は R の lme4 相当をより高速に。正答データはロジスティック混合モデルで。</p>
+          <div class="chips"><code>(1|subj)</code><code>fit(MixedModel, …)</code><code>Bernoulli()</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L28</span>
+          <h3>潜在変数モデリング</h3>
+          <p>測定誤差が相関を薄める様子をシミュレーションで確認してから、因子分析・SEM へ。本格的な SEM は R の lavaan が依然定番なので、RCall.jl で連携する現実解もあわせて紹介します。</p>
+          <div class="chips"><code>MultivariateStats.jl</code><code>StructuralEquationModels.jl</code><code>RCall</code></div>
+        </article>
+        <article class="lesson">
+          <span class="badge">卒業制作</span>
+          <h3>L29 デザインの検定力設計</h3>
+          <p>自分の実験デザイン(被験者数 × 試行数 × 効果量)の検定力を、GLMM のシミュレーションで見積もる統合課題。解析的な公式が存在しない世界こそ、Julia の速度が効きます。</p>
+          <div class="chips"><code>MixedModels.jl</code><code>MixedModelsSim.jl</code><code>parametricbootstrap</code></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ブリッジ:Rとの連携 -->
+    <section class="phase reveal" style="--pc:#276DC3; --ps:#E9F0FA;">
+      <span class="node" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">ブリッジ / R との連携</span>
+        <h2>R と Julia、置き換えずに分業する <span class="psub">移行期の研究室のための現実解</span></h2>
+        <p class="ptag">どのレッスンの後からでも合流できる独立トラック。「全部 Julia に」ではなく、得意分野で使い分けます。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson">
+          <span class="lnum">Julia → R</span>
+          <h3>RCall.jl</h3>
+          <p>R"..." マクロで lavaan や emmeans をそのまま実行。$x で Julia の変数を R 側へ渡し、@rput / @rget で往復。REPL で $ を押すと R モードに切り替わります。</p>
+          <div class="chips"><code>R"t.test($x)"</code><code>@rput</code><code>@rget</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">R → Julia</span>
+          <h3>JuliaCall・JuliaConnectoR</h3>
+          <p>研究室が R 中心でも、GLMM や重いシミュレーションだけ Julia に任せる分業が可能。R のスクリプトから Julia の関数を呼び出せます。</p>
+          <div class="chips"><code>JuliaCall</code><code>JuliaConnectoR</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">データ形式</span>
+          <h3>ファイルと構文の橋渡し</h3>
+          <p>.RData・.rds は RData.jl で直接読めます。共通フォーマットは Arrow か CSV。dplyr・ggplot2 の構文を Julia で再現する Tidier.jl なら、頭の切り替えコストは最小です。</p>
+          <div class="chips"><code>RData.jl</code><code>Arrow.jl</code><code>Tidier.jl</code></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- サイドクエスト -->
+    <section class="phase reveal" style="--pc:#A79FB0; --ps:#F5F2EC;">
+      <span class="node node-hollow" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">補講・サイドクエスト</span>
+        <h2>どのタイミングでも <span class="psub">1本ずつ差しこめる小レッスン</span></h2>
+      </div>
+      <div class="sideg">
+        <div class="sq">
+          <h3>エラーメッセージの読み方</h3>
+          <p>MethodError を恐れない。基礎編レッスン3の続きとして。</p>
+        </div>
+        <div class="sq">
+          <h3>文字列処理</h3>
+          <p>ログファイルの整形と、正規表現のさわりだけ。</p>
+        </div>
+        <div class="sq">
+          <h3>分布のカタログ</h3>
+          <p><code>Distributions.jl</code> の世界。正規・二項・ポアソン——シミュレーションの材料庫です。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ゴール -->
+    <section class="phase reveal" style="--pc:#2A2733; --ps:#EFEBE2;">
+      <span class="node" aria-hidden="true"></span>
+      <div class="goal-card">
+        <span class="dots"><i class="r"></i><i class="g"></i><i class="p"></i></span>
+        <h2>ゴール:自分のデータを、自分の手で。</h2>
+        <p>統計はどの回も「生成 → 推定 → 復元」の一本線。続編もすべて今のアプリ形式(1画面1トピック・即時フィードバック)で追加できます。仕上げは Pluto.jl ノートブックでの実データ演習へ。</p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="foot reveal">
+    <span class="dots"><i class="r"></i><i class="g"></i><i class="p"></i></span>
+    <p>はじめてのJulia — 研究室のためのプログラミング入門</p>
+  </footer>
+
+</main>
+<script>
+(function () {
+  var els = document.querySelectorAll(".reveal");
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || !("IntersectionObserver" in window)) {
+    els.forEach(function (e) { e.classList.add("in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        en.target.classList.add("in");
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function (e) { io.observe(e); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Julia の3色ドット（アプリの TriDots と同じ配色） -->
+  <circle cx="8" cy="20" r="6" fill="#CB3C33" />
+  <circle cx="16" cy="10" r="6" fill="#389826" />
+  <circle cx="24" cy="20" r="6" fill="#9558B2" />
+</svg>
