@@ -15,6 +15,7 @@ function ChoiceEx({ ex, seedKey, solved, onCorrect }) {
   const [sel, setSel] = useState(solved ? ex.ans : null);
   const [status, setStatus] = useState(solved ? "correct" : "idle");
   const [showHint, setShowHint] = useState(false);
+  const [missed, setMissed] = useState(false); // 一度でも誤答したか(初見クリアの判定用)
   // シードに問題文だけを使うと、同一文面の問題どうしで正解が同じ位置に固定される(監査A3)。
   // レッスンidと問indexを混ぜて、問題ごとに独立した並びにする
   const order = useMemo(() => seededOrder(ex.opts.length, seedKey + ":" + ex.q), [ex, seedKey]);
@@ -24,8 +25,9 @@ function ChoiceEx({ ex, seedKey, solved, onCorrect }) {
     setSel(i);
     if (i === ex.ans) {
       setStatus("correct");
-      onCorrect();
+      onCorrect(!missed);
     } else {
+      setMissed(true);
       setStatus("wrong");
     }
   };
@@ -85,6 +87,7 @@ function FillEx({ ex, solved, onCorrect }) {
   const [val, setVal] = useState(solved ? ex.show : "");
   const [status, setStatus] = useState(solved ? "correct" : "idle");
   const [showHint, setShowHint] = useState(false);
+  const [missed, setMissed] = useState(false);
 
   const check = () => {
     if (status === "correct") return;
@@ -95,8 +98,9 @@ function FillEx({ ex, solved, onCorrect }) {
     if (ex.accept.includes(v)) {
       setStatus("correct");
       setVal(ex.show);
-      onCorrect();
+      onCorrect(!missed);
     } else {
+      setMissed(true);
       setStatus("wrong");
     }
   };
@@ -147,11 +151,138 @@ function FillEx({ ex, solved, onCorrect }) {
   );
 }
 
+// tf形式: 3つの記述それぞれに○×を付け、全問正解でクリア(ロードマップ仕様5節)。
+// 判定時は項目別の正誤と解説を必ず開示する。「初見で全問正解」は別フラグで記録する2層設計
+function TfEx({ ex, solved, onCorrect }) {
+  const [marks, setMarks] = useState(() => (solved ? ex.items.map((it) => it.a) : ex.items.map(() => null)));
+  const [checked, setChecked] = useState(solved);
+  const [status, setStatus] = useState(solved ? "correct" : "idle");
+  const [missed, setMissed] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+
+  const setMark = (i, v) => {
+    if (status === "correct") return;
+    const next = marks.slice();
+    next[i] = v;
+    setMarks(next);
+    setChecked(false);
+    if (status === "wrong") setStatus("idle");
+  };
+
+  const judge = () => {
+    if (status === "correct" || marks.some((m) => m === null)) return;
+    setChecked(true);
+    if (ex.items.every((it, i) => marks[i] === it.a)) {
+      setStatus("correct");
+      onCorrect(!missed);
+    } else {
+      setMissed(true);
+      setStatus("wrong");
+    }
+  };
+
+  const rightCount = ex.items.filter((it, i) => marks[i] === it.a).length;
+
+  return (
+    <div>
+      <p className="mb-1 text-base font-bold leading-relaxed" style={{ color: C.ink }}>
+        <T>{ex.q}</T>
+      </p>
+      {ex.code && <CodeBlock code={ex.code} />}
+      <div className="mt-4 flex flex-col gap-3">
+        {ex.items.map((it, i) => {
+          const judged = checked || status === "correct";
+          const right = judged && marks[i] === it.a;
+          const wrong = judged && marks[i] !== it.a;
+          return (
+            <div
+              key={i}
+              className="rounded-xl p-3"
+              style={{
+                background: right ? C.greenSoft : wrong ? C.redSoft : "#FFFFFF",
+                border: "1.5px solid " + (right ? C.green : wrong ? C.red : C.line),
+              }}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <p className="min-w-0 flex-1 pt-1 text-sm leading-6" style={{ color: C.ink }}>
+                  <T>{it.s}</T>
+                </p>
+                <div className="flex shrink-0 gap-1.5" role="group" aria-label={`記述${i + 1}の判定`}>
+                  {[
+                    { v: true, label: "○" },
+                    { v: false, label: "×" },
+                  ].map(({ v, label }) => (
+                    <button
+                      key={label}
+                      onClick={() => setMark(i, v)}
+                      disabled={status === "correct"}
+                      aria-pressed={marks[i] === v}
+                      aria-label={`記述${i + 1}を「${v ? "正しい" : "まちがい"}」にする`}
+                      className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold disabled:cursor-default"
+                      style={
+                        marks[i] === v
+                          ? { background: C.purpleDeep, color: "#FFFFFF" }
+                          : { background: "#FFFFFF", border: "1.5px solid " + C.edge, color: C.body }
+                      }
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {judged && (
+                <p className="mt-2 text-xs leading-5" style={{ color: right ? "#2E5626" : C.redText }}>
+                  {right ? "○ " : "✕ "}
+                  <T>{it.why}</T>
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-4">
+        <Btn onClick={judge} disabled={status === "correct" || marks.some((m) => m === null)}>
+          答え合わせ
+        </Btn>
+      </div>
+      <div role="status" aria-live="polite">
+        {status === "correct" && (
+          <div className="pop mt-4 rounded-xl p-4" style={{ background: C.greenSoft, border: "1px solid #BFE3B4" }}>
+            <p className="text-sm font-bold" style={{ color: C.greenText }}>
+              全問正解です!{!missed && " 初見でパーフェクトでした。"}
+            </p>
+          </div>
+        )}
+        {checked && status === "wrong" && (
+          <div className="rise mt-4 rounded-xl p-4" style={{ background: "#FFF7E8", border: "1px solid #F1DFB8" }}>
+            <p className="mb-1.5 text-sm font-bold" style={{ color: "#82590F" }}>
+              {rightCount} / {ex.items.length} 問が合っています。各記述の解説を読んで、もう一度。
+            </p>
+            {showHint ? (
+              <p className="text-sm leading-relaxed" style={{ color: "#7A5A1A" }}>
+                ヒント:<T>{ex.hint}</T>
+              </p>
+            ) : (
+              <button
+                className="inline-flex min-h-11 items-center text-sm font-bold underline"
+                style={{ color: "#82590F" }}
+                onClick={() => setShowHint(true)}
+              >
+                ヒントを見る
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ============================================================
    レッスン画面
    ============================================================ */
 
-function LessonView({ lesson, doneSet, onSolve, onHome, onNextLesson, hasNext, onCheat }) {
+function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, hasNext, onCheat }) {
   // 番号なしレッスン(bridge/extra)は「LESSON null」にならないようセクション名を表示する(仕様4.4b)
   const sec = SECTIONS.find((s) => s.dir === lesson.section);
   const headLabel = lesson.num != null ? `LESSON ${lesson.num}` : (sec ? sec.title : "");
@@ -247,14 +378,21 @@ function LessonView({ lesson, doneSet, onSolve, onHome, onNextLesson, hasNext, o
                 ex={cur.e}
                 seedKey={lesson.id + ":" + cur.i}
                 solved={doneSet.has(cur.i)}
-                onCorrect={() => onSolve(cur.i)}
+                onCorrect={(first) => onSolve(cur.i, first)}
+              />
+            ) : cur.e.k === "tf" ? (
+              <TfEx
+                key={lesson.id + "-" + cur.i}
+                ex={cur.e}
+                solved={doneSet.has(cur.i)}
+                onCorrect={(first) => onSolve(cur.i, first)}
               />
             ) : (
               <FillEx
                 key={lesson.id + "-" + cur.i}
                 ex={cur.e}
                 solved={doneSet.has(cur.i)}
-                onCorrect={() => onSolve(cur.i)}
+                onCorrect={(first) => onSolve(cur.i, first)}
               />
             )}
           </div>
@@ -272,6 +410,7 @@ function LessonView({ lesson, doneSet, onSolve, onHome, onNextLesson, hasNext, o
                 </h2>
                 <p className="mb-6 text-sm" style={{ color: C.sub }}>
                   練習問題 {total} 問、すべてクリアしました。
+                  {firstSet && firstSet.size > 0 && ` うち ${firstSet.size} 問は一発クリアです!`}
                 </p>
                 <div className="flex flex-col items-center gap-3">
                   {hasNext ? (
@@ -422,9 +561,19 @@ function Home({ progress, onOpen, onCheat, onReset }) {
                 <h2 className="text-sm font-bold" style={{ color: C.ink }}>
                   {sec.title}
                 </h2>
-                <span className="text-xs" style={{ color: C.sub }}>
+                <span className="min-w-0 flex-1 truncate text-xs" style={{ color: C.sub }}>
                   {sec.sub}
                 </span>
+                {sec.notebook && (
+                  <a
+                    className="inline-flex min-h-11 shrink-0 items-center text-xs font-bold underline"
+                    style={{ color: C.purpleDeep }}
+                    href={import.meta.env.BASE_URL + "notebooks/" + sec.notebook}
+                    download
+                  >
+                    演習ノート ↓
+                  </a>
+                )}
               </div>
               <div className="flex flex-col gap-3">
                 {ls.map((l) => {

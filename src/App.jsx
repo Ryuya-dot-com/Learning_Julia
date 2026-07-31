@@ -24,18 +24,21 @@ function nextLessonOf(lesson) {
 
 export default function JuliaLearningApp() {
   const [view, setView] = useState({ name: "home" });
-  const [progress, setProgress] = useState({ done: {} });
+  // done: クリア済み問題 / first: 初見(誤答なし)でクリアした問題。修了と測定を分ける2層設計(仕様5節)
+  const [progress, setProgress] = useState({ done: {}, first: {} });
 
-  const solve = useCallback((lid, i) => {
+  const solve = useCallback((lid, i, firstTry) => {
     setProgress((prev) => {
       const cur = prev.done[lid] || [];
       if (cur.includes(i)) return prev;
-      return { done: { ...prev.done, [lid]: [...cur, i] } };
+      const next = { done: { ...prev.done, [lid]: [...cur, i] }, first: prev.first };
+      if (firstTry) next.first = { ...prev.first, [lid]: [...(prev.first[lid] || []), i] };
+      return next;
     });
   }, []);
 
   const reset = () => {
-    setProgress({ done: {} });
+    setProgress({ done: {}, first: {} });
     setView({ name: "home" });
   };
 
@@ -48,7 +51,8 @@ export default function JuliaLearningApp() {
         key={lesson.id}
         lesson={lesson}
         doneSet={new Set(progress.done[lesson.id] || [])}
-        onSolve={(i) => solve(lesson.id, i)}
+        firstSet={new Set(progress.first[lesson.id] || [])}
+        onSolve={(i, first) => solve(lesson.id, i, first)}
         onHome={() => setView({ name: "home" })}
         hasNext={next != null}
         onNextLesson={() => next && setView({ name: "lesson", id: next.id })}

@@ -7,8 +7,8 @@ import { fileURLToPath } from "node:url";
 import { LESSONS } from "./lessons/index.js";
 import { SECTIONS } from "./sections.js";
 
-// 演習形式の許容値。tf を追加するときはここに1行足す(仕様4.6)
-const ALLOWED_K = ["choice", "fill"];
+// 演習形式の許容値(仕様4.6)
+const ALLOWED_K = ["choice", "fill", "tf"];
 
 const mods = import.meta.glob("./lessons/*/*.js", { eager: true });
 
@@ -78,10 +78,26 @@ describe("演習", () => {
 
   it.each(allEx)("%s: 形式と解答の整合", (_, ex) => {
     expect(ALLOWED_K, `k="${ex.k}" は未対応の形式`).toContain(ex.k);
-    // Feedback が why.length を使うため、why は必須(欠けると正解表示がクラッシュする)
-    expect(typeof ex.why).toBe("string");
-    expect(ex.why.length).toBeGreaterThan(0);
     expect(typeof ex.hint).toBe("string");
+    if (ex.k !== "tf") {
+      // Feedback が why.length を使うため、choice/fill では why 必須(欠けると正解表示がクラッシュする)
+      expect(typeof ex.why).toBe("string");
+      expect(ex.why.length).toBeGreaterThan(0);
+    }
+
+    if (ex.k === "tf") {
+      // tf は3記述固定・各記述に個別の why 必須(項目別フィードバックの開示——仕様5節)
+      expect(Array.isArray(ex.items) && ex.items.length === 3, "tf は記述3つ").toBe(true);
+      for (const it of ex.items) {
+        expect(typeof it.s).toBe("string");
+        expect(it.s.length).toBeGreaterThan(0);
+        expect(typeof it.a).toBe("boolean");
+        expect(typeof it.why).toBe("string");
+        expect(it.why.length).toBeGreaterThan(0);
+      }
+      // 全部○・全部×は当て推量で解けるため禁止
+      expect(new Set(ex.items.map((it) => it.a)).size, "○×が混在していない").toBe(2);
+    }
 
     if (ex.k === "choice") {
       expect(Array.isArray(ex.opts) && ex.opts.length >= 2).toBe(true);
@@ -109,7 +125,10 @@ describe("演習", () => {
     const texts = [];
     for (const l of LESSONS) {
       for (const p of l.pages) texts.push(...(p.b || []), ...(p.a || []), p.t);
-      for (const ex of l.ex) texts.push(ex.q, ex.why, ex.hint, ...(ex.opts || []));
+      for (const ex of l.ex) {
+        texts.push(ex.q, ex.why, ex.hint, ...(ex.opts || []));
+        for (const it of ex.items || []) texts.push(it.s, it.why);
+      }
     }
     for (const t of texts.filter(Boolean)) {
       const count = (String(t).match(/`/g) || []).length;

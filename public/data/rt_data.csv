@@ -1,0 +1,13 @@
+id,cond,rt,correct
+P01,cong,512.5,true
+P01,cong,498.2,true
+P01,incong,560.4,true
+P01,incong,601.3,false
+P02,cong,530.1,true
+P02,cong,521.7,true
+P02,incong,588.2,true
+P02,incong,624.9,true
+P03,cong,479.8,true
+P03,cong,505.3,false
+P03,incong,570.6,true
+P03,incong,598.1,true
