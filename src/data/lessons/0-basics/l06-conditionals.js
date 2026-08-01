@@ -1,7 +1,7 @@
 // レッスン: 条件分岐 — 「もし〜なら」を書く
 // num は書かない（セクション順+ファイル名順から自動採番される）
 export default {
-  id: "l6",
+  id: "conditionals",
   title: "条件分岐",
   tag: "「もし〜なら」を書く",
   pages: [

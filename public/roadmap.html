@@ -217,8 +217,8 @@ html.js .reveal.in{opacity:1; transform:none}
     <p class="backlink"><a href="./">← アプリにもどる</a></p>
     <p class="eyebrow">学習アプリ「はじめてのJulia」続編構想</p>
     <h1>学習ロードマップ</h1>
-    <p class="lede">文法の土台(基礎編)から、データハンドリング・可視化・シミュレーション、相関・回帰・重回帰、そして GLMM・潜在変数モデリングまで。R との連携ルートも備え、シミュレーションを縦糸に統計を「体験」で積み上げるロードマップです。</p>
-    <p class="meta"><span>基礎編〜データ操作編 全16レッスン公開中</span><span class="sep">/</span><span>続編 13レッスン+R連携・補講(構想)</span><span class="sep">/</span><span>対象:プログラミング未経験〜</span></p>
+    <p class="lede">文法の土台(基礎編)から、データハンドリング、確率分布、標本分布、推定、相関・回帰、そして混合モデルと研究計画まで。R との連携ルートも備え、分布を作り乱数を引くJuliaのコードを縦糸に、統計を「体験」で積み上げるロードマップです。</p>
+    <p class="meta"><span>基礎編〜測定・依存構造・研究計画編 全37レッスン公開中</span><span class="sep">/</span><span>R連携・補講は独立トラック</span><span class="sep">/</span><span>対象:プログラミング未経験〜</span></p>
   </header>
 
   <div class="route">
@@ -229,7 +229,7 @@ html.js .reveal.in{opacity:1; transform:none}
       <div>
         <span class="pstep">基礎編・公開中</span>
         <h2>レッスン 1–9 <span class="psub">文法の土台</span></h2>
-        <p class="ptag">変数から関数まで、1画面1トピックで。最後は反応時間データの平均・SD・外れ値カウントを体験して修了します。</p>
+        <p class="ptag">変数から関数まで、1画面1トピックで。Float64の有限精度・underflow・丸め前判定も導入し、最後は反応時間データの平均・SD・外れ値カウントを体験して修了します。</p>
       </div>
       <div class="base-card">
         <ol class="base-list">
@@ -305,9 +305,9 @@ html.js .reveal.in{opacity:1; transform:none}
         </article>
         <article class="lesson">
           <span class="lnum">L16</span>
-          <h3>縦横変換と一括読み込み</h3>
-          <p>SPSS 的な横持ちと解析用の縦持ちを行き来し、30人分のログファイルを一気に読んで連結。研究室の定番作業を自動化します。</p>
-          <div class="chips"><code>stack</code><code>unstack</code><code>vcat</code></div>
+          <h3>データの整形・保存・再利用</h3>
+          <p>横持ち／縦持ちの変換と一括連結から、CSV・Arrow・JLD2・Serializationの使い分けへ。RDSとの違い、model objectだけに依存しない保存、round trip検査まで扱います。</p>
+          <div class="chips"><code>stack / vcat</code><code>CSV / Arrow</code><code>JLD2</code><code>round trip</code></div>
         </article>
       </div>
     </section>
@@ -316,9 +316,9 @@ html.js .reveal.in{opacity:1; transform:none}
     <section class="phase reveal" style="--pc:#389826; --ps:#EAF6E6;">
       <span class="node" aria-hidden="true"></span>
       <div>
-        <span class="pstep">STEP 2 / 統計・可視化編</span>
-        <h2>レッスン 17–20 <span class="psub">数字と図で、結果を語る</span></h2>
-        <p class="ptag">記述統計の深掘りから検定・作図まで。Rとの対応も併記して、研究室の共通言語につなげます。</p>
+        <span class="pstep">STEP 2 / 統計・可視化編・公開中</span>
+        <h2>レッスン 17–19 <span class="psub">経験分布から確率分布へ</span></h2>
+        <p class="ptag">手元のデータを要約・可視化し、その背後にある生成過程をJuliaの分布オブジェクトとして表します。</p>
       </div>
       <div class="lessons">
         <article class="lesson">
@@ -329,142 +329,194 @@ html.js .reveal.in{opacity:1; transform:none}
         </article>
         <article class="lesson">
           <span class="lnum">L18</span>
-          <h3>検定入門</h3>
-          <p>HypothesisTests.jl による t 検定と p 値の取り出し。R の t.test に相当します。</p>
-          <div class="chips"><code>OneSampleTTest</code><code>pvalue</code></div>
-        </article>
-        <article class="lesson">
-          <span class="lnum">L19</span>
           <h3>探索の可視化(Plots・StatsPlots)</h3>
-          <p>ヒストグラム・箱ひげ・散布図を最小の学習コストで。@df でデータフレームの列名からそのまま描けます。</p>
+          <p>ヒストグラムと箱ひげ図を最小の学習コストで。@df でデータフレームの列名からそのまま描けます。</p>
           <div class="chips"><code>histogram</code><code>boxplot</code><code>@df</code></div>
         </article>
         <article class="lesson">
-          <span class="lnum">L20</span>
-          <h3>論文品質の可視化(Makie)</h3>
-          <p>CairoMakie で出版クオリティの図へ。AlgebraOfGraphics なら ggplot2 風の文法で、エラーバー付きの条件比較図も宣言的に組めます。</p>
-          <div class="chips"><code>CairoMakie</code><code>AlgebraOfGraphics</code></div>
+          <span class="lnum">L19</span>
+          <h3>確率変数と確率分布</h3>
+          <p><code>Normal(500, 50)</code> のように分布を値として作り、確率と乱数を共通APIで操作。極端な尤度・裾確率を <code>logpdf</code>・<code>ccdf</code>・log-sum-expで安定に計算し、数値上の0とモデル上の0を区別します。</p>
+          <div class="chips"><code>Distributions.jl</code><code>logpdf / ccdf</code><code>log1p</code><code>rand(rng, d, n)</code></div>
         </article>
       </div>
     </section>
 
-    <!-- STEP 3 シミュレーション・研究実践編 -->
+    <!-- STEP 3 確率・推論・シミュレーション編 -->
     <section class="phase reveal" style="--pc:#9558B2; --ps:#F3ECF7;">
       <span class="node" aria-hidden="true"></span>
       <div>
-        <span class="pstep">STEP 3 / シミュレーション基礎編</span>
-        <h2>レッスン 21–22 <span class="psub">乱数で統計を「体験」する土台</span></h2>
-        <p class="ptag">検定力分析を自作して、シミュレーションという道具を手に入れます。この先の統計レッスンすべてを貫く縦糸です。</p>
+        <span class="pstep">STEP 3 / 確率・推論・シミュレーション編・公開中</span>
+        <h2>レッスン 20–25 <span class="psub">抽出、標本分布、推定、検定</span></h2>
+        <p class="ptag">分布から乱数を生成し、標本統計量の揺れを可視化して、区間推定・仮説検定・モンテカルロへ進みます。</p>
       </div>
       <div class="lessons">
         <article class="lesson">
+          <span class="lnum">L20</span>
+          <h3>乱数・標本抽出・再現性</h3>
+          <p><code>Xoshiro(2026)</code> を明示的に渡し、分布からの生成、母集団からの抽出、条件への無作為割付を区別。割付表とManifestまで含めて再現性を設計します。</p>
+          <div class="chips"><code>Xoshiro</code><code>rand(rng, d, n)</code><code>shuffle(rng, x)</code></div>
+        </article>
+        <article class="lesson">
           <span class="lnum">L21</span>
-          <h3>乱数と再現性</h3>
-          <p>刺激リストのランダム化、カウンターバランス、シードの固定。実験心理の実務に直結する回です。</p>
-          <div class="chips"><code>rand</code><code>shuffle</code><code>Random.seed!</code></div>
+          <h3>標本分布</h3>
+          <p>標本平均を1万個生成して、生データの分布と統計量の分布を分離。nを増やすとSEが <code>1/sqrt(n)</code> で縮む様子と、依存を無視した反例を確かめます。</p>
+          <div class="chips"><code>sample_means</code><code>std</code><code>sqrt(n)</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L22</span>
+          <h3>推定と不確かさ</h3>
+          <p>推定対象・推定量・推定値、SD・SE・MCSEを分け、t分布による95%信頼区間の被覆率とブートストラップをJuliaで自作します。</p>
+          <div class="chips"><code>TDist</code><code>quantile</code><code>bootstrap</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L23</span>
+          <h3>仮説検定入門</h3>
+          <p>「差がない世界」からp値を読み、独立／対応、平均／確率的優越を分離。Mann–Whitney、符号付順位、Kruskal–Wallis、置換検定をexact・効果量・Holm補正まで扱います。</p>
+          <div class="chips"><code>MannWhitneyUTest</code><code>SignedRankTest</code><code>KruskalWallisTest</code><code>PermutationTest</code></div>
         </article>
         <article class="lesson featured">
           <span class="badge">Juliaの真骨頂</span>
-          <h3>L22 モンテカルロ・シミュレーション</h3>
+          <h3>L24 モンテカルロ・シミュレーション</h3>
           <p>「n=20・効果量 d=0.5 の実験、何%有意になる?」——1万回の仮想実験を数秒で回して、検定力分析を自作します。ブートストラップや順列検定への入り口にも。</p>
           <div class="code">
             <div class="codehead"><i class="cd r"></i><i class="cd g"></i><i class="cd p"></i><span>Julia</span></div>
-            <pre><span class="kw">using</span> Random, HypothesisTests
+            <pre><span class="kw">using</span> Random, Distributions, HypothesisTests
 
-<span class="kw">function</span> power_sim(n, d; nsim = <span class="num">10_000</span>)  <span class="com"># nsim回の仮想実験</span>
+<span class="kw">function</span> power_sim(rng, n, d; nsim = <span class="num">10_000</span>)
     hits = <span class="num">0</span>
     <span class="kw">for</span> i <span class="kw">in</span> <span class="num">1</span>:nsim
-        a = randn(n)                 <span class="com"># 統制群</span>
-        b = randn(n) .+ d            <span class="com"># 実験群(効果量 d)</span>
+        a = rand(rng, Normal(), n)
+        b = rand(rng, Normal(d, <span class="num">1</span>), n)
         <span class="kw">if</span> pvalue(EqualVarianceTTest(a, b)) &lt; <span class="num">0.05</span>
             hits += <span class="num">1</span>
         <span class="kw">end</span>
     <span class="kw">end</span>
-    <span class="kw">return</span> <span class="num">100</span> * hits / nsim
+    power = hits / nsim
+    mcse = sqrt(power * (<span class="num">1</span> - power) / nsim)
+    <span class="kw">return</span> (; power, mcse)
 <span class="kw">end</span>
 
-Random.seed!(<span class="num">2026</span>)                   <span class="com"># 再現性の確保</span>
-println(<span class="str">"検定力: $(power_sim(20, 0.5)) %"</span>)</pre>
-            <div class="result"><span class="rl">▶ 実行結果(Julia 1.12)</span><span class="rv">検定力: 32.93 %</span></div>
+result = power_sim(Xoshiro(<span class="num">2026</span>), <span class="num">20</span>, <span class="num">0.5</span>)
+println(round(<span class="num">100</span> * result.power, digits = <span class="num">2</span>))
+println(round(<span class="num">100</span> * result.mcse, digits = <span class="num">2</span>))</pre>
+            <div class="result"><span class="rl">▶ 実行結果(Julia 1.12.6)</span><span class="rv">32.93% / MCSE 0.47pt</span></div>
           </div>
-          <p class="fnote">※ L11 のドット記法 <code>.+</code> がここで効いてきます。関数にしておけば n や d を変えて何度でも呼べて、ファイルでもノートブックでもそのまま動きます。この「生成→検定→集計」の型を、STEP 4 以降のすべてのモデルに広げていきます。乱数の結果はJuliaのバージョンによりわずかに変わります。</p>
+          <p class="fnote">※ 分布オブジェクト、明示RNG、NamedTupleを組み合わせた「生成→推定→不確かさ」の型です。種だけでなくJulia版・Manifest・生成済みデータも保存し、具体的な乱数列ではなく必要な統計的性質を検証します。</p>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L25</span>
+          <h3>不確かさを論文品質で可視化</h3>
+          <p>生データ・点推定・95%信頼区間を同じ図に重ねます。棒＋SE、軸切断、過度な平滑化、点の重なりが情報を隠す反例も点検します。</p>
+          <div class="chips"><code>CairoMakie</code><code>rangebars!</code><code>95% CI</code></div>
         </article>
       </div>
     </section>
 
-    <!-- STEP 4 統計モデリング編 -->
+    <!-- STEP 4 関連と一般線形モデル編 -->
     <section class="phase reveal" style="--pc:#4063D8; --ps:#EBF0FB;">
       <span class="node" aria-hidden="true"></span>
       <div>
-        <span class="pstep">STEP 4 / 統計モデリング編</span>
-        <h2>レッスン 23–26 <span class="psub">生成 → 推定 → 復元、の一本線</span></h2>
+        <span class="pstep">STEP 4 / 関連と一般線形モデル編・公開中</span>
+        <h2>レッスン 26–32 <span class="psub">尺度に応じた関連から多カテゴリGLMへ</span></h2>
         <p class="ptag">どの回も「真の値からデータを生成し、モデルで推定し、どこまで復元できたかを確かめる」流れ。統計の意味を、公式ではなく体験から理解します。</p>
       </div>
       <div class="lessons">
         <article class="lesson">
-          <span class="lnum">L23</span>
-          <h3>相関のシミュレーション</h3>
-          <p>「n=20 の r はどれだけ揺れる?」——相関係数の標本分布を1万回の仮想実験で描き、r の信用度を体感します。</p>
-          <div class="chips"><code>cor</code><code>MvNormal</code></div>
-        </article>
-        <article class="lesson">
-          <span class="lnum">L24</span>
-          <h3>単回帰</h3>
-          <p>真の傾き 0.5 のデータを生成し、GLM.jl で推定。切片・傾き・残差の意味を、パラメータ復元で確かめます。</p>
-          <div class="chips"><code>@formula</code><code>lm</code><code>coeftable</code></div>
-        </article>
-        <article class="lesson">
-          <span class="lnum">L25</span>
-          <h3>重回帰と交絡</h3>
-          <p>第3の変数 z を仕込んだデータで、z を入れる/入れないで係数がどう変わるかを目撃。「統制する」の意味がわかる回です。</p>
-          <div class="chips"><code>y ~ x + z</code><code>r2</code></div>
-        </article>
-        <article class="lesson">
           <span class="lnum">L26</span>
-          <h3>ロジスティック回帰</h3>
-          <p>正答/誤答(0/1)データの世界へ。オッズ比の読み方と、確率で生まれるデータのシミュレーション。GLMM への助走です。</p>
-          <div class="chips"><code>glm</code><code>Binomial()</code><code>LogitLink()</code></div>
+          <h3>相関係数の標本変動</h3>
+          <p>母相関・標本相関・標本相関の標本分布を区別し、Fisher区間を計算。非線形、外れ値、範囲制限でPearson相関が誤誘導する反例も検証します。</p>
+          <div class="chips"><code>cor</code><code>MvNormal</code><code>atanh</code></div>
         </article>
-      </div>
-    </section>
-
-    <!-- STEP 5 発展編 -->
-    <section class="phase reveal" style="--pc:#6D3E86; --ps:#F3ECF7;">
-      <span class="node" aria-hidden="true"></span>
-      <div>
-        <span class="pstep">STEP 5 / 発展編:マルチレベルと潜在変数</span>
-        <h2>レッスン 27–29 <span class="psub">研究の現場レベルへ</span></h2>
-        <p class="ptag">反復測定と測定誤差——心理データの2つの現実に、モデルで正面から向き合います。</p>
-      </div>
-      <div class="lessons">
         <article class="lesson">
           <span class="lnum">L27</span>
-          <h3>GLMM(混合モデル)</h3>
-          <p>被験者と項目のランダム効果を入れて、試行レベルのデータをそのまま分析。MixedModels.jl は R の lme4 相当をより高速に。正答データはロジスティック混合モデルで。</p>
-          <div class="chips"><code>(1|subj)</code><code>fit(MixedModel, …)</code><code>Bernoulli()</code></div>
+          <h3>尺度に応じた関連指標</h3>
+          <p>連続・2値・順序データを分け、相関からクロス集計へ接続。2×2／R×Cのχ²・Fisher、効果量・残差、対応ありMcNemarを読み分け、Simpson反転を層別MH・調整済みロジスティック回帰・確率の標準化まで追跡します。</p>
+          <div class="chips"><code>ChisqTest</code><code>FisherExactTest</code><code>Cramér V</code><code>McNemar</code><code>MH / 標準化</code></div>
         </article>
         <article class="lesson">
           <span class="lnum">L28</span>
-          <h3>潜在変数モデリング</h3>
-          <p>測定誤差が相関を薄める様子をシミュレーションで確認してから、因子分析・SEM へ。本格的な SEM は R の lavaan が依然定番なので、RCall.jl で連携する現実解もあわせて紹介します。</p>
-          <div class="chips"><code>MultivariateStats.jl</code><code>StructuralEquationModels.jl</code><code>RCall</code></div>
+          <h3>t検定・ANOVA・回帰を一つのモデルで見る</h3>
+          <p>独立2群の平均差を0/1回帰へ、一元配置ANOVAをカテゴリ回帰へ接続。t²=F、効果量、within／betweenで異なる誤差構造まで統合します。</p>
+          <div class="chips"><code>y ~ group</code><code>t² = F</code><code>lm</code></div>
         </article>
         <article class="lesson">
-          <span class="badge">卒業制作</span>
-          <h3>L29 デザインの検定力設計</h3>
-          <p>自分の実験デザイン(被験者数 × 試行数 × 効果量)の検定力を、GLMM のシミュレーションで見積もる統合課題。解析的な公式が存在しない世界こそ、Julia の速度が効きます。</p>
-          <div class="chips"><code>MixedModels.jl</code><code>MixedModelsSim.jl</code><code>parametricbootstrap</code></div>
+          <span class="lnum">L29</span>
+          <h3>重回帰・ANCOVA・モデル比較</h3>
+          <p>変数をブロック投入し、参照水準と計画コントラストを明示。ネストモデルのF比較、交互作用、調整済み下位検定まで扱います。</p>
+          <div class="chips"><code>DummyCoding</code><code>ftest</code><code>HypothesisCoding</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L30</span>
+          <h3>回帰診断とVIF</h3>
+          <p>正規性・非線形性・分散不均一・依存性を分離し、VIF・条件数・QR対正規方程式・完全ランク落ちを診断します。リッジ、Lasso、Elastic Netを情報漏洩を防ぐ交差検証へ接続し、選択安定性と選択後推論を予測性能から分けます。</p>
+          <div class="chips"><code>rank / SVD</code><code>ridge</code><code>Lasso</code><code>Elastic Net</code><code>post-selection</code><code>nested CV</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L31</span>
+          <h3>ロジスティック回帰</h3>
+          <p>固定効果だけの二項ロジットGLMとして、Bernoulli個票とBinomial集計、logit係数、条件付きOR、確率差を区別します。GLMMとの境界、分離、外部較正、ベースレート、誤分類コスト、意思決定閾値までを監査します。</p>
+          <div class="chips"><code>GLM ≠ GLMM</code><code>logit</code><code>calibration</code><code>decision threshold</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L32</span>
+          <h3>順序・多項ロジスティック回帰</h3>
+          <p>発展概説として、比例オッズ型の累積logitと名義尺度のsoftmaxを分離。実行環境を変更せず、応答level・参照カテゴリ、比例オッズ／IIA、確率予測、Juliaで実装を止める境界を出力読解から学びます。</p>
+          <div class="chips"><code>発展概説</code><code>no setup</code><code>reference level</code><code>model limits</code></div>
         </article>
       </div>
     </section>
 
-    <!-- ブリッジ:Rとの連携 -->
+    <!-- STEP 5 測定・依存構造・研究計画編 -->
+    <section class="phase reveal" style="--pc:#6D3E86; --ps:#F3ECF7;">
+      <span class="node" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">STEP 5 / 測定・依存構造・研究計画編・公開中</span>
+        <h2>レッスン 33–37 <span class="psub">測定、依存構造、研究計画</span></h2>
+        <p class="ptag">各章を「必須概念→出力読解→任意実装」の3層で進めます。初回はコードを実行しなくても修了でき、研究上必要になった章だけ実装へ戻れます。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson">
+          <span class="lnum">L33</span>
+          <h3>古典的テスト理論と項目分析</h3>
+          <p>通過率と修正済み項目–合計相関から、parallel／τ等価／congeneric、α・KR-20・ω・κを整理。一般化可能性理論とIRTへ測定モデルを拡張します。</p>
+          <div class="chips"><code>概念必須</code><code>実装任意</code><code>KR-20</code><code>ω / κ</code><code>IRT</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L34</span>
+          <h3>収束的・弁別的妥当性</h3>
+          <p>複数trait×複数methodのMTMM相関行列を生成し、収束・弁別・method効果をパターンとして検証。共有項目、希薄化修正、外的基準の反例も扱います。</p>
+          <div class="chips"><code>概念必須</code><code>実装任意</code><code>MTMM</code><code>Fisher CI</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L35</span>
+          <h3>within／betweenデザインと混合効果モデル</h3>
+          <p>擬似反復を反例に、Gaussian／Bernoulliのランダム切片・傾き、交差・入れ子構造を整理。パネルの個人別時間傾きとlag残差、GLMMの条件付き／周辺確率、Brier score・log loss、配備単位に対応したgrouped検証まで接続します。</p>
+          <div class="chips"><code>formula必須</code><code>fit任意</code><code>(1+cond|subj)</code><code>panel／lag</code><code>conditional／marginal</code><code>grouped CV</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">L36</span>
+          <h3>測定誤差と希薄化</h3>
+          <p>古典的誤差と差別的誤差、結果／説明変数の非対称性、Berkson誤差、誤分類を生成モデルで比較。重回帰の係数汚染と信頼性感度分析から補正法を監査します。</p>
+          <div class="chips"><code>方向理解必須</code><code>simulation任意</code><code>regression dilution</code><code>Berkson</code><code>SIMEX</code></div>
+        </article>
+        <article class="lesson">
+          <span class="badge">卒業制作</span>
+          <span class="lnum">L37</span>
+          <h3>デザインの検定力設計</h3>
+          <p>参加者×項目のランダム傾き、測定信頼性、欠測を生成し、第I種過誤・検定力・MCSE・Wilson区間・singular率を同じ解析パイプラインで監査する卒業制作です。</p>
+          <div class="chips"><code>設計原理必須</code><code>simulation任意</code><code>refit!</code><code>MCSE</code><code>感度分析</code></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ブリッジ:R・Stanとの連携 -->
     <section class="phase reveal" style="--pc:#276DC3; --ps:#E9F0FA;">
       <span class="node" aria-hidden="true"></span>
       <div>
-        <span class="pstep">ブリッジ / R との連携</span>
-        <h2>R と Julia、置き換えずに分業する <span class="psub">移行期の研究室のための現実解</span></h2>
-        <p class="ptag">どのレッスンの後からでも合流できる独立トラック。「全部 Julia に」ではなく、得意分野で使い分けます。</p>
+        <span class="pstep">ブリッジ / R・Stanとの連携</span>
+        <h2>Juliaと外部の統計環境を、置き換えずに分業する <span class="psub">必要なengineだけ橋を架ける</span></h2>
+        <p class="ptag">どのレッスンの後からでも合流できる任意トラック。外部環境を本編の前提にせず、data・code・結果・versionを一組で受け渡します。</p>
       </div>
       <div class="lessons">
         <article class="lesson">
@@ -482,8 +534,14 @@ println(<span class="str">"検定力: $(power_sim(20, 0.5)) %"</span>)</pre>
         <article class="lesson">
           <span class="lnum">データ形式</span>
           <h3>ファイルと構文の橋渡し</h3>
-          <p>.RData・.rds は RData.jl で直接読めます。共通フォーマットは Arrow か CSV。dplyr・ggplot2 の構文を Julia で再現する Tidier.jl なら、頭の切り替えコストは最小です。</p>
-          <div class="chips"><code>RData.jl</code><code>Arrow.jl</code><code>Tidier.jl</code></div>
+          <p>RData.jlが文書化するのは.rda／.RDataの読込です。RDSそのものはRCallからsaveRDS／readRDSを使い、言語中立の表交換にはArrowまたはCSVを使います。</p>
+          <div class="chips"><code>RData.jl: .RData読込</code><code>RCall: RDS</code><code>Arrow / CSV</code></div>
+        </article>
+        <article class="lesson">
+          <span class="lnum">Julia → Stan</span>
+          <h3>StanSample.jl／CmdStan（任意発展）</h3>
+          <p>外部CmdStanとC++ toolchainを要するため本編では実行しません。.stan、入力data、seed、chain設定、生のdraws CSV、R̂・ESS・divergence、engine versionを一組で保存するbridgeとして扱います。</p>
+          <div class="chips"><code>.stan</code><code>draws CSV</code><code>R̂ / ESS</code><code>optional</code></div>
         </article>
       </div>
     </section>
@@ -501,8 +559,16 @@ println(<span class="str">"検定力: $(power_sim(20, 0.5)) %"</span>)</pre>
           <p>RStudioに近いのはどれ? <code>VS Code</code>・<code>IJulia</code>・Pluto の使い分け。</p>
         </div>
         <div class="sq">
+          <h3>再現可能な研究プロジェクト(公開中)</h3>
+          <p><code>Project／Manifest</code>、<code>@__DIR__</code>、data dictionary＋schema、checksum、run metadataを一つのclean runへ結びます。<a href="./templates/reproducible-study-template.tar" download>実行可能template (.tar)</a></p>
+        </div>
+        <div class="sq">
+          <h3>Gitで研究履歴と公開境界を管理する(公開中)</h3>
+          <p><code>status／diff／commit</code>からbranch・annotated tagへ進み、公開合成例とprivate rawを分離します。ignoreは履歴削除ではなく、Git LFSも匿名化ではないという境界を、実行可能templateで確認します。</p>
+        </div>
+        <div class="sq">
           <h3>エラーメッセージの読み方</h3>
-          <p>MethodError を恐れない。基礎編レッスン3の続きとして。</p>
+          <p>MethodError を恐れない。基礎編「データの型」の続きとして。</p>
         </div>
         <div class="sq">
           <h3>文字列処理</h3>

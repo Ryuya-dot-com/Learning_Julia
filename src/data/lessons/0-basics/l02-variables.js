@@ -1,7 +1,7 @@
 // レッスン: 変数と計算 — データに名前をつけて計算する
 // num は書かない（セクション順+ファイル名順から自動採番される）
 export default {
-  id: "l2",
+  id: "variables-calculation",
   title: "変数と計算",
   tag: "データに名前をつけて計算する",
   pages: [

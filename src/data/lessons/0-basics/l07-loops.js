@@ -1,7 +1,7 @@
 // レッスン: くり返し — forループで自動化する
 // num は書かない（セクション順+ファイル名順から自動採番される）
 export default {
-  id: "l7",
+  id: "loops",
   title: "くり返し",
   tag: "forループで自動化する",
   pages: [

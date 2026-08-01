@@ -7,4 +7,8 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: "/Learning_Julia/",
+  // Playwrightの e2e/*.spec.js をVitestが誤収集しないよう、契約テストの境界を明示する。
+  test: {
+    include: ["src/**/*.test.js"],
+  },
 });

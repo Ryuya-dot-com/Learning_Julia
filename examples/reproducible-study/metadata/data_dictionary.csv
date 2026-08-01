@@ -1,0 +1,6 @@
+variable,meaning,unit,role,missing_rule
+participant_id,匿名参加者ID,none,key,not allowed
+trial,参加者内試行番号,count,key,not allowed
+condition,実験条件,category,predictor,not allowed
+rt_ms,刺激提示から反応までの時間,ms,outcome,allowed when correct is false
+correct,正答,boolean,quality,not allowed

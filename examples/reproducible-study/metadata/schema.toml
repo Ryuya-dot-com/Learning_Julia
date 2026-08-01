@@ -1,0 +1,14 @@
+[trials]
+columns = ["participant_id", "trial", "condition", "rt_ms", "correct"]
+allowed_condition = ["control", "treatment"]
+missing_strings = ["", "NA"]
+primary_key = ["participant_id", "trial"]
+rt_ms_min = 100.0
+rt_ms_max = 3000.0
+
+[trials.types]
+participant_id = "String"
+trial = "Int"
+condition = "String"
+rt_ms = "Float64"
+correct = "Bool"

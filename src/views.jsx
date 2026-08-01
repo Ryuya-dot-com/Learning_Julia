@@ -3,7 +3,6 @@ import { C, MONO } from "./theme.js";
 import { isCodey } from "./highlight.js";
 import { seededOrder } from "./shuffle.js";
 import { T, CodeBlock, TriDots, Btn, ResetButton, Feedback } from "./components.jsx";
-import { LESSONS } from "./data/lessons/index.js";
 import { SECTIONS } from "./data/sections.js";
 import { CHEATS } from "./data/cheats.js";
 
@@ -349,6 +348,16 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
               </p>
             ))}
             {cur.p.code && <CodeBlock code={cur.p.code} output={cur.p.out} error={cur.p.err} lang={cur.p.lang} />}
+            {cur.p.download && (
+              <a
+                href={import.meta.env.BASE_URL + cur.p.download.path}
+                download
+                className="mb-4 inline-flex min-h-11 items-center rounded-full px-5 py-2.5 text-sm font-bold transition-opacity hover:opacity-85"
+                style={{ background: C.purple, color: "#FFFFFF" }}
+              >
+                ↓ {cur.p.download.label}
+              </a>
+            )}
             {(cur.p.a || []).map((s, i) => (
               <p key={i} className="mb-3 text-sm leading-7" style={{ color: C.body }}>
                 <T>{s}</T>
@@ -472,12 +481,14 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
    ホーム画面
    ============================================================ */
 
-function Home({ progress, onOpen, onCheat, onReset }) {
-  const totalEx = LESSONS.reduce((s, l) => s + l.ex.length, 0);
-  const doneEx = LESSONS.reduce((s, l) => s + (progress.done[l.id] || []).length, 0);
-  const doneLessons = LESSONS.filter((l) => (progress.done[l.id] || []).length === l.ex.length).length;
-  const allDone = doneLessons === LESSONS.length;
-  const firstIncomplete = LESSONS.find((l) => (progress.done[l.id] || []).length < l.ex.length);
+function Home({ lessons, progress, onOpen, onCheat, onReset }) {
+  const totalEx = lessons.reduce((s, l) => s + l.exCount, 0);
+  const doneEx = lessons.reduce((s, l) => s + (progress.done[l.id] || []).length, 0);
+  const doneLessons = lessons.filter((l) => (progress.done[l.id] || []).length === l.exCount).length;
+  const numberedLessons = lessons.filter((l) => l.num != null).length;
+  const supplementalLessons = lessons.length - numberedLessons;
+  const allDone = doneLessons === lessons.length;
+  const firstIncomplete = lessons.find((l) => (progress.done[l.id] || []).length < l.exCount);
   const pct = Math.round((doneEx / totalEx) * 100);
   const dotsFilled = allDone ? 3 : Math.floor((doneEx / totalEx) * 3);
 
@@ -498,7 +509,8 @@ function Home({ progress, onOpen, onCheat, onReset }) {
         はじめてのJulia
       </h1>
       <p className="mb-6 text-sm leading-6" style={{ color: C.sub }}>
-        ゼロから学ぶ、研究のためのプログラミング。全{LESSONS.length}レッスンで、データ解析の入り口まで案内します。
+        ゼロから学ぶ、研究のためのプログラミング。番号付き全{numberedLessons}レッスン
+        {supplementalLessons > 0 && `＋補講${supplementalLessons}本`}で、データ解析の入り口まで案内します。
       </p>
 
       <div className="mb-6 rounded-2xl bg-white p-5" style={{ border: "1px solid " + C.line }}>
@@ -548,7 +560,7 @@ function Home({ progress, onOpen, onCheat, onReset }) {
       <div className="flex flex-col gap-7">
         {SECTIONS.map((sec) => {
           // レッスンが0本のセクションは表示しない(仕様4.3。移行直後は基礎編のみが並ぶ)
-          const ls = LESSONS.filter((l) => l.section === sec.dir);
+          const ls = lessons.filter((l) => l.section === sec.dir);
           if (ls.length === 0) return null;
           return (
             <div key={sec.dir}>
@@ -578,7 +590,7 @@ function Home({ progress, onOpen, onCheat, onReset }) {
               <div className="flex flex-col gap-3">
                 {ls.map((l) => {
                   const got = (progress.done[l.id] || []).length;
-                  const all = got === l.ex.length;
+                  const all = got === l.exCount;
                   // 番号なしトラックは mark+セクション内連番(例: R1, 補1)を表示する(仕様4.4b)
                   const badge = l.num != null ? String(l.num).padStart(2, "0") : (sec.mark || "") + l.numInSection;
                   return (
@@ -610,7 +622,7 @@ function Home({ progress, onOpen, onCheat, onReset }) {
                         className="shrink-0 text-xs font-bold"
                         style={{ color: all ? C.greenText : got > 0 ? C.purpleDeep : C.faint, fontFamily: MONO }}
                       >
-                        {all ? "修了" : got + " / " + l.ex.length}
+                        {all ? "修了" : got + " / " + l.exCount}
                       </span>
                     </button>
                   );
@@ -643,7 +655,7 @@ function Home({ progress, onOpen, onCheat, onReset }) {
    lg以上の画面幅でのみ表示する。モバイルはホーム画面が目次を兼ねる
    ============================================================ */
 
-function Sidebar({ progress, currentId, viewName, onOpen, onCheat, onHome }) {
+function Sidebar({ lessons, progress, currentId, viewName, onOpen, onCheat, onHome }) {
   return (
     <nav
       aria-label="レッスンの目次"
@@ -668,7 +680,7 @@ function Sidebar({ progress, currentId, viewName, onOpen, onCheat, onHome }) {
 
       <div className="flex flex-col gap-4 pb-4">
         {SECTIONS.map((sec) => {
-          const ls = LESSONS.filter((l) => l.section === sec.dir);
+          const ls = lessons.filter((l) => l.section === sec.dir);
           if (ls.length === 0) return null;
           return (
             <div key={sec.dir}>
@@ -685,7 +697,7 @@ function Sidebar({ progress, currentId, viewName, onOpen, onCheat, onHome }) {
               <div className="flex flex-col">
                 {ls.map((l) => {
                   const got = (progress.done[l.id] || []).length;
-                  const all = got === l.ex.length;
+                  const all = got === l.exCount;
                   const current = viewName === "lesson" && l.id === currentId;
                   const badge = l.num != null ? String(l.num).padStart(2, "0") : (sec.mark || "") + l.numInSection;
                   return (

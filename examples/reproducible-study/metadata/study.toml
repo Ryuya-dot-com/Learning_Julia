@@ -1,0 +1,4 @@
+[study]
+id = "synthetic-rt-demo"
+input_path = "data/example/trials_synthetic.csv"
+input_classification = "synthetic-public"

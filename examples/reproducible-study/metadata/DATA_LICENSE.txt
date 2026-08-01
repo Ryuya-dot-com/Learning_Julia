@@ -1,0 +1,6 @@
+The data in data/example/trials_synthetic.csv are synthetic and dedicated to the public
+domain under CC0 1.0 Universal:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+No row represents a real participant. This dedication does not apply to data
+that a user substitutes into the template.
