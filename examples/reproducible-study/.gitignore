@@ -1,0 +1,15 @@
+# 機微なlocal入力。READMEだけは配置規約として追跡する。
+data/raw/*
+!data/raw/README.md
+
+# 再生成できる成果物と実行記録。
+data/derived/
+output/
+metadata/runs/
+
+# local設定・秘密情報・Julia固有の一時保存。
+.env
+.env.*
+!.env.example
+*.jls
+.DS_Store

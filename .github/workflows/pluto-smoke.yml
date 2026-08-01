@@ -1,0 +1,43 @@
+name: Pluto notebook smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 毎週月曜03:17 JST。時刻をずらして共有runnerの混雑を避ける。
+    - cron: '17 18 * * 0'
+  push:
+    branches: [main]
+    paths:
+      - 'public/notebooks/**'
+      - 'public/data/**'
+      - 'scripts/nb-exec-check.jl'
+      - 'scripts/run-notebook-smoke.jl'
+      - 'scripts/setup-validation-env.jl'
+      - 'validation/**'
+      - '.github/workflows/pluto-smoke.yml'
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: pluto-notebook-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: '1.12'
+          project: validation
+      - uses: julia-actions/cache@v3
+        with:
+          cache-name: julia-pluto-${{ hashFiles('validation/Project.toml') }}
+      - name: Instantiate validation environment
+        run: julia --project=validation scripts/setup-validation-env.jl
+      - name: Execute public notebooks in initial state
+        run: julia --project=validation scripts/run-notebook-smoke.jl

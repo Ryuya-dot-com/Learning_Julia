@@ -1,0 +1,7 @@
+participant_id,trial,condition,rt_ms,correct
+P01,1,control,500.0,true
+P01,2,treatment,540.0,true
+P02,1,control,520.0,true
+P02,2,treatment,,false
+P03,1,control,510.0,true
+P03,2,treatment,560.0,true

@@ -1,7 +1,7 @@
 // レッスン: 関数 — 処理に名前をつける
 // num は書かない（セクション順+ファイル名順から自動採番される）
 export default {
-  id: "l8",
+  id: "functions",
   title: "関数",
   tag: "処理に名前をつける",
   pages: [

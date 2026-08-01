@@ -1,0 +1,4 @@
+# JavaScript・Julia・Notebook埋め込みTOMLをOS間で同じ改行に保ち、
+# core.autocrlf による警告と不要な全行差分を防ぐ。
+* text=auto eol=lf
+public/templates/*.tar -text

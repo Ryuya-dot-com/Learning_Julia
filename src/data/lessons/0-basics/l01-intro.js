@@ -1,7 +1,7 @@
 // レッスン: Juliaってなに? — プログラミングの世界へようこそ
 // num は書かない（セクション順+ファイル名順から自動採番される）
 export default {
-  id: "l1",
+  id: "julia-introduction",
   title: "Juliaってなに?",
   tag: "プログラミングの世界へようこそ",
   pages: [

@@ -1,6 +1,10 @@
 # 依存とビルド成果物
 node_modules/
 dist/
+.e2e-dist/
+playwright-report/
+test-results/
+.vite-e2e.*.log
 
 # 設計文書・監査レポート(ローカル管理。Dropboxがバックアップを担う)
 /docs/
