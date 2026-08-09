@@ -89,6 +89,8 @@ research用warning閾値は、条件数10,000、相関の絶対値0.995、相対
 
 閾値決定用とはseedを分けたholdout 9条件・各160反復では、Optimが受理した1,436試行中55件が合成真値から破局的に逸脱し、data-only warningは55件すべてを検出しました。20%切断条件のwarningは1/480で、その1件も破局的逸脱でした。90%切断では93/480を警告しており、警告は「推定が誤り」という断定ではなく「通常のWald報告へ進まない」という停止信号です。
 
+上記の件数はJulia 1.12.5で記録した再現結果です。尤度境界に近い最適化の受理判定はJuliaのpatch release間で数件変わり得るため、CIは件数の完全一致ではなく、難条件の破局的逸脱率が2〜8%に留まること、発生した破局的逸脱をwarningがすべて捕捉すること、安定条件のwarning率が1%以下であることを検証します。これにより、研究上の安全契約を保ったまま数値環境の微小差を許容します。
+
 ## 2026-08-09 profile likelihood pilot
 
 Optim公式の有界1変数最適化`Brent()`でnuisance parameterをprofileし、`Chisq(1)`のlikelihood-ratio cutoffから95%区間を探索するresearch実装を追加しました。geometry warningがあるfitはprofileを開始せず、探索範囲内で端点を見つけられない場合は`search_limit`として残します。

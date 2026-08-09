@@ -17,6 +17,9 @@ const PROFILE_TRUE_DISTRIBUTION = Normal(520, 85)
 const PROFILE_TRUE_MU, PROFILE_TRUE_SIGMA = params(PROFILE_TRUE_DISTRIBUTION)
 const GEOMETRY_REPETITIONS = 160
 const PROFILE_REPETITIONS = 80
+const MIN_CHALLENGING_CATASTROPHIC_RATE = 0.02
+const MAX_CHALLENGING_CATASTROPHIC_RATE = 0.08
+const MAX_STABLE_WARNING_RATE = 0.01
 
 function catastrophic_recovery(fit)
     abs(mean(fit.distribution) - PROFILE_TRUE_MU) > 5PROFILE_TRUE_SIGMA ||
@@ -180,6 +183,26 @@ function rounded_profile(result)
         for (key, value) in pairs(result))...)
 end
 
+function geometry_gate_summary(results)
+    challenging = filter(result -> result.retained_fraction < 0.8, results)
+    stable = filter(result -> result.retained_fraction == 0.8, results)
+    catastrophic = sum(result -> result.catastrophic, results)
+    catastrophic_warnings = sum(result -> result.catastrophic_warnings, results)
+    challenging_catastrophic = sum(result -> result.catastrophic, challenging)
+    challenging_accepts = sum(result -> result.optimizer_accepts, challenging)
+    stable_warnings = sum(result -> result.warnings, stable)
+    stable_attempts = sum(result -> result.attempts, stable)
+
+    (
+        catastrophic,
+        catastrophic_warnings,
+        challenging_catastrophic_rate = challenging_catastrophic /
+            challenging_accepts,
+        stable_warnings,
+        stable_warning_rate = stable_warnings / stable_attempts,
+    )
+end
+
 geometry_calibration_results = [
     geometry_calibration(sample_size, retained_fraction, 20261000 + 10i + j)
     for (i, sample_size) in enumerate((40, 120, 400))
@@ -206,6 +229,11 @@ println("P2_IDENTIFICATION_GEOMETRY_HOLDOUT")
 foreach(result -> println(rounded_profile(result)), geometry_holdout_results)
 println("P2_PROFILE_PILOT")
 foreach(result -> println(rounded_profile(result)), profile_results)
+println("P2_IDENTIFICATION_GATE_SUMMARY")
+calibration_gate = geometry_gate_summary(geometry_calibration_results)
+holdout_gate = geometry_gate_summary(geometry_holdout_results)
+println((matrix = :calibration, rounded_profile(calibration_gate)...))
+println((matrix = :holdout, rounded_profile(holdout_gate)...))
 
 @testset "P2 data-only identification and profile likelihood" begin
     for results in (geometry_calibration_results, geometry_holdout_results)
@@ -221,18 +249,18 @@ foreach(result -> println(rounded_profile(result)), profile_results)
         )
     end
 
-    @test sum(result -> result.catastrophic, geometry_calibration_results) == 40
-    @test sum(
-        result -> result.catastrophic_warnings,
-        geometry_calibration_results,
-    ) == 40
-    @test sum(result -> result.catastrophic, geometry_holdout_results) == 55
-    @test sum(result -> result.catastrophic_warnings, geometry_holdout_results) == 55
-    stable_holdout = filter(
-        result -> result.retained_fraction == 0.8,
-        geometry_holdout_results,
-    )
-    @test sum(result -> result.warnings, stable_holdout) == 1
+    # Optimizer acceptance at the likelihood boundary can differ by a few fits
+    # across Julia patch releases. Gate the scientific contract rather than an
+    # incidental exact count: the difficult conditions must still reproduce a
+    # meaningful failure rate, every catastrophic fit must be stopped, and the
+    # stable conditions must keep a low warning rate.
+    for gate in (calibration_gate, holdout_gate)
+        @test MIN_CHALLENGING_CATASTROPHIC_RATE <=
+              gate.challenging_catastrophic_rate <=
+              MAX_CHALLENGING_CATASTROPHIC_RATE
+        @test gate.catastrophic_warnings == gate.catastrophic
+        @test gate.stable_warning_rate <= MAX_STABLE_WARNING_RATE
+    end
 
     @test length(profile_results) == 6
     @test all(result -> result.attempts == PROFILE_REPETITIONS, profile_results)
