@@ -1,0 +1,65 @@
+{
+  "schema_id": "learning-julia.p2.learner-usability-observation",
+  "schema_version": "1.0.0",
+  "record_kind": "synthetic_example",
+  "data_classification": "restricted_research_observation",
+  "contains_direct_identifiers": false,
+  "recording": "none",
+  "consent_confirmed": true,
+  "session_code": "round-01-p01",
+  "round_kind": "formative",
+  "prerequisites": {
+    "probability_distribution_lesson": true,
+    "observation_boundary_lesson": true,
+    "selection_count_prior_exposure": "none"
+  },
+  "interaction_modes": ["keyboard_pointer"],
+  "tasks": [
+    {
+      "task_id": "denominator",
+      "completion": "independent",
+      "teach_back_score": 2,
+      "prompt_count": 0,
+      "elapsed_seconds": 95,
+      "issue_codes": []
+    },
+    {
+      "task_id": "missingness",
+      "completion": "minor_prompt",
+      "teach_back_score": 1,
+      "prompt_count": 1,
+      "elapsed_seconds": 180,
+      "issue_codes": ["missingness_wording_unclear"]
+    },
+    {
+      "task_id": "conditional_vs_count",
+      "completion": "independent",
+      "teach_back_score": 2,
+      "prompt_count": 0,
+      "elapsed_seconds": 140,
+      "issue_codes": []
+    },
+    {
+      "task_id": "unresolved_interval",
+      "completion": "major_prompt",
+      "teach_back_score": 1,
+      "prompt_count": 2,
+      "elapsed_seconds": 240,
+      "issue_codes": ["automatic_fallback_assumed"]
+    },
+    {
+      "task_id": "family_scope",
+      "completion": "independent",
+      "teach_back_score": 2,
+      "prompt_count": 0,
+      "elapsed_seconds": null,
+      "issue_codes": []
+    }
+  ],
+  "post_session": {
+    "understood_material_not_person_tested": true,
+    "understood_stop_any_time": true,
+    "confidence_read_results": 3,
+    "fatigue": 2
+  }
+}

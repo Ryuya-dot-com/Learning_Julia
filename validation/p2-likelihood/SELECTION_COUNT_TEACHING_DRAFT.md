@@ -4,6 +4,8 @@
 >
 > この文書は、P2の数値検証を初心者向け補講へ移すための教材ドラフトです。ここに出てくる関数は、安定した公開教材APIではありません。実データへ使う前に、観測方法と仮定を確認してください。
 
+この説明を実際に動かす31セルの[研究用Pluto Notebook](selection-count-teaching-notebook.jl)もあります。観測契約を書き換えると後続結果が更新されますが、公開Notebookや安定APIではありません。さらに[研究用Web UI preview](WEB_UI_PREVIEW_DESIGN.md)で、同じ停止理由を入力表・結果表・誤答別feedbackとして試作しています。
+
 ## この補講の前提
 
 先に次の内容を学んでいることを想定します。
@@ -218,7 +220,81 @@ profile likelihoodは、`mu`をある値へ固定するたびに、残りの`sig
 
 > 固定された有限区間で正しくscreeningされ、総数と選択数が正確に分かるNormal simulationでは、人数情報が点推定の同定を改善した。対称で強い選択では、Wald区間ではなくprofileのような非線形な区間法が必要だった。
 
-## 9. 実データへ進む前の観測契約
+## 9. 選択率が合っても、モデル全体が合うとは限らない
+
+追加のholdoutでは、中央10%を選ぶscreeningを80回ずつ繰り返し、Normal専用fitへNormal以外のdataを入れました。選別前は毎回4,000件なので、選択後は平均約400件です。
+
+| 真の潜在分布 | Normal fitのfit失敗 | 選択率の平均差 | 観測していない領域での破綻 |
+|---|---:|---:|---|
+| `LogNormal(0, 0.8)` | 0/80 | 4桁丸めで0.0000 | 本当は存在しない負値へ平均15.56%を予測し、95%分位点を真値の47.06%に過小評価 |
+| `TDist(3)` | 0/80 | 4桁丸めで0.0000 | 99%分位点を真値の52.07%に過小評価 |
+
+fitは収束し、人数から分かる選択率も再現しています。それでも、選択範囲の外へ戻した予測は大きく外れました。観測できた範囲と選択数へ合うことは、潜在分布のfamilyや裾まで正しいことを保証しません。
+
+同じNormal dataへ誤ったmetadataを与える感度分析も行いました。
+
+| 変更したmetadata | 正しいmetadataの推定scaleに対する比 |
+|---|---:|
+| 境界幅を2倍に誤記録 | 1.9745 |
+| 選別前総数を20%少なく記録 | 0.8288 |
+| 選別前総数を20%多く記録 | 1.1589 |
+
+観測値より狭い境界や`N < m`は、入力の矛盾として停止できます。一方、広すぎる境界や、`N >= m`を満たす人数誤差はdataだけでは自動検出できません。境界と人数は単なる追加列ではなく、尤度そのものを決めるdesign metadataです。原記録を監査し、あり得る値を変えた感度分析を残します。
+
+この追加stressからも、「人数情報を加えればどんな潜在分布や記録誤差にも頑健」とは結論しません。
+
+## 10. Wald・profile・bootstrapを一つの表で読む
+
+区間は「計算できたか」と「反復したときに校正されているか」を分けて読みます。この研究実装では、三つの95%区間を並べます。
+
+- **Wald**: 最適値の近くを二次関数で近似する。速いが、中央の狭い範囲では`mu`を過度に狭く見積もった
+- **profile**: `mu`または`sigma`を固定し、もう一方を毎回最適化する。尤度の曲がりを追うが、端点を見つけられないと`search_limit`になる
+- **parametric bootstrap**: fit済み分布からscreening全体を何度も作り直し、毎回fitする
+
+bootstrapでは、選択後の43行だけを再標本化しません。選別前の400人からやり直します。
+
+```text
+fit済みの潜在Normal
+  → 400人を生成
+  → 同じ境界でscreening
+  → 新しい選択人数と選択値
+  → selection-count fit
+```
+
+Juliaでは三方式を一つのreportへまとめます。
+
+```julia
+report = selection_count_interval_report(
+    Xoshiro(20279001),
+    observed,
+    total_screened;
+    lower,
+    upper,
+    bootstrap_repetitions = 499,
+)
+
+report.status
+report.wald
+report.profile
+report.bootstrap
+report.automatic_interval
+```
+
+400人から43人を選んだ例では、profileとbootstrapの`mu`区間が真値37を含みました。499反復bootstrapは成功率100%で、`mu`区間35.864〜38.039、`sigma`区間0.421〜1.721でした。ただし、この1例だけでbootstrapが校正済みとは判断しません。
+
+別seedのouter simulationを各80回行うと、次の結果になりました。
+
+| design | Wald coverage（mu / sigma） | profile coverage（mu / sigma） | bootstrap coverage（mu / sigma） |
+|---|---:|---:|---:|
+| 中央10%、期待選択40 | 42.50% / 86.25% | 95.00% / 93.75% | 93.75% / 61.25% |
+| 中央10%、期待選択120 | 43.75% / 85.00% | 93.75% / 91.25% | 91.25% / 71.25% |
+| 非対称50%、期待選択40 | 91.25% / 96.25% | 96.25% / 96.25% | 93.75% / 95.00% |
+
+bootstrapは中央10%の`mu`を大きく改善しましたが、`sigma`は61.25%・71.25%に留まりました。全bootstrap fitが成功しても、区間のcoverageが95%になるとは限りません。profileとbootstrapのどちらかを自動的に選ぶとこの違いを隠すため、reportは`automatic_interval = nothing`を返します。
+
+bootstrapの成功率が事前の最低値を下回ると、`insufficient_success`として区間を`missing`にします。これは「差がない」という結果ではなく、「この反復数とdesignでは区間を報告できない」という未解決状態です。
+
+## 11. 実データへ進む前の観測契約
 
 次の問いへすべて答えられない場合、`N`と`m`をそのままこの尤度へ入れません。
 
@@ -240,7 +316,7 @@ profile likelihoodは、`mu`をある値へ固定するたびに、残りの`sig
 
 これらは「入力を少し修正すればよい」問題ではなく、尤度で表す観測過程を変更する問題です。
 
-## 10. 分析の順序
+## 12. 分析の順序
 
 実務では次の順に進めます。
 
@@ -249,11 +325,12 @@ profile likelihoodは、`mu`をある値へ固定するたびに、残りの`sig
 3. **値を監査する**: 選択値がすべて境界内か、NaN・Infがないか確認する
 4. **条件付き解析を基準に残す**: 人数情報なしで何が不安定か比較する
 5. **selection-count fitを行う**: 人数情報で結論がどう変わるか確認する
-6. **Waldだけで終えない**: 強い対称選択ではprofileを確認する
-7. **状態を保存する**: fit失敗、`search_limit`、区間未解決を結果として残す
-8. **観測過程へ戻す**: 推定分布からscreening全体を再生成し、選択数と選択値を同時に点検する
+6. **Waldだけで終えない**: 強い対称選択ではprofileと観測過程全体のparametric bootstrapを比較する
+7. **状態を保存する**: fit失敗、`search_limit`、`insufficient_success`、区間未解決を結果として残す
+8. **観測過程へ戻す**: 推定分布からscreening全体を再生成し、選択数と選択値だけでなく、supportと未観測領域の分位点も点検する
+9. **metadata感度を残す**: 境界・総数のあり得る誤差で結論がどの程度動くかを結果表へ残す
 
-## 11. 用語集
+## 13. 用語集
 
 | 用語 | この補講での意味 |
 |---|---|
@@ -264,11 +341,13 @@ profile likelihoodは、`mu`をある値へ固定するたびに、残りの`sig
 | point estimate | 最も尤度が高い1組のparameter |
 | Wald interval | 最適値近傍のHessianによる局所二次近似区間 |
 | profile interval | 片方のparameterを固定し、他方を最適化し直して作る区間 |
+| parametric bootstrap interval | fit済みmodelから観測過程全体を再生成し、再fitしたparameterの分位点で作る区間 |
 | coverage | 反復simulationで区間が真値を含んだ割合 |
 | holdout | 閾値や判定規則の調整に使わなかった検証条件 |
 | search limit | 探索範囲内でprofile区間の端点を確定できなかった状態 |
+| insufficient success | bootstrapの有効fit率が事前の最低値へ届かず、区間を報告しない状態 |
 
-## 12. 理解チェック
+## 14. 理解チェック
 
 ### 問1: 人数を分ける
 
@@ -350,23 +429,75 @@ profile likelihoodは、`mu`をある値へ固定するたびに、残りの`sig
 
 <details><summary>答えと理由</summary>
 
-結論できません。現在の回復結果はNormal、有限で既知の境界、正確な総数・選択数、指定したscreening過程に限定されます。Normal以外、境界誤指定、人数記録誤差、依存した反復測定は次のstress課題です。
+結論できません。現在の回復結果はNormal、有限で既知の境界、正確な総数・選択数、指定したscreening過程に限定されます。追加stressでは、Normal以外、境界誤指定、人数記録誤差で、fitが収束しても未観測領域の予測やscaleが大きく変わることを確認しました。依存した反復測定は、さらに別の観測過程です。
 
 </details>
 
-## 13. このドラフトを公開補講へ昇格させる条件
+### 問6: 選択率が合ったfitを読む
 
-- Normal以外、境界誤指定、人数記録誤差のstress結果を加える
-- `profile.status == :search_limit`を画面上で「区間なし」と明示する
-- 観測契約を入力フォームまたは表から検査する例を加える
-- 誤答を「計算ミス」「truncation/censoring混同」「欠測との混同」に分けて返す
-- Notebookで、選択後だけのfitと人数情報つきfitを同じdataで比較する
+正の値しか取らないLogNormal dataへNormal fitを適用したところ、観測された選択率はよく合いましたが、負値へ15.56%の確率を割り当てました。最も適切な説明はどれですか。
+
+1. 選択率が合ったのでNormal familyは正しい
+2. fitが収束したので負値予測は無視してよい
+3. 観測範囲には合ってもsupportを破っており、潜在分布の予測には使えない
+
+<details><summary>ヒント</summary>
+
+今回観測した範囲と、潜在分布が取り得る値全体を分けます。
+
+</details>
+
+<details><summary>答えと理由</summary>
+
+3です。選択率と範囲内の値は、未観測領域の形を一意に決めません。真のsupportに反する予測は、収束flagではなくfamily誤指定を示す反例です。
+
+</details>
+
+### 問7: bootstrapの成功とcoverageを分ける
+
+中央10%選択でbootstrap fitは100%成功しましたが、`sigma`の95%区間coverageは61.25%でした。正しい説明はどれですか。
+
+1. fitが100%成功したので、区間も95%校正されている
+2. 計算成功率とcoverageは別であり、このbootstrap区間を自動採用しない
+3. 61.25%は95%とほぼ同じなので問題ない
+
+<details><summary>ヒント</summary>
+
+「数値を返せた割合」と「真値を含んだ割合」を分けます。
+
+</details>
+
+<details><summary>答えと理由</summary>
+
+2です。optimizerがすべてのbootstrap標本で値を返しても、percentile区間が十分に広いとは限りません。区間法は反復coverageで評価し、未校正なら自動選択を止めます。
+
+</details>
+
+## 15. このドラフトを公開補講へ昇格させる条件
+
+model misspecification stress、Wald・profile・bootstrapを統合するresearch report、観測契約から誤指定反例までを動かす研究Notebook、検索・教材catalog非掲載の参加者向けWeb UI previewは追加済みです。その結果は頑健性ではなく、Normal専用scope、metadata感度、bootstrap scale未校正を明示する必要性を支持しました。
+
+研究段階で完了した項目:
+
+- Notebookで、選択後だけのfitと人数情報つきfitを同じ43件で比較する
+- `search_limit`と`insufficient_success`を「区間なし」と日本語表示する
+- 観測契約を編集可能なNamedTupleとして検査し、欠測・censoring・後付け境界・異なる境界・依存行を分ける
+- 選択率が合ってもsupport／tailが壊れるLogNormal反例を同じNotebookへ入れる
+- Notebookと同じ誤りcode、区間なし、誤指定反例を参加者向けWeb UIの入力表・結果表・誤答別feedbackへ移す
+
+残る公開条件:
+
+- 公開APIをNormal専用として固定するか、別familyを独立したparameter回復試験へ進める
+- 5つの非誘導task、teach-back rubric、formative／confirmation round、privacy境界はprotocol v1へ固定済み。practice後に実参加者で2 roundを実施し、入力label、停止理由、次の行動が理解できるか確認する。実参加者0件の現状を完了扱いしない
+- Julia-Web status schema v1、未解決行を落とさないJSON／CSV、合成値を含むAPI request/response v1、timeout、公開後のversion重複期間に加え、loopback限定のsession／CSRF、rate limit、bounded body、killable workerは研究fixtureで接続済み。public化するならproduction identity、TLS、OS/container資源上限、監査済み非記録log、実データの利用目的・保持・削除を配備環境で検証する
 - 公開する最小APIとpackage依存を改めて固定する
 
 数値検証は次で再実行できます。
 
 ```bash
 julia --startup-file=no --project=validation/p2-likelihood scripts/p2-selection-count-check.jl
+julia --startup-file=no --project=validation/p2-likelihood scripts/p2-selection-count-robustness-check.jl
+julia --startup-file=no --project=validation/p2-likelihood scripts/p2-selection-count-interval-check.jl
 ```
 
 詳細な研究判断と全simulation結果は[README](README.md)を参照してください。

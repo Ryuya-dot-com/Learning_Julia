@@ -216,7 +216,7 @@ describe("データの整形・保存・再利用回の学習契約", () => {
     expect(checker).toContain("sha256");
     expect(checker).toContain("eltype(arrow_data.condition) <: CategoricalValue");
     expect(runner).toContain('"scripts/data-persistence-check.jl"');
-    expect(deploy).toContain("Run 26 numerical regression checks");
+    expect(deploy).toContain("Run 32 numerical regression checks");
   });
 
   it("ロードマップがRData・RDSを訂正し、Stanを任意bridgeにする", () => {
@@ -290,7 +290,7 @@ describe("再現可能な研究プロジェクト補講の学習契約", () => {
       expect(checker, `${concept} がworkflow検証にない`).toContain(concept);
     }
     expect(runner).toContain('"scripts/reproducible-workflow-check.jl"');
-    expect(deploy).toContain("Run 26 numerical regression checks");
+    expect(deploy).toContain("Run 32 numerical regression checks");
   });
 
   it("ロードマップと保存回から公開補講へ到達できる", () => {
@@ -419,7 +419,7 @@ describe("Gitで研究履歴と公開境界を管理する補講の学習契約"
       expect(checker, `${concept} がGit境界検証にない`).toContain(concept);
     }
     expect(runner).toContain('"scripts/version-control-boundary-check.jl"');
-    expect(deploy).toContain("Run 26 numerical regression checks");
+    expect(deploy).toContain("Run 32 numerical regression checks");
   });
 
   it("ロードマップとdownload版へ到達できる", () => {

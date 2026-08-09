@@ -8,8 +8,10 @@
 # https://juliastats.org/Distributions.jl/stable/truncate/
 # https://julianlsolvers.github.io/Optim.jl/stable/examples/generated/maxlikenlm/
 # https://julianlsolvers.github.io/Optim.jl/latest/user/gradientsandhessians/
+# https://juliaweb.github.io/HTTP.jl/stable/
 using Distributions
 using ForwardDiff
+using HTTP
 using Optim
 using Random
 using Statistics
@@ -237,13 +239,22 @@ using .P2LikelihoodContracts
         project_dir = normpath(joinpath(@__DIR__, "..", "validation", "p2-likelihood"))
         project = TOML.parsefile(joinpath(project_dir, "Project.toml"))
         manifest = TOML.parsefile(joinpath(project_dir, "Manifest.toml"))
-        @test Set(keys(project["deps"])) ==
-              Set(["ADTypes", "Distributions", "ForwardDiff", "Optim"])
-        @test length(manifest["deps"]) <= 90
+        public_project = TOML.parsefile(joinpath(project_dir, "..", "Project.toml"))
+        @test Set(keys(project["deps"])) == Set([
+            "ADTypes", "CSV", "Distributions", "ForwardDiff", "HTTP", "JSON3", "Optim",
+        ]) && all(
+            dependency -> !haskey(public_project["deps"], dependency),
+            ("HTTP", "JSON3", "Optim"),
+        )
+        @test length(manifest["deps"]) <= 96
         @test project["compat"]["julia"] == "1.12"
-        @test project["compat"]["Optim"] == "~2.2.1"
+        @test project["compat"]["Optim"] == "~2.2.1" &&
+              project["compat"]["HTTP"] == "~2.0.0" &&
+              project["compat"]["CSV"] == "~0.10" &&
+              project["compat"]["JSON3"] == "~1.14"
         @test pkgversion(Optim) == v"2.2.1"
         @test pkgversion(ForwardDiff) == v"1.4.5"
+        @test pkgversion(HTTP) == v"2.0.0"
     end
 end
 
@@ -252,6 +263,7 @@ println((
     distributions = string(pkgversion(Distributions)),
     optim = string(pkgversion(Optim)),
     forwarddiff = string(pkgversion(ForwardDiff)),
+    http = string(pkgversion(HTTP)),
     scope = "feasibility-only; not a public censored-data estimation API",
 ))
 println("P2_LIKELIHOOD_CHECK_PASS")

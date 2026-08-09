@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:learning-julia:p2:learner-usability-round-summary:1",
+  "title": "Learning Julia P2 repository-safe learner usability round summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "record_kind",
+    "data_classification",
+    "round_id",
+    "round_kind",
+    "completed_sessions",
+    "cumulative_completed_sessions",
+    "task_summaries",
+    "issues",
+    "keyboard_only_gate_met",
+    "decision",
+    "decision_reason_codes"
+  ],
+  "properties": {
+    "schema_id": { "const": "learning-julia.p2.learner-usability-round-summary" },
+    "schema_version": { "const": "1.0.0" },
+    "record_kind": { "enum": ["synthetic_example", "public_aggregate"] },
+    "data_classification": { "const": "aggregate_without_direct_identifiers" },
+    "round_id": { "type": "string", "pattern": "^round-[0-9]{2}$" },
+    "round_kind": { "enum": ["formative", "confirmation"] },
+    "completed_sessions": { "type": "integer", "minimum": 0, "maximum": 20 },
+    "cumulative_completed_sessions": { "type": "integer", "minimum": 0, "maximum": 40 },
+    "task_summaries": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "allOf": [
+        {
+          "contains": { "type": "object", "required": ["task_id"], "properties": { "task_id": { "const": "denominator" } } },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": { "type": "object", "required": ["task_id"], "properties": { "task_id": { "const": "missingness" } } },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": { "type": "object", "required": ["task_id"], "properties": { "task_id": { "const": "conditional_vs_count" } } },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": { "type": "object", "required": ["task_id"], "properties": { "task_id": { "const": "unresolved_interval" } } },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": { "type": "object", "required": ["task_id"], "properties": { "task_id": { "const": "family_scope" } } },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "attempted",
+          "completed_independently",
+          "teach_back_score_2"
+        ],
+        "properties": {
+          "task_id": {
+            "enum": [
+              "denominator",
+              "missingness",
+              "conditional_vs_count",
+              "unresolved_interval",
+              "family_scope"
+            ]
+          },
+          "attempted": { "type": "integer", "minimum": 0, "maximum": 20 },
+          "completed_independently": { "type": "integer", "minimum": 0, "maximum": 20 },
+          "teach_back_score_2": { "type": "integer", "minimum": 0, "maximum": 20 }
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["issue_code", "severity", "occurrences", "status", "action_code"],
+        "properties": {
+          "issue_code": { "type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$" },
+          "severity": { "enum": ["blocker", "major", "minor", "observation"] },
+          "occurrences": { "type": "integer", "minimum": 1, "maximum": 20 },
+          "status": { "enum": ["open", "resolved", "accepted_research_boundary"] },
+          "action_code": { "type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$" }
+        }
+      }
+    },
+    "keyboard_only_gate_met": { "type": "boolean" },
+    "decision": {
+      "enum": [
+        "insufficient_evidence",
+        "revise_retest",
+        "confirmation_candidate",
+        "hold"
+      ]
+    },
+    "decision_reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$" }
+    }
+  }
+}

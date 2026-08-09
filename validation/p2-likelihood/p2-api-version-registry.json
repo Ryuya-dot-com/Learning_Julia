@@ -1,0 +1,21 @@
+{
+  "schema_id": "learning-julia.p2.selection-count-api-version-registry",
+  "schema_version": "1.0.0",
+  "endpoint_status": "local_research_only",
+  "versions": [
+    {
+      "api_version": "1.0.0",
+      "request_schema_version": "1.0.0",
+      "report_schema_version": "1.0.0",
+      "status": "research",
+      "available": false,
+      "sunset_at": null
+    }
+  ],
+  "policy": {
+    "minimum_successor_overlap_days_after_public_release": 180,
+    "sunset_header_required": true,
+    "fixture_fallback_required": true,
+    "silent_fallback_for_unmatched_input_forbidden": true
+  }
+}

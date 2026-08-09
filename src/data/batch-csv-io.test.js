@@ -81,7 +81,7 @@ describe("複数CSVと分析成果物の入出力の学習契約", () => {
       expect(implementation, `${contract}がJulia検証にない`).toContain(contract);
     }
     expect(runner).toContain('"scripts/batch-csv-io-check.jl"');
-    expect(deploy).toContain("Run 26 numerical regression checks");
+    expect(deploy).toContain("Run 32 numerical regression checks");
   });
 
   it("L16・NB1・ロードマップ・READMEから公開補講へ到達できる", () => {

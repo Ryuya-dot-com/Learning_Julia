@@ -63,7 +63,7 @@ describe("P0〜P1の横断実行契約", () => {
     const deploy = read(".github/workflows/deploy.yml");
     const roadmap = read("public/roadmap.html");
     expect(runner).toContain('"scripts/p0-p1-pipeline-check.jl"');
-    expect(deploy).toContain("Run 26 numerical regression checks");
+    expect(deploy).toContain("Run 32 numerical regression checks");
     expect(roadmap).toContain("P0_P1_PIPELINE_CHECK_PASS");
     expect(roadmap).toContain("複数CSVからfit・予測診断・forward観測設計・監査済み出力");
   });

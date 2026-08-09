@@ -1,6 +1,6 @@
 # P2 likelihood feasibility environment
 
-Status: **research only / not a public lesson API**
+Status: **research only / unlisted participant preview public / not a public lesson API**
 
 P1で区別したcensoringとtruncationを、未知parameterの尤度へ進められるか評価する隔離環境です。本編、公開Notebook、`validation/`本体の依存は変更しません。
 
@@ -203,11 +203,152 @@ sum(log f(x_selected)) + (N - m) * log(1 - p)
 julia --startup-file=no --project=validation/p2-likelihood scripts/p2-selection-count-check.jl
 ```
 
+## 2026-08-09 model misspecification robustness gate
+
+selection-count likelihoodの式が正しくても、潜在分布family、選別境界、選別前総数という入力契約が誤っていれば、推定対象そのものが変わります。そこで中央10%選択、選別前4,000件、各80反復の未使用seed holdoutで、Normal専用fitの失敗境界を分離しました。設計と事前に固定した判定範囲は[研究設計](ROBUSTNESS_GATE_DESIGN.md)に記録しています。以下はJulia 1.12.6で再現した結果です。
+
+### 潜在分布family
+
+| 真の潜在分布 | fit失敗 | fitted選択率と観測率の平均差 | 未観測領域の反例 |
+|---|---:|---:|---|
+| `LogNormal(0, 0.8)` | 0/80 | 0.0000 | 負値への平均確率15.56%、fitted 95%分位点／真値 = 0.4706 |
+| `TDist(3)` | 0/80 | 0.0000 | fitted 99%分位点／真値 = 0.5207 |
+
+4桁丸めで選択率の差が0でも、supportと裾の予測は大きく外れました。収束flag、正定値Hessian、選択数の再現だけでは、Normal familyの妥当性を検証できません。
+
+### 境界・人数metadata
+
+真値`Normal(37, 1.7)`の同じ選択dataを、正しいmetadataと誤ったmetadataでpaired fitしました。
+
+| 記録条件 | 正しいmetadataの推定scaleに対する平均比 |
+|---|---:|
+| 境界幅を2倍に誤記録 | 1.9745 |
+| 選別前総数を20%少なく記録 | 0.8288 |
+| 選別前総数を20%多く記録 | 1.1589 |
+
+観測値より狭い誤境界と`N < m`は入力検査で停止しました。一方、全観測値を含む広すぎる境界や、`N >= m`のもっともらしい人数誤差は自動検出できず、fitは全条件0失敗でした。したがって、境界と人数を原記録から監査し、誤差が疑われる場合は複数値による感度分析を必須とします。
+
+この結果により「Normal以外・境界誤指定・人数記録誤差のstressを追加する」という作業項目は完了しましたが、公開blockerは解消しませんでした。むしろ、Normal専用scope、support／tail予測診断、metadata感度を公開APIと教材へどう表すかが次の設計課題です。`P2_SELECTION_COUNT_ROBUSTNESS_CHECK_PASS`は既知の誤指定が見えることを表し、方法が誤指定へ頑健であることを意味しません。
+
+実行:
+
+```bash
+julia --startup-file=no --project=validation/p2-likelihood scripts/p2-selection-count-robustness-check.jl
+```
+
+## 2026-08-09 profile and parametric bootstrap interval report
+
+Waldを既定にせず、profileの未解決状態とparametric bootstrapの計算状態を同じ結果へ残すresearch APIを追加しました。設計は[interval report gate](INTERVAL_REPORT_DESIGN.md)に分離しています。
+
+`parametric_bootstrap_selection_count_intervals`は、選択後の行だけを再標本化しません。fit済みNormalから選別前`N`件を生成し、同じ境界でscreeningし、新しい選択数と選択値を一緒に再fitします。反復数、成功数、失敗型、選択数範囲、確率分解能も返し、成功率90%未満なら区間を`missing`にして`insufficient_success`とします。既定999反復に対し、次のCI pilotは計算時間を抑えるため199反復を明示しています。
+
+`selection_count_interval_report`はWald・profile・bootstrapを並べ、`profile_interval_unresolved`や`bootstrap_success_rate_too_low`をmessage codeとして保持します。両方計算できても`automatic_interval = nothing`であり、方法を自動選択しません。
+
+真値`Normal(37, 1.7)`、各80 outer反復のholdout結果です。
+
+| design | Wald coverage（mu / sigma） | profile coverage（mu / sigma） | bootstrap coverage（mu / sigma） | bootstrap成功率 |
+|---|---:|---:|---:|---:|
+| 中央10%、期待選択40 | 42.50% / 86.25% | 95.00% / 93.75% | 93.75% / 61.25% | 100% |
+| 中央10%、期待選択120 | 43.75% / 85.00% | 93.75% / 91.25% | 91.25% / 71.25% | 100% |
+| 非対称50%、期待選択40 | 91.25% / 96.25% | 96.25% / 96.25% | 93.75% / 95.00% | 100% |
+
+中央10%ではprofileとbootstrapの`mu`区間がWaldより大きく改善しました。しかし、単純なpercentile bootstrapの`sigma` coverageは61.25%・71.25%に留まりました。bootstrap fitが全件成功しても区間校正が保証されない反例です。したがって、bootstrapをprofileの自動fallbackにはせず、scaleについては引き続きprofileを含む反復coverageで評価します。
+
+400人から43人を選ぶ教材例では、499反復bootstrapの`mu`区間35.864〜38.039、`sigma`区間0.421〜1.721となり、この1試行では真値37・1.7を含みました。一方、同じfitから選別前10人だけを再生成する意図的失敗例では、有効fitの成功率が90%を下回り、区間を返さず`insufficient_success`にしました。1試行の成功と方法全体のcoverage、計算成功と区間校正を分けます。
+
+`P2_SELECTION_COUNT_INTERVAL_CHECK_PASS`は、三方式の役割、中央10%でのbootstrap scale未校正、未解決statusが再現できたことを表します。bootstrapが常にprofileを代替できるという意味ではありません。
+
+実行:
+
+```bash
+julia --startup-file=no --project=validation/p2-likelihood scripts/p2-selection-count-interval-check.jl
+```
+
+## Research Pluto notebook
+
+[selection-count teaching notebook](selection-count-teaching-notebook.jl)は、公開前の日本語UI表現を31セルで試すresearch-only Notebookです。通常の公開Notebook環境へP2依存を追加せず、このdirectoryの共有Project／Manifestを明示的にactivateします。これはPluto公式の[共有環境パターン](https://plutojl.org/en/docs/packages-advanced/)に沿ったrepository内研究Notebookであり、単独配布用Notebookではありません。Plutoは依存関係からセルを再計算するため、観測契約の入力を変更するとfit以降も更新されます（[reactivity公式資料](https://plutojl.org/en/docs/reactivity/)）。
+
+Notebookでは次を一つの固定seed経路へ接続しました。
+
+1. 募集総数、screening総数、選択数、範囲外人数、未測定人数を分離し、誤りを`missingness_confusion`、`boundary_posthoc`、`heterogeneous_boundary`、`dependent_rows`、`censoring_confusion`へ分類する
+2. 同じ43件で選択後だけのfitとselection-count fitを比較する
+3. Wald・profile・199反復bootstrapを並べ、`automatic_interval = nothing`を日本語で表示する
+4. `insufficient_success`と`search_limit`を「区間なし」として保持する
+5. LogNormal dataへNormal専用fitを誤用し、選択率一致とsupport／tail破綻を同時に表示する
+
+Notebookは有効なJulia `.jl` fileでもあるため、通常実行とPluto本体の両方で検証します。Pluto検証はProject、Manifest、契約module、Notebookだけを一時directoryへコピーし、31セル、error 0、実行時markerを確認します。
+
+```bash
+julia --startup-file=no --project=validation/p2-likelihood \
+  validation/p2-likelihood/selection-count-teaching-notebook.jl
+julia --startup-file=no --project=validation \
+  scripts/p2-selection-count-notebook-exec.jl
+```
+
+`P2_SELECTION_COUNT_NOTEBOOK_EXEC_PASS`は、教材の成功例だけでなく、未解決statusとfamily誤指定の停止理由までPlutoの反応実行で再現できたことを表します。公開catalogへの登録や実データ利用許可を意味しません。
+
+## Research Web UI preview
+
+[Web UI preview design](WEB_UI_PREVIEW_DESIGN.md)に従い、Notebookの観測契約、結果status、誤指定反例、誤答別feedbackをReact previewへ移しました。HTMLは`validation/p2-likelihood/ui-preview.html`、実装は`src/research/`に置き、`src/main.jsx`と公開lesson catalogからは参照しません。参加者へ同じ検証済みartifactを共有するため、Viteの独立したproduction entryとしてGitHub Pagesへ出力します。`noindex,nofollow`で検索非掲載とし、公開アプリからの導線も置きません。
+
+参加者への共有URL:
+
+<https://ryuya-dot-com.github.io/Learning_Julia/validation/p2-likelihood/ui-preview.html>
+
+```bash
+npm run dev
+# http://127.0.0.1:5173/Learning_Julia/validation/p2-likelihood/ui-preview.html
+```
+
+previewはbrowserで推定を実行しません。任意入力は観測契約だけを監査し、Julia 1.12.6で検証したN=400・m=43のfixtureと一致するときだけ、人数なし／ありfitと区間表を表示します。別入力に固定結果を流用しないため、実計算backendへ接続したような誤解を避けます。
+
+誤りはNotebookと同じ`missingness_confusion`、`boundary_posthoc`、`heterogeneous_boundary`、`dependent_rows`、`censoring_confusion`へ分類します。各誤答にもcode、理由、次の行動を持たせました。正常な監査は`role="status"`、fit停止や区間なしは`role="alert"`とし、入力変更中はalertを連発せず明示的な再監査後に通知します。
+
+```bash
+npm test -- --run
+npm run test:p2-ui
+```
+
+専用Playwrightはdesktop操作、same-origin API応答、mobile幅の3件で、入力label、fieldset、停止理由、fit表の表示境界、profile未解決、API未配備fallback、request ID・SHA照合、誤答別feedback、browser error 0を検証します。本番同条件のPlaywrightは、公開entry、検索非掲載、JSON／CSV download、外部origin通信0、lesson catalog非掲載も検査します。build後の`P2_PARTICIPANT_PREVIEW_BUILD_PASS`は、private観察記録0と合成download 2件を生成物から再検査します。`P2_SELECTION_COUNT_UI_PREVIEW_PASS`は研究preview契約の通過を表し、公開教材への昇格や実データ利用を意味しません。
+
+## Versioned Julia-Web schema and result output
+
+[Result schema and output contract](RESULT_IO_SCHEMA.md)として、`learning-julia.p2.selection-count-report` version `1.0.0`を追加しました。JuliaのreportをJSON3で階層JSONへ、CSV.jlでlong形式CSVへ書き出し、別の読込でround tripします。Web previewはJulia生成JSONをimportし、JavaScript側でもversion、method構成、status整合、未解決端点の`null`、`automatic_interval = null`を検査してから表へ変換します。
+
+CSV fixtureは3状態×3方法×2parameterの18行です。profile未解決2行とbootstrap未解決2行を削除せず、端点を`NA`として保存します。fit時N=400と、成功率不足を再現するbootstrap再生成N=10も別列です。既存の同名JSON／CSVは上書きせず、両fileのSHA-256を返します。
+
+```bash
+julia --startup-file=no --project=validation/p2-likelihood \
+  scripts/p2-selection-count-report-io-check.jl
+```
+
+`P2_SELECTION_COUNT_REPORT_IO_CHECK_PASS`は、既知のschema v1と固定fixtureのJulia／Web往復を保証します。将来の任意versionを自動移行できることや、実計算server APIが公開可能であることは保証しません。
+
+## Research API boundary
+
+[API boundary design](API_BOUNDARY_DESIGN.md)として、requestとtransport response envelopeをそれぞれversion `1.0.0`で追加しました。requestは人数だけでなく、選択された正確な値、事前境界、6つの観測仮定、seed、profile／bootstrap計算上限を要求します。responseは既存report v1を壊さず、request ID、exact body SHA-256、Julia version、Manifest SHA-256、UTC生成時刻を外側へ保持します。
+
+browser clientは同一origin pathだけへPOSTし、120秒timeout、1 MiB response上限、media type、API/report版header、request ID、本文SHA、入力echoを検査します。401、403、406／426、429、5xx、timeout、cancelを別codeにし、Bearer secretをbrowserへ置きません。APIが使えない場合も、checked-in合成requestと完全一致するときだけ、理由を表示してJulia生成fixtureへ切り替えます。
+
+HTTP.jl 2.0.0をこの隔離環境だけへ追加し、`127.0.0.1`へしかbindできない実動serverも用意しました。15分のHttpOnly・SameSite=Strict local session、CSRF、exact Origin、3回/60秒、request 1 MiB、header 32 KiB、同時計算1件をfit前に検査します。さらにchecked-in合成requestのexact SHA-256以外は`422 synthetic_fixture_only`で止め、実データや任意入力を受け付けません。
+
+計算はHTTP process内ではなく、requestごとに別Julia processへ渡します。親processは120秒で打ち切り、終了しなければkillし、responseをschemaとrequest SHAで再照合します。requestはmode 0700の一時directory・mode 0600のfileへ置いて処理後に削除し、worker stderrとserver出力へ選択値を書きません。時間・同時数・入出力sizeは制限しましたが、production用のOS/container CPU・memory quotaではありません。
+
+```bash
+julia --startup-file=no --project=validation/p2-likelihood \
+  scripts/p2-selection-count-api-boundary-check.jl
+julia --startup-file=no --project=validation/p2-likelihood \
+  scripts/p2-selection-count-local-server-check.jl
+npm run test:p2-api
+```
+
+API coreのJulia 32検査、loopback serverの55検査、Vitestのtransport/session検査、Playwrightのmock/fallback経路とbrowser→Vite proxy→Julia server→別Julia workerの実経路を通します。machine-readable registryはendpointを`local_research_only`、v1を`research`、public availabilityを`available = false`とし、公開後に後継版を出す場合だけ旧版を最低180日重複提供する方針です。`P2_SELECTION_COUNT_LOCAL_SERVER_CHECK_PASS`は合成fixture限定のlocal endpointを検証した意味であり、public endpoint、production identity、TLS、実データ運用、監視、SLAの完成を意味しません。
+
 ## Dependency budget
 
-- 直接依存: 4
-- Manifest entries: 69（stdlibを含む）
-- 空の一時depotでのinstantiate＋precompile: 83.4秒、142.5MB
+- 直接依存: 7（数値4＋研究結果I/OのCSV.jl・JSON3.jl＋loopback serverのHTTP.jl）。CSV.jlは公開Notebook環境でも既存利用、JSON3.jl・HTTP.jlはP2専用
+- Manifest entries: 96（stdlibを含む）
+- 空の一時depotでのinstantiate＋precompile: 98.8秒、250.1MB（HTTP追加前の記録から+2.4秒、+44.1MB）
 - 計測環境: Julia 1.12.5、macOS arm64。network・machine依存の観測値でありCI thresholdではありません。
 - 独立engine: 別の`validation/p2-scipy/requirements.txt`でNumPy 2.4.2・SciPy 1.17.1の2依存を固定し、公開アプリのruntime依存には加えません。
 
@@ -217,12 +358,29 @@ julia --startup-file=no --project=validation/p2-likelihood scripts/p2-selection-
 julia --startup-file=no scripts/p2-clean-install-measure.jl
 ```
 
+## Learner usability protocol
+
+[Learner usability protocol](LEARNER_USABILITY_PROTOCOL.md)として、初学者評価を実施する前のresearch question、非誘導task、0／1／2 teach-back rubric、formative／confirmation round、事前固定した判定、privacy境界をversion 1.0.0で固定しました。
+
+固定taskは`denominator`、`missingness`、`conditional_vs_count`、`unresolved_interval`、`family_scope`の5つです。formativeとconfirmationは別参加者4〜8人ずつ、confirmation時点で累計8人以上を要求します。特に`missingness`と`unresolved_interval`はscore 2が100%でなければ改訂・再testとし、その他taskも独立完了・score 2が75%未満なら進めません。これは小人数roundを教育効果の母集団推定へ読み替える基準ではありません。
+
+private observationとrepository-safe aggregateを別schemaにし、checked-in fileは`record_kind = synthetic_example`の2例だけです。既定は録音・録画なし、実データ入力なし、telemetryなしで、氏名・連絡先・診断・署名・逐語録を観察JSONへ持たせません。実観察票はこのrepositoryやDropbox同期directoryへ保存しない契約です。
+
+```bash
+julia --startup-file=no --project=validation/p2-likelihood \
+  scripts/p2-learner-usability-protocol-check.jl
+```
+
+59検査の`P2_LEARNER_USABILITY_PROTOCOL_CHECK_PASS`はprotocol readinessだけを表します。現在の実参加者記録は0件であり、利用者理解blockerは未完了です。
+
 ## Public promotion blockers
 
-1. selection-count likelihoodが仮定する固定境界、独立なscreening、正確な総数・選択数を、欠測や別理由の除外と区別する入力契約を教材化すること
-2. 対称な強選択ではWaldを既定にせず、profileの`search_limit`を未解決として伝えるAPIとbootstrap比較を用意すること
-3. Normal以外・境界誤指定・選別人数の記録誤差に対するmodel misspecification stressを追加すること
-4. 初心者が「境界値」「flag」「選別前総数」を取り違えたときのfeedback設計
-5. clean install costを許容する任意トラックとしての配布方法
+研究Notebookと参加者向けWeb UI previewでは、観測契約、未解決status、Normal誤指定時のsupport／tail反例、誤り分類、入力・結果表現まで実装しました。静的previewは共有可能ですが、公開教材・公開推定serviceへの昇格blockerは次です。
+
+1. protocol、5 task、rubric、個票／集約schema、privacy境界は固定済み。practice後、別参加者によるformative／confirmation roundを実施し、`N`、`m`、未測定、区間未解決、family scopeのteach-backを確認すること。実参加者0件の現状を完了扱いしない
+2. 中央10%で残るbootstrap scale未校正を隠さず、区間を自動選択しない表示を公開UIでも維持すること
+3. Normal専用scopeと境界・人数metadata感度を公開入力・出力へ固定すること。別familyへ広げる場合はfamilyごとのparameter回復試験を独立に通すこと
+4. request/response schema、120秒timeout、error分類、公開後180日の互換version方針に加え、loopback合成fixture限定でsession／CSRF、rate limit、bounded stream read、非記録server出力、killable workerを検証済み。public化するならproduction identity、TLS＋Secure cookie、OS/containerのCPU・memory quota、監査済み非記録log、監視、実データの利用目的・保持・削除・同意を配備環境で検証すること
+5. 98.8秒・250.1MBのclean install costを許容する任意トラックとしての配布方法を決め、単独配布ならembedded environmentまたはpackage化を再設計すること
 
 これらが揃うまで`data-strategy-status="research"`を維持し、公開レッスン数やNotebook課題数へ含めません。

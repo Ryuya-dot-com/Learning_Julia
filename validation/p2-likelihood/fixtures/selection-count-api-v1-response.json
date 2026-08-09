@@ -1,0 +1,99 @@
+{
+    "schema_id": "learning-julia.p2.selection-count-api-response",
+    "schema_version": "1.0.0",
+    "request_id": "teaching-example-v1",
+    "request_sha256": "f663d6e4f718e0c64fd7445e9e192dd8e8aaaed4977b276a87f6847db67e60db",
+    "engine": {
+        "julia_version": "1.12.5",
+        "project_environment": "validation/p2-likelihood",
+        "manifest_sha256": "d5baef285b3b6e1bc11e49f870d54bef8017c61524b4ef51aca3c890924b1f17",
+        "report_schema_version": "1.0.0",
+        "generated_at_utc": "2026-08-10T00:00:00.000Z"
+    },
+    "report_bundle": {
+        "schema_id": "learning-julia.p2.selection-count-report",
+        "schema_version": "1.0.0",
+        "model_scope": {
+            "family": "Normal",
+            "selection_rule": "strict_open_interval",
+            "automatic_interval_selection": false
+        },
+        "reports": [
+            {
+                "report_id": "teaching-example-v1",
+                "status": "review_profile_and_bootstrap",
+                "automatic_interval": null,
+                "input_contract": {
+                    "total_screened": 400,
+                    "selected_count": 43,
+                    "lower_boundary": 36.78637571034638,
+                    "upper_boundary": 37.21362428965362,
+                    "boundary_rule": "lower < value < upper"
+                },
+                "methods": [
+                    {
+                        "method": "wald",
+                        "status": "ok",
+                        "intervals": [
+                            {
+                                "parameter": "mu",
+                                "lower": 35.76820874627668,
+                                "upper": 36.30743696780582
+                            },
+                            {
+                                "parameter": "sigma",
+                                "lower": 0.3036826523240285,
+                                "upper": 2.836880740804658
+                            }
+                        ],
+                        "diagnostics": null
+                    },
+                    {
+                        "method": "profile",
+                        "status": "ok",
+                        "intervals": [
+                            {
+                                "parameter": "mu",
+                                "lower": 35.704861778896735,
+                                "upper": 38.14528672724458
+                            },
+                            {
+                                "parameter": "sigma",
+                                "lower": 0.4479716702473726,
+                                "upper": 2.0609445479313133
+                            }
+                        ],
+                        "diagnostics": null
+                    },
+                    {
+                        "method": "bootstrap",
+                        "status": "ok",
+                        "intervals": [
+                            {
+                                "parameter": "mu",
+                                "lower": 35.89022840273472,
+                                "upper": 38.05737189844818
+                            },
+                            {
+                                "parameter": "sigma",
+                                "lower": 0.4152426118302157,
+                                "upper": 1.6363800344161956
+                            }
+                        ],
+                        "diagnostics": {
+                            "total_screened": 400,
+                            "repetitions": 99,
+                            "successes": 99,
+                            "success_rate": 1,
+                            "minimum_success_rate": 0.9
+                        }
+                    }
+                ],
+                "messages": [
+                    "wald_is_local_approximation",
+                    "compare_profile_and_bootstrap"
+                ]
+            }
+        ]
+    }
+}

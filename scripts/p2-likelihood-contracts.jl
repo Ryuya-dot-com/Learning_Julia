@@ -5,6 +5,7 @@ using Distributions
 using ForwardDiff
 using LinearAlgebra
 using Optim
+using Random
 using Statistics
 
 export fit_censored_normal,
@@ -18,7 +19,9 @@ export fit_censored_normal,
        normal_initial,
        normal_selection_count_nll,
        normal_truncated_nll,
+       parametric_bootstrap_selection_count_intervals,
        profile_likelihood_intervals,
+       selection_count_interval_report,
        simulate_censored,
        two_sided_scale_contrast,
        two_sided_truncation_assessment,
@@ -467,22 +470,34 @@ function profile_likelihood_intervals(
     fit;
     level = 0.95,
     assessment = nothing,
+    max_expansions = 14,
 )
     0 < level < 1 || throw(ArgumentError("levelは0と1の間にしてください"))
+    max_expansions isa Integer && !(max_expansions isa Bool) && max_expansions >= 0 ||
+        throw(ArgumentError("max_expansionsは0以上の整数にしてください"))
     if !isnothing(assessment) && assessment.status != :regular
         return (
             status = :skipped_weak_identification,
             mu = (missing, missing),
             sigma = (missing, missing),
             bounded = (mu = false, sigma = false),
+            error_type = nothing,
         )
     end
 
     target = quantile(Chisq(1), level) / 2
-    mu_lower = profile_endpoint(objective, fit, 1, -1, target)
-    mu_upper = profile_endpoint(objective, fit, 1, 1, target)
-    log_sigma_lower = profile_endpoint(objective, fit, 2, -1, target)
-    log_sigma_upper = profile_endpoint(objective, fit, 2, 1, target)
+    mu_lower = profile_endpoint(
+        objective, fit, 1, -1, target; max_expansions,
+    )
+    mu_upper = profile_endpoint(
+        objective, fit, 1, 1, target; max_expansions,
+    )
+    log_sigma_lower = profile_endpoint(
+        objective, fit, 2, -1, target; max_expansions,
+    )
+    log_sigma_upper = profile_endpoint(
+        objective, fit, 2, 1, target; max_expansions,
+    )
     (
         status = all(!ismissing, (mu_lower, mu_upper, log_sigma_lower, log_sigma_upper)) ?
             :ok : :search_limit,
@@ -495,6 +510,167 @@ function profile_likelihood_intervals(
             mu = !ismissing(mu_lower) && !ismissing(mu_upper),
             sigma = !ismissing(log_sigma_lower) && !ismissing(log_sigma_upper),
         ),
+        error_type = nothing,
+    )
+end
+
+function validate_selection_count_bootstrap(
+    fit,
+    total_screened,
+    lower,
+    upper,
+    repetitions,
+    minimum_success_rate,
+    level,
+)
+    fit.distribution isa Normal ||
+        throw(ArgumentError("parametric bootstrapはNormal fitだけを受け取ります"))
+    isfinite(lower) && isfinite(upper) && lower < upper ||
+        throw(ArgumentError("parametric bootstrapには有限で順序づけた境界が必要です"))
+    total_screened isa Integer && !(total_screened isa Bool) && total_screened >= 2 ||
+        throw(ArgumentError("total_screenedは2以上の整数にしてください"))
+    repetitions isa Integer && !(repetitions isa Bool) && repetitions >= 99 ||
+        throw(ArgumentError("bootstrap反復数は99以上の整数にしてください"))
+    0 < minimum_success_rate <= 1 ||
+        throw(ArgumentError("minimum_success_rateは0より大きく1以下にしてください"))
+    level == 0.95 ||
+        throw(ArgumentError("feasibility checkでは95% bootstrap区間だけを検証します"))
+    true
+end
+
+function parametric_bootstrap_selection_count_intervals(
+    rng::AbstractRNG,
+    fit,
+    total_screened;
+    lower,
+    upper,
+    repetitions = 999,
+    minimum_success_rate = 0.9,
+    level = 0.95,
+)
+    validate_selection_count_bootstrap(
+        fit,
+        total_screened,
+        lower,
+        upper,
+        repetitions,
+        minimum_success_rate,
+        level,
+    )
+    bootstrap_mu = Float64[]
+    bootstrap_sigma = Float64[]
+    selected_counts = Int[]
+    failures = Dict{String, Int}()
+
+    for _ in 1:repetitions
+        latent = rand(rng, fit.distribution, total_screened)
+        observed = filter(value -> lower < value < upper, latent)
+        push!(selected_counts, length(observed))
+        try
+            bootstrap_fit = fit_selection_count_normal(
+                observed, total_screened; lower, upper,
+            )
+            push!(bootstrap_mu, mean(bootstrap_fit.distribution))
+            push!(bootstrap_sigma, std(bootstrap_fit.distribution))
+        catch error
+            error_type = string(nameof(typeof(error)))
+            failures[error_type] = get(failures, error_type, 0) + 1
+        end
+    end
+
+    successes = length(bootstrap_mu)
+    success_rate = successes / repetitions
+    status = success_rate >= minimum_success_rate ? :ok : :insufficient_success
+    intervals_available = status == :ok
+    (
+        status,
+        method = :parametric_percentile,
+        level,
+        total_screened,
+        repetitions,
+        successes,
+        success_rate,
+        minimum_success_rate,
+        monte_carlo = (
+            probability_resolution = inv(successes + 1),
+            expected_tail_draws_per_side = successes * (1 - level) / 2,
+        ),
+        failures = sort!(collect(failures); by = first),
+        selected_count = (
+            mean = mean(selected_counts),
+            minimum = minimum(selected_counts),
+            maximum = maximum(selected_counts),
+        ),
+        mu = intervals_available ? interval95(bootstrap_mu) : (missing, missing),
+        sigma = intervals_available ? interval95(bootstrap_sigma) : (missing, missing),
+    )
+end
+
+function selection_count_interval_report(
+    rng::AbstractRNG,
+    observed,
+    total_screened;
+    lower,
+    upper,
+    bootstrap_repetitions = 999,
+    minimum_bootstrap_success_rate = 0.9,
+    profile_max_expansions = 14,
+)
+    fit = fit_selection_count_normal(observed, total_screened; lower, upper)
+    objective = raw -> normal_selection_count_nll(
+        raw, observed, total_screened, lower, upper,
+    )
+    wald = wald_intervals(fit)
+    profile = try
+        profile_likelihood_intervals(
+            objective, fit; max_expansions = profile_max_expansions,
+        )
+    catch error
+        (
+            status = :error,
+            mu = (missing, missing),
+            sigma = (missing, missing),
+            bounded = (mu = false, sigma = false),
+            error_type = string(nameof(typeof(error))),
+        )
+    end
+    bootstrap = parametric_bootstrap_selection_count_intervals(
+        rng,
+        fit,
+        total_screened;
+        lower,
+        upper,
+        repetitions = bootstrap_repetitions,
+        minimum_success_rate = minimum_bootstrap_success_rate,
+    )
+
+    messages = Symbol[:wald_is_local_approximation]
+    if profile.status == :search_limit
+        push!(messages, :profile_interval_unresolved)
+    elseif profile.status == :skipped_weak_identification
+        push!(messages, :profile_skipped_weak_identification)
+    elseif profile.status == :error
+        push!(messages, :profile_computation_error)
+    end
+    bootstrap.status == :insufficient_success &&
+        push!(messages, :bootstrap_success_rate_too_low)
+    status = if profile.status != :ok
+        :unresolved_profile
+    elseif bootstrap.status != :ok
+        :unresolved_bootstrap
+    else
+        push!(messages, :compare_profile_and_bootstrap)
+        :review_profile_and_bootstrap
+    end
+
+    (
+        status,
+        automatic_interval = nothing,
+        fit,
+        wald,
+        profile,
+        bootstrap,
+        messages,
     )
 end
 

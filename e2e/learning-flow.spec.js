@@ -94,9 +94,12 @@ test("ロードマップとNotebook配布リンクがPagesのbase pathで到達�
     await expect(strategy.locator(`[data-strategy-horizon="${horizon}"]`)).toHaveCount(1);
   }
   await expect(strategy.locator('[data-strategy-status="research"]')).toHaveCount(1);
-  await expect(strategy.getByRole("heading", { name: "観測過程を尤度へ入れる検証トラック(研究中・未公開)" })).toBeVisible();
+  await expect(strategy.getByRole("heading", { name: "観測過程を尤度へ入れる検証トラック(研究中・参加者previewのみ公開)" })).toBeVisible();
   await expect(strategy.getByText("P2_LIKELIHOOD_STRESS_CHECK_PASS", { exact: true })).toBeVisible();
   await expect(strategy.getByText("P2_IDENTIFICATION_PROFILE_CHECK_PASS", { exact: true })).toBeVisible();
+  await expect(strategy.getByText("P2_SELECTION_COUNT_UI_PREVIEW_PASS", { exact: true })).toBeVisible();
+  await expect(strategy.getByText("P2_SELECTION_COUNT_REPORT_IO_CHECK_PASS", { exact: true })).toBeVisible();
+  await expect(strategy.getByText("P2_SELECTION_COUNT_API_BOUNDARY_CHECK_PASS", { exact: true })).toBeVisible();
   await expect(strategy.getByRole("heading", { name: "候補を公開教材へ昇格させる5つの問い" })).toBeVisible();
   await page.getByRole("link", { name: "← アプリにもどる" }).first().click();
   await expect(page.getByRole("heading", { level: 1, name: "はじめてのJulia" })).toBeVisible();
@@ -198,4 +201,41 @@ test("モバイル幅でもホームと教材を往復できる", async ({ page 
   await expect(page.getByRole("heading", { level: 2, name: "Juliaへようこそ" })).toBeVisible();
   await page.getByRole("button", { name: "← レッスン一覧" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "はじめてのJulia" })).toBeVisible();
+});
+
+test("参加者向けP2研究previewを非掲載・合成データ限定で配布できる", async ({ page }) => {
+  const requestedOrigins = new Set();
+  page.on("request", (request) => requestedOrigins.add(new URL(request.url()).origin));
+
+  await page.goto("./validation/p2-likelihood/ui-preview.html");
+  await expect(page).toHaveTitle(/P2研究UI preview/);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "選ばれた値と人数を一緒に読む" })
+  ).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex,nofollow");
+  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute("content", "no-referrer");
+  await expect(page.getByRole("note", { name: "参加者向けデータ利用案内" })).toContainText(
+    "外部への送信、保存、analytics、session replayは行いません"
+  );
+  await expect(page.getByText("公開教材未登録", { exact: true })).toBeVisible();
+  await expect(page.getByText("実計算API未配備", { exact: true })).toBeVisible();
+
+  for (const [name, expected] of [
+    ["JSON fixture", "learning-julia.p2.selection-count-report"],
+    ["CSV fixture", "report_id,report_status"],
+  ]) {
+    const href = await page.getByRole("link", { name }).getAttribute("href");
+    const response = await page.request.get(new URL(href, page.url()).href);
+    expect(response.ok()).toBe(true);
+    expect(await response.text()).toContain(expected);
+  }
+
+  await page.getByRole("button", { name: "合成requestで接続境界を確認" }).click();
+  await expect(
+    page.getByRole("status").filter({ hasText: "合成fixtureへ明示的に切り替え" })
+  ).toContainText("api_not_configured");
+  expect([...requestedOrigins], "previewが外部originへ通信しない").toEqual([APP_ORIGIN]);
+
+  await page.goto("./");
+  await expect(page.locator('a[href*="validation/p2-likelihood"]')).toHaveCount(0);
 });

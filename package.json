@@ -8,10 +8,12 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/p2-participant-preview-build-check.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:e2e": "vite build --outDir .e2e-dist && playwright test",
+    "test:p2-ui": "playwright test --config=playwright.p2.config.js",
+    "test:p2-api": "playwright test --config=playwright.p2.local.config.js",
     "postinstall": "node scripts/dropbox-ignore.mjs"
   },
   "dependencies": {

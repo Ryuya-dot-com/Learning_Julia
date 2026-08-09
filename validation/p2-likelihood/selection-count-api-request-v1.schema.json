@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:learning-julia:p2:selection-count-api-request:1",
+  "title": "Learning Julia P2 selection-count API request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "request_id", "model_scope", "input_contract", "analysis_options"],
+  "properties": {
+    "schema_id": { "const": "learning-julia.p2.selection-count-api-request" },
+    "schema_version": { "const": "1.0.0" },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "model_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "selection_rule", "automatic_interval_selection"],
+      "properties": {
+        "family": { "const": "Normal" },
+        "selection_rule": { "const": "strict_open_interval" },
+        "automatic_interval_selection": { "const": false }
+      }
+    },
+    "input_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_screened",
+        "selected_count",
+        "lower_boundary",
+        "upper_boundary",
+        "boundary_rule",
+        "selected_values",
+        "assumptions_confirmed"
+      ],
+      "properties": {
+        "total_screened": { "type": "integer", "minimum": 2 },
+        "selected_count": { "type": "integer", "minimum": 2 },
+        "lower_boundary": { "type": "number" },
+        "upper_boundary": { "type": "number" },
+        "boundary_rule": { "const": "lower < value < upper" },
+        "selected_values": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "number" }
+        },
+        "assumptions_confirmed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "boundary_precommitted",
+            "same_boundary",
+            "same_population",
+            "independent_rows",
+            "exact_selected_values",
+            "excluded_confirmed_outside"
+          ],
+          "properties": {
+            "boundary_precommitted": { "const": true },
+            "same_boundary": { "const": true },
+            "same_population": { "const": true },
+            "independent_rows": { "const": true },
+            "exact_selected_values": { "const": true },
+            "excluded_confirmed_outside": { "const": true }
+          }
+        }
+      }
+    },
+    "analysis_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["random_seed", "bootstrap_repetitions", "minimum_bootstrap_success_rate", "profile_max_expansions"],
+      "properties": {
+        "random_seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "bootstrap_repetitions": { "type": "integer", "minimum": 99, "maximum": 9999 },
+        "minimum_bootstrap_success_rate": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "profile_max_expansions": { "type": "integer", "minimum": 0, "maximum": 50 }
+      }
+    }
+  }
+}
