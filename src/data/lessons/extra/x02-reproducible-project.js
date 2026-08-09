@@ -59,7 +59,7 @@ julia --project=. code/run_analysis.jl`,
       b: [
         "`CSV.read(\"data/example/trials_synthetic.csv\", ...)`は、Juliaを起動した作業directoryが変わると別の場所を探します。`@__DIR__`はscript fileのdirectoryを基準にできるので、入口scriptが`code/`にあるなら一つ上をproject rootとして固定できます。",
       ],
-      code: `const PROJECT_ROOT = normpath(joinpath(@__DIR__, ".."))
+      code: `const PROJECT_ROOT = realpath(normpath(joinpath(@__DIR__, "..")))
 
 raw_path = joinpath(PROJECT_ROOT, "data", "raw", "trials.csv")
 schema_path = joinpath(PROJECT_ROOT, "metadata", "schema.toml")
@@ -68,7 +68,7 @@ println((root_is_absolute = isabspath(PROJECT_ROOT),
          input_file = basename(raw_path)))`,
       out: `(root_is_absolute = true, input_file = "trials.csv")`,
       a: [
-        "`@__DIR__`をREPLや`julia -e`で評価すると現在の作業directoryになるため、この方法は保存したscript内で使います。個人の`C:\\Users\\...`や`/Users/...`をcode・表・metadataへ書き込まないことも、移動可能性とprivacyの両面で重要です。",
+        "`@__DIR__`をREPLや`julia -e`で評価すると現在の作業directoryになるため、この方法は保存したscript内で使います。`realpath`はmacOSの`/var`と`/private/var`のような同じ場所の別表現をcanonical pathへ揃えます。個人の`C:\\Users\\...`や`/Users/...`をcode・表・metadataへ書き込まないことも、移動可能性とprivacyの両面で重要です。",
       ],
     },
     {

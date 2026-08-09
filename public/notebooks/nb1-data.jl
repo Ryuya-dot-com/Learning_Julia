@@ -13,7 +13,7 @@ end
 md"""
 # NB1: データ操作編の演習ノート
 
-**はじめてのJulia — STEP 1（「ドット記法(ブロードキャスト)」から「グループ集計と結合」まで）の実践編**です（自由課題で「縦横変換と一括読み込み」の内容も使えます）。
+**はじめてのJulia — STEP 1（「ドット記法(ブロードキャスト)」から「複数CSVと分析成果物の入出力」まで）の実践編**です。
 
 このノートブックは Pluto で動いています(推奨: Julia 1.12系)。セルの中身を書きかえると、関係するセルが**自動で再計算**されます。`# TODO` のセルを書きかえて、下の判定セルが ✅ になったらクリアです。
 
@@ -131,16 +131,82 @@ else
     md"🤔 `mean(skipmissing(◯◯))` の形を見返しましょう。"
 end
 
+# ╔═╡ 85cbdd60-8c9c-11f1-a2f3-4b5c6d7e8f90
+md"""
+## 課題6: 複数CSVの列挙と一括読み込み（「複数CSVと分析成果物の入出力」）
+
+下の準備セルは、12行のデータを2つの一時CSVへ分けています。`readdir`でCSVだけを名前順に列挙して`batch_files`へ入れ、`CSV.File`のvector inputで`batch_data`へまとめましょう。各行の入力元を`:source_file`列へ残してください。
+
+一時directoryはこの演習専用です。手元の研究dataを変更しません。
+"""
+
+# ╔═╡ 85cbdd6a-8c9c-11f1-b3a4-5c6d7e8f9012
+batch_fixture = let
+    root = mktempdir()
+    raw_dir = joinpath(root, "raw")
+    output_dir = joinpath(root, "output")
+    mkpath(raw_dir)
+    mkpath(output_dir)
+    CSV.write(joinpath(raw_dir, "trials_02.csv"), df[7:12, :])
+    CSV.write(joinpath(raw_dir, "trials_01.csv"), df[1:6, :])
+    write(joinpath(raw_dir, "README.txt"), "CSVだけを対象にします\n")
+    (raw = raw_dir, output = output_dir)
+end
+
+# ╔═╡ 85cbdd74-8c9c-11f1-c4b5-6d7e8f901234
+batch_files = missing # TODO: readdir(...; join=true, sort=true)をCSVだけに絞る
+
+# ╔═╡ 85cbdd7e-8c9c-11f1-d5c6-7e8f90123456
+batch_data = missing # TODO: DataFrame(CSV.File(batch_files; source=:source_file))
+
+# ╔═╡ 85cbdd88-8c9c-11f1-e6d7-8f9012345678
+if batch_files === missing || batch_data === missing
+    md"⏳ まずCSV pathを名前順に列挙し、そのVectorを`CSV.File`へ渡します。"
+elseif batch_data isa DataFrame &&
+       basename.(batch_files) == ["trials_01.csv", "trials_02.csv"] &&
+       nrow(batch_data) == 12 &&
+       :source_file in propertynames(batch_data) &&
+       length(unique(batch_data.source_file)) == 2
+    md"✅ **正解!** 2つの入力から12行を読み、各行の入力元も残せました。"
+else
+    md"🤔 CSVは2個、結合後は12行です。`README.txt`を除外し、`source=:source_file`を指定できていますか?"
+end
+
+# ╔═╡ 85cbdd92-8c9c-11f1-f7e8-90123456789a
+md"""
+## 課題7: 結果CSVを書き出して読み戻す（「複数CSVと分析成果物の入出力」）
+
+`batch_data`を一時的なoutput directoryの`combined.csv`へ書き出し、返されたpathを`batch_output`へ入れましょう。判定セルは別の`CSV.read`で12行と`source_file`列を確認します。
+"""
+
+# ╔═╡ 85cbdd9c-8c9c-11f1-a8f9-0123456789bc
+batch_output = missing # TODO: CSV.write(joinpath(batch_fixture.output, "combined.csv"), batch_data)
+
+# ╔═╡ 85cbdda6-8c9c-11f1-b90a-123456789bcd
+if batch_output === missing
+    md"⏳ `CSV.write(出力path, 表)`の返り値を`batch_output`へ入れます。"
+elseif batch_output isa AbstractString && isfile(batch_output)
+    restored_batch = CSV.read(batch_output, DataFrame)
+    if nrow(restored_batch) == 12 && :source_file in propertynames(restored_batch)
+        md"✅ **正解!** 12行と入力元列を、別の読込でround trip確認できました。"
+    else
+        md"🤔 fileはありますが、12行または`source_file`列が復元されていません。"
+    end
+else
+    md"🤔 `batch_fixture.output`の中へ`combined.csv`を書き出してください。"
+end
+
 # ╔═╡ 85cbdd5a-8c9c-11f1-afac-b7726c78e252
 md"""
 ## おつかれさまでした!
 
-5課題すべて ✅ になったら、STEP 1 は卒業です。自由課題もどうぞ:
+7課題すべて ✅ になったら、STEP 1 は卒業です。自由課題もどうぞ:
 
-- `leftjoin(df, info, on = :id)` で2つの表を合体して、`group` ごとの平均反応時間を出す（「グループ集計と結合」）
+- `leftjoin(df, info, on = :id, validate = (false, true))` で右表の参加者IDが一意か検査してから、`group` ごとの平均反応時間を出す（「グループ集計と結合」）
 - 課題4の表 `m` を `unstack` で横持ちにしてみる（「縦横変換と一括読み込み」）
+- 課題7の出力を明示した`types`と`strict = true`で読み戻し、列型も照合する
 
-続きは学習ロードマップの STEP 2(統計・可視化編)で。
+続きは学習ロードマップの STEP 2(統計・可視化編)と **NB2** です。NB2は単独でも再実行できるよう同じ小さなfixtureを読み直しますが、実際の研究では、ここで監査した`combined.csv`などの成果物とrun metadataを次の分析へ渡します。Notebook間の暗黙の変数ではなく、schemaと出力fileを受け渡し契約にしましょう。
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -494,6 +560,14 @@ version = "5.15.0+0"
 # ╠═85cbdd32-8c9c-11f1-b26f-dba267591fc8
 # ╠═85cbdd46-8c9c-11f1-9b42-479a94ffd960
 # ╠═85cbdd4e-8c9c-11f1-ac3e-2b312db1de1e
+# ╟─85cbdd60-8c9c-11f1-a2f3-4b5c6d7e8f90
+# ╠═85cbdd6a-8c9c-11f1-b3a4-5c6d7e8f9012
+# ╠═85cbdd74-8c9c-11f1-c4b5-6d7e8f901234
+# ╠═85cbdd7e-8c9c-11f1-d5c6-7e8f90123456
+# ╠═85cbdd88-8c9c-11f1-e6d7-8f9012345678
+# ╟─85cbdd92-8c9c-11f1-f7e8-90123456789a
+# ╠═85cbdd9c-8c9c-11f1-a8f9-0123456789bc
+# ╠═85cbdda6-8c9c-11f1-b90a-123456789bcd
 # ╟─85cbdd5a-8c9c-11f1-afac-b7726c78e252
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

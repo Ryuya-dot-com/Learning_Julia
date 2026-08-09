@@ -18,7 +18,9 @@ md"""
 
 `# TODO` のセルを書きかえて、下の判定セルが ✅ になったらクリアです。セルを書きかえると、関係するセルが自動で再計算されます。
 
-データは「グループ集計と結合」以来おなじみの反応時間データ(12試行×4列)。**CSVがこのノートと同じフォルダにあればそれを読み、なければサイトから自動ダウンロードします**。手元の経験分布を確認してから、`Normal(...)` で理論分布を作り、`cdf` と `rand` で問いかけます。
+データは「グループ集計と結合」以来おなじみの反応時間データ(12試行×4列)。**CSVがこのノートと同じフォルダにあればそれを読み、なければサイトから自動ダウンロードします**。NB1とは独立して再実行できる教材fixtureですが、実際の研究ではNB1で列挙・schema・主キー・入力元を監査して書き出した成果物を、明示したpathから読みます。入力監査を省略してよいという意味ではありません。
+
+手元の経験分布を確認し、`Normal(...)`で理論分布を操作した後、「分布のカタログ」から「分布の推定と予測診断」へ進みます。最後は「観測境界・依存・混合分布」へ接続し、truncation／censoring、共分散、既知componentからの生成を区別します。
 
 !!! tip "Pluto の約束ごと"
     Pluto では1つのセルに書ける式は1つです。複数行の処理を1セルに書きたいときは `begin ... end` で囲みます。
@@ -183,6 +185,199 @@ else
     md"🤔 4つの名前付き要素を持つNamedTupleにまとめましょう。"
 end
 
+# ╔═╡ c0ffee25-0000-11f1-9a01-000000000025
+md"""
+## 課題7: 観測dataへLogNormal分布を当てはめる（「分布の推定と予測診断」）
+
+反応時間は正の連続値で、この小さなdataでは右裾を持つ候補として`LogNormal`を使います。`fit_mle`で`df.rt`へ当てはめた分布を`fitted_rt`へ入れましょう。
+
+`fit_mle(分布型, data)`の順です。返り値はparameterの点推定を持つ分布オブジェクトで、区間推定やmodel適合の証明ではありません。
+"""
+
+# ╔═╡ c0ffee26-0000-11f1-9a01-000000000026
+fitted_rt = missing # TODO: fit_mle(LogNormal, df.rt)
+
+# ╔═╡ c0ffee27-0000-11f1-9a01-000000000027
+if fitted_rt === missing
+    md"⏳ `fit_mle(LogNormal, df.rt)`で、分布型と観測列を渡します。"
+elseif fitted_rt isa LogNormal &&
+       collect(params(fitted_rt)) ≈ collect(params(fit_mle(LogNormal, df.rt))) &&
+       all(x -> insupport(fitted_rt, x), df.rt) &&
+       all(isfinite, (mean(fitted_rt), std(fitted_rt), quantile(fitted_rt, 0.95)))
+    md"✅ **正解!** 正の観測値をsupport内に持ち、有限な理論量を返すfit済みLogNormal分布を作れました。"
+else
+    md"🤔 `LogNormal(...)`を手で決めるのではなく、`fit_mle(LogNormal, df.rt)`の返り値をそのまま入れます。"
+end
+
+# ╔═╡ c0ffee28-0000-11f1-9a01-000000000028
+md"""
+## 課題8: 同じ標本サイズのreplicate dataを2000回作る
+
+`Xoshiro(2027)`、fit済み分布`fitted_rt`、観測数`nrow(df)`を使い、各列が1つのreplicate datasetになる`nrow(df) × 2000`行列を作りましょう。
+
+構文は`rand(rng, 分布, 行数, 列数)`です。特定の乱数値ではなく、size・support・有限性を判定します。
+"""
+
+# ╔═╡ c0ffee29-0000-11f1-9a01-000000000029
+rt_replicates = missing # TODO: rand(Xoshiro(2027), fitted_rt, nrow(df), 2000)
+
+# ╔═╡ c0ffee30-0000-11f1-9a01-000000000030
+if rt_replicates === missing
+    md"⏳ `rand(Xoshiro(2027), fitted_rt, nrow(df), 2000)`で行列を作ります。"
+elseif rt_replicates isa AbstractMatrix &&
+       size(rt_replicates) == (nrow(df), 2000) &&
+       all(isfinite, rt_replicates) &&
+       all(x -> insupport(fitted_rt, x), rt_replicates) &&
+       abs(mean(rt_replicates) - mean(fitted_rt)) < 10
+    md"✅ **正解!** 観測と同じ$(nrow(df))行を持つreplicate datasetを2000本生成できました。"
+else
+    md"🤔 `nrow(df) × 2000`の行列ですか? RNG、fit済み分布、2つの次元の順を確認しましょう。"
+end
+
+# ╔═╡ c0ffee31-0000-11f1-9a01-000000000031
+md"""
+## 課題9: q95と最大値を予測区間へ戻す
+
+各replicate列の95%点と最大値を計算し、それぞれの2.5%点・97.5%点を予測区間にします。次の4要素を持つNamedTupleを`predictive_check`へ入れましょう。
+
+```julia
+replicate_q95 = [quantile(column, 0.95) for column in eachcol(rt_replicates)]
+replicate_max = [maximum(column) for column in eachcol(rt_replicates)]
+
+(
+    observed_q95 = quantile(df.rt, 0.95),
+    predicted_q95 = quantile(replicate_q95, [0.025, 0.975]),
+    observed_max = maximum(df.rt),
+    predicted_max = quantile(replicate_max, [0.025, 0.975]),
+)
+```
+"""
+
+# ╔═╡ c0ffee32-0000-11f1-9a01-000000000032
+predictive_check = missing # TODO: 上のNamedTupleを作る
+
+# ╔═╡ c0ffee33-0000-11f1-9a01-000000000033
+if predictive_check === missing
+    md"⏳ 各列のq95・最大値を配列にしてから、`quantile(..., [0.025, 0.975])`で予測区間を作ります。"
+elseif predictive_check isa NamedTuple &&
+       hasproperty(predictive_check, :observed_q95) &&
+       hasproperty(predictive_check, :predicted_q95) &&
+       hasproperty(predictive_check, :observed_max) &&
+       hasproperty(predictive_check, :predicted_max) &&
+       isapprox(predictive_check.observed_q95, quantile(df.rt, 0.95); atol = 1e-8) &&
+       isapprox(collect(predictive_check.predicted_q95), quantile([quantile(column, 0.95) for column in eachcol(rt_replicates)], [0.025, 0.975]); atol = 1e-8) &&
+       isapprox(predictive_check.observed_max, maximum(df.rt); atol = 1e-8) &&
+       isapprox(collect(predictive_check.predicted_max), quantile([maximum(column) for column in eachcol(rt_replicates)], [0.025, 0.975]); atol = 1e-8)
+    q95_inside = predictive_check.predicted_q95[1] <= predictive_check.observed_q95 <= predictive_check.predicted_q95[2]
+    max_inside = predictive_check.predicted_max[1] <= predictive_check.observed_max <= predictive_check.predicted_max[2]
+    md"✅ **正解!** q95が予測区間内: **$(q95_inside)**、最大値が予測区間内: **$(max_inside)**。内外だけでなく、ずれの方向と大きさを読みます。"
+else
+    md"🤔 4つの名前、観測dataの要約、replicate要約の中央95%区間を確認しましょう。"
+end
+
+# ╔═╡ c0ffee34-0000-11f1-9a01-000000000034
+md"""
+## 課題10: truncationとcensoringを別の観測分布にする（「観測境界・依存・混合分布」）
+
+latentな反応時間を`Normal(500, 80)`、観測下限を400とします。下限未満が標本へ入らない分布と、下限未満が400として記録される分布を次のNamedTupleにしましょう。
+
+```julia
+(
+    selected = truncated(latent_boundary; lower = detection_limit),
+    recorded = censored(latent_boundary; lower = detection_limit),
+)
+```
+"""
+
+# ╔═╡ c0ffee35-0000-11f1-9a01-000000000035
+begin
+    latent_boundary = Normal(500, 80)
+    detection_limit = 400.0
+end
+
+# ╔═╡ c0ffee36-0000-11f1-9a01-000000000036
+boundary_models = missing # TODO: selectedとrecordedを持つNamedTuple
+
+# ╔═╡ c0ffee37-0000-11f1-9a01-000000000037
+if boundary_models === missing
+    md"⏳ `selected = truncated(...)`と`recorded = censored(...)`をNamedTupleへ入れます。"
+elseif boundary_models isa NamedTuple &&
+       hasproperty(boundary_models, :selected) &&
+       hasproperty(boundary_models, :recorded) &&
+       minimum(boundary_models.selected) == detection_limit &&
+       minimum(boundary_models.recorded) == detection_limit &&
+       cdf(boundary_models.selected, detection_limit) == 0.0 &&
+       isapprox(cdf(boundary_models.recorded, detection_limit), cdf(latent_boundary, detection_limit); atol = 1e-12) &&
+       mean(boundary_models.selected) > mean(boundary_models.recorded) > mean(latent_boundary)
+    md"✅ **正解!** selectedは境界内へ条件付け直し、recordedは境界へ確率質量を残します。"
+else
+    md"🤔 `truncated`と`censored`を入れ替えていませんか? 境界でのcdfと平均の順も確認しましょう。"
+end
+
+# ╔═╡ c0ffee38-0000-11f1-9a01-000000000038
+md"""
+## 課題11: 共分散を持つ2変数を同時生成する
+
+平均0、分散1、相関0.65の2変量Normalから、`Xoshiro(2032)`を使って5000観測を生成し、`dependent_draws`へ入れましょう。
+
+```julia
+rand(Xoshiro(2032),
+     MvNormal(zeros(2), [1.0 0.65; 0.65 1.0]),
+     5000)
+```
+
+各列が1観測なので、結果は`2 × 5000`のmatrixです。
+"""
+
+# ╔═╡ c0ffee39-0000-11f1-9a01-000000000039
+dependent_draws = missing # TODO: MvNormalから5000観測を生成する
+
+# ╔═╡ c0ffee40-0000-11f1-9a01-000000000040
+if dependent_draws === missing
+    md"⏳ 明示RNG、MvNormal、観測数5000の順で`rand`へ渡します。"
+elseif dependent_draws isa AbstractMatrix &&
+       size(dependent_draws) == (2, 5000) &&
+       all(isfinite, dependent_draws) &&
+       isapprox(mean(dependent_draws[1, :]), 0; atol = 0.05) &&
+       isapprox(mean(dependent_draws[2, :]), 0; atol = 0.05) &&
+       isapprox(cor(dependent_draws[1, :], dependent_draws[2, :]), 0.65; atol = 0.04)
+    md"✅ **正解!** 周辺平均0を保ちながら、2変数を相関約0.65で同時生成できました。"
+else
+    md"🤔 shapeは2×5000ですか? 共分散matrixの非対角要素と、各行間の`cor`を確認しましょう。"
+end
+
+# ╔═╡ c0ffee41-0000-11f1-9a01-000000000041
+md"""
+## 課題12: 既知componentの混合分布から生成する
+
+70%の`Normal(450, 25)`と30%の`Normal(650, 30)`を混ぜた`mixture_rt`を用意しました。`Xoshiro(2033)`を使って10000個生成し、`mixture_draws`へ入れましょう。
+
+この課題は既知parameterからの生成です。Distributions.jlの`MixtureModel`がdataからcomponentを自動推定する、という意味ではありません。
+"""
+
+# ╔═╡ c0ffee42-0000-11f1-9a01-000000000042
+mixture_rt = MixtureModel(
+    Normal[Normal(450, 25), Normal(650, 30)],
+    [0.7, 0.3],
+)
+
+# ╔═╡ c0ffee43-0000-11f1-9a01-000000000043
+mixture_draws = missing # TODO: rand(Xoshiro(2033), mixture_rt, 10_000)
+
+# ╔═╡ c0ffee44-0000-11f1-9a01-000000000044
+if mixture_draws === missing
+    md"⏳ `rand(Xoshiro(2033), mixture_rt, 10_000)`で生成します。"
+elseif mixture_draws isa AbstractVector &&
+       length(mixture_draws) == 10_000 &&
+       all(isfinite, mixture_draws) &&
+       isapprox(mean(mixture_draws), mean(mixture_rt); atol = 3) &&
+       isapprox(std(mixture_draws; corrected = false), std(mixture_rt); atol = 3) &&
+       mean((520 .< mixture_draws) .& (mixture_draws .< 580)) < 0.02
+    md"✅ **正解!** component間の谷を保つmixtureを生成できました。全体平均・SDだけではこの谷を表せません。"
+else
+    md"🤔 長さ10000、有限値、理論mean・SDへの近さ、520〜580の谷を確認しましょう。"
+end
+
 # ╔═╡ c0ffee20-0000-11f1-9a01-000000000020
 md"""
 ## 自由課題
@@ -194,6 +389,11 @@ md"""
 3. `sim_rt` のヒストグラムへ、標本数200と20000で得た形を重ねて比べる
 4. 平均0・SD1の正規乱数と、`rand(rng, [-1.0, 1.0], n)` を並べ、同じ平均・SDでも形が違う反例を確かめる
 5. `log(pdf(Normal(), 40))` と `logpdf(Normal(), 40)` を比べ、`isfinite` で確認する
+6. `fit_mle(Exponential, df.rt)`は観測平均を再現してもSDと中央値を外すことを、replicate dataで確認する
+7. parameter bootstrapとreplicate dataを別々に作り、「fitの揺れ」と「観測値の揺れ」を比較する
+8. 同じlatent sampleへ除外と`max.(x, limit)`を適用し、行数・境界値数・平均の違いを確認する
+9. 相関0と0.65のMvNormalで、両変数が同時に1を超える割合を比較する
+10. `Normal(mean(mixture_rt), std(mixture_rt))`とmixtureを同じnだけ生成し、component間の谷を比較する
 
 ---
 
@@ -2465,6 +2665,26 @@ version = "1.13.0+0"
 # ╠═c0ffee22-0000-11f1-9a01-000000000022
 # ╠═c0ffee23-0000-11f1-9a01-000000000023
 # ╠═c0ffee24-0000-11f1-9a01-000000000024
+# ╟─c0ffee25-0000-11f1-9a01-000000000025
+# ╠═c0ffee26-0000-11f1-9a01-000000000026
+# ╠═c0ffee27-0000-11f1-9a01-000000000027
+# ╟─c0ffee28-0000-11f1-9a01-000000000028
+# ╠═c0ffee29-0000-11f1-9a01-000000000029
+# ╠═c0ffee30-0000-11f1-9a01-000000000030
+# ╟─c0ffee31-0000-11f1-9a01-000000000031
+# ╠═c0ffee32-0000-11f1-9a01-000000000032
+# ╠═c0ffee33-0000-11f1-9a01-000000000033
+# ╟─c0ffee34-0000-11f1-9a01-000000000034
+# ╠═c0ffee35-0000-11f1-9a01-000000000035
+# ╠═c0ffee36-0000-11f1-9a01-000000000036
+# ╠═c0ffee37-0000-11f1-9a01-000000000037
+# ╟─c0ffee38-0000-11f1-9a01-000000000038
+# ╠═c0ffee39-0000-11f1-9a01-000000000039
+# ╠═c0ffee40-0000-11f1-9a01-000000000040
+# ╟─c0ffee41-0000-11f1-9a01-000000000041
+# ╠═c0ffee42-0000-11f1-9a01-000000000042
+# ╠═c0ffee43-0000-11f1-9a01-000000000043
+# ╠═c0ffee44-0000-11f1-9a01-000000000044
 # ╟─c0ffee20-0000-11f1-9a01-000000000020
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

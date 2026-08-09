@@ -37,7 +37,7 @@ test("ホームから教材を遅延読込し、解答と進捗反映まで操�
   await page.goto("./");
   await expect(page).toHaveTitle(/はじめてのJulia/);
   await expect(page.getByRole("heading", { level: 1, name: "はじめてのJulia" })).toBeVisible();
-  await expect(page.getByText(/番号付き全37レッスン＋補講3本/)).toBeVisible();
+  await expect(page.getByText(/番号付き全37レッスン＋補講9本/)).toBeVisible();
 
   await page.getByRole("button", { name: "レッスン1をはじめる" }).click();
   await expect(page.getByRole("heading", { level: 2, name: "Juliaへようこそ" })).toBeVisible();
@@ -83,6 +83,21 @@ test("ロードマップとNotebook配布リンクがPagesのbase pathで到達�
   await page.getByRole("link", { name: "この先の学習ロードマップを見る" }).click();
   await expect(page).toHaveURL(/\/Learning_Julia\/roadmap\.html$/);
   await expect(page.getByRole("heading", { level: 1, name: "学習ロードマップ" })).toBeVisible();
+  const nextExpansion = page.locator("#next-expansion");
+  await expect(nextExpansion.getByText("拡充スプリント・P0〜P1完了")).toBeVisible();
+  await expect(nextExpansion.locator('[data-roadmap-status="published"]')).toHaveCount(4);
+  await expect(nextExpansion.locator('[data-roadmap-status="planned"]')).toHaveCount(0);
+  await expect(nextExpansion.getByRole("heading", { name: "共通の公開ゲート" })).toBeVisible();
+  const strategy = page.locator("#strategic-horizons");
+  await expect(strategy.getByText("長期運用ロードマップ・判断規準")).toBeVisible();
+  for (const horizon of ["now", "next", "later", "hold"]) {
+    await expect(strategy.locator(`[data-strategy-horizon="${horizon}"]`)).toHaveCount(1);
+  }
+  await expect(strategy.locator('[data-strategy-status="research"]')).toHaveCount(1);
+  await expect(strategy.getByRole("heading", { name: "観測過程を尤度へ入れる検証トラック(研究中・未公開)" })).toBeVisible();
+  await expect(strategy.getByText("P2_LIKELIHOOD_STRESS_CHECK_PASS", { exact: true })).toBeVisible();
+  await expect(strategy.getByText("P2_IDENTIFICATION_PROFILE_CHECK_PASS", { exact: true })).toBeVisible();
+  await expect(strategy.getByRole("heading", { name: "候補を公開教材へ昇格させる5つの問い" })).toBeVisible();
   await page.getByRole("link", { name: "← アプリにもどる" }).first().click();
   await expect(page.getByRole("heading", { level: 1, name: "はじめてのJulia" })).toBeVisible();
 });
@@ -135,6 +150,43 @@ test("Git補講を遅延読込し、公開境界つきTarへ到達できる", as
   await expect(download).toHaveAttribute(
     "href",
     "/Learning_Julia/templates/reproducible-study-template.tar"
+  );
+});
+
+test("追加補講6本をそれぞれ遅延読込できる", async ({ page }) => {
+  const loaded = new Set();
+  page.on("response", (response) => {
+    const match = new URL(response.url()).pathname.match(
+      /\/assets\/(x0[4-9]-(?:reading-errors|text-processing|distribution-catalog|batch-csv-io|distribution-fit-diagnostics|observation-boundaries-dependence))-[^/]+\.js$/
+    );
+    if (match) loaded.add(match[1]);
+  });
+
+  const cases = [
+    ["エラーメッセージの読み方", "エラーは、止まった理由を返す観測データ"],
+    ["文字列処理", "文字列を整える前に、意味と原文を分ける"],
+    ["分布のカタログ", "分布名の暗記ではなく、候補を絞る地図を作る"],
+    ["複数CSVと分析成果物の入出力", "一括読込は、ファイルを多く開くことではない"],
+    ["分布の推定と予測診断", "fitは結論ではなく、反証できる予測を作る入口"],
+    ["観測境界・依存・混合分布", "見えなかった値と、境界に記録された値は違う"],
+  ];
+
+  await page.goto("./");
+  for (const [lesson, heading] of cases) {
+    await page.getByRole("button", { name: lesson }).click();
+    await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
+    await page.getByRole("button", { name: "← レッスン一覧" }).click();
+  }
+
+  expect(loaded).toEqual(
+    new Set([
+      "x04-reading-errors",
+      "x05-text-processing",
+      "x06-distribution-catalog",
+      "x07-batch-csv-io",
+      "x08-distribution-fit-diagnostics",
+      "x09-observation-boundaries-dependence",
+    ])
   );
 });
 

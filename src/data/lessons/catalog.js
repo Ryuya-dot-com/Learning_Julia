@@ -41,4 +41,10 @@ export const LESSON_CATALOG = [
   { path: "extra/x01-editors.js", id: "editors-environments", title: "エディタと開発環境", tag: "JuliaのRStudioはどれ?", exCount: 3 },
   { path: "extra/x02-reproducible-project.js", id: "reproducible-research-project", title: "再現可能な研究プロジェクト", tag: "環境・schema・経路・実行記録を一つにつなぐ", exCount: 6 },
   { path: "extra/x03-git-research-history.js", id: "git-research-history", title: "Gitで研究履歴と公開境界を管理する", tag: "commit・branch・tagと機微dataを分ける", exCount: 6 },
+  { path: "extra/x04-reading-errors.js", id: "reading-error-messages", title: "エラーメッセージの読み方", tag: "型・場所・入力を手がかりに原因を切り分ける", exCount: 4 },
+  { path: "extra/x05-text-processing.js", id: "text-processing", title: "文字列処理", tag: "分割・正規化・抽出を追跡可能な変換にする", exCount: 4 },
+  { path: "extra/x06-distribution-catalog.js", id: "distribution-catalog", title: "分布のカタログ", tag: "取りうる値・生成過程・仮定から候補を選ぶ", exCount: 4 },
+  { path: "extra/x07-batch-csv-io.js", id: "batch-csv-io", title: "複数CSVと分析成果物の入出力", tag: "列挙・schema・入力元・結果表を一つの検証経路にする", exCount: 6 },
+  { path: "extra/x08-distribution-fit-diagnostics.js", id: "distribution-fit-diagnostics", title: "分布の推定と予測診断", tag: "fitした分布を同じ標本サイズの予測へ戻して点検する", exCount: 6 },
+  { path: "extra/x09-observation-boundaries-dependence.js", id: "observation-boundaries-dependence", title: "観測境界・依存・混合分布", tag: "除外・測定限界・共分散・異質性を生成過程として分ける", exCount: 6 },
 ];

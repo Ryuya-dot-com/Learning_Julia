@@ -10,8 +10,8 @@
 using Pluto
 
 const EXPECTED_JUDGES = Dict(
-    "nb1-data.jl" => 5,
-    "nb2-stats.jl" => 6,
+    "nb1-data.jl" => 7,
+    "nb2-stats.jl" => 12,
     "nb3-sim.jl" => 5,
     "nb4-model.jl" => 14,
     "nb5-advanced.jl" => 9,
