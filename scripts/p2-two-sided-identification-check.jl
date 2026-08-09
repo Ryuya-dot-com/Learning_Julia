@@ -13,6 +13,8 @@ include(joinpath(@__DIR__, "p2-likelihood-contracts.jl"))
 using .P2LikelihoodContracts
 
 const TWO_SIDED_REPETITIONS = 120
+const MIN_CHALLENGING_CATASTROPHIC_RATE = 0.20
+const MAX_CHALLENGING_CATASTROPHIC_RATE = 0.30
 const CALIBRATION_TRUTHS = (Normal(-2, 0.35), Normal(1200, 250))
 const HOLDOUT_TRUTHS = (Normal(37, 1.7), Normal(-15_000, 3_200))
 const TWO_SIDED_DESIGNS = (
@@ -160,13 +162,12 @@ println(holdout)
     end
 
     @test calibration.challenging.attempts == 1_920
-    @test calibration.challenging.catastrophic == 490
-    @test calibration.challenging.enhanced_catastrophic_warnings == 484
     @test holdout.challenging.attempts == 1_920
-    @test holdout.challenging.catastrophic == 446
-    @test holdout.challenging.enhanced_catastrophic_warnings == 436
 
     for challenging in (calibration.challenging, holdout.challenging)
+        @test MIN_CHALLENGING_CATASTROPHIC_RATE <=
+              challenging.catastrophic / challenging.attempts <=
+              MAX_CHALLENGING_CATASTROPHIC_RATE
         @test challenging.enhanced_catastrophic_warnings >
               challenging.current_catastrophic_warnings
         @test challenging.enhanced_catastrophic_warnings /

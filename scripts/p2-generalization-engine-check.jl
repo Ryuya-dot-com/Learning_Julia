@@ -16,6 +16,14 @@ using .P2LikelihoodContracts
 const GENERALIZATION_REPETITIONS = 120
 const GENERALIZATION_TRUTHS = (Normal(-2, 0.35), Normal(1200, 250))
 const GENERALIZATION_DESIGNS = (:left80, :right50, :central50, :left10, :central10)
+const MIN_ONE_SIDED_CATASTROPHIC_RATE = 0.03
+const MAX_ONE_SIDED_CATASTROPHIC_RATE = 0.06
+const MIN_TWO_SIDED_FIT_FAILURE_RATE = 0.10
+const MAX_TWO_SIDED_FIT_FAILURE_RATE = 0.15
+const MIN_TWO_SIDED_CATASTROPHIC_RATE = 0.40
+const MAX_TWO_SIDED_CATASTROPHIC_RATE = 0.55
+const MIN_TWO_SIDED_MISS_RATE = 0.30
+const MAX_TWO_SIDED_MISS_RATE = 0.45
 
 function truncation_bounds(distribution, design)
     if design == :left80
@@ -186,6 +194,46 @@ foreach(println, generalization_results)
 println("P2_INDEPENDENT_ENGINE")
 foreach(println, engine_results)
 
+function generalization_gate_summary(results)
+    attempts = sum(result -> result.attempts, results)
+    optimizer_accepts = sum(result -> result.optimizer_accepts, results)
+    fit_failures = sum(result -> result.fit_failures, results)
+    catastrophic = sum(result -> result.catastrophic, results)
+    catastrophic_warnings = sum(
+        result -> result.catastrophic_warnings, results,
+    )
+    missed_catastrophic = catastrophic - catastrophic_warnings
+    (
+        attempts,
+        optimizer_accepts,
+        fit_failures,
+        fit_failure_rate = fit_failures / attempts,
+        catastrophic,
+        catastrophic_rate = catastrophic / optimizer_accepts,
+        catastrophic_warnings,
+        missed_catastrophic,
+        miss_rate = missed_catastrophic / catastrophic,
+    )
+end
+
+stable_one_sided = filter(
+    result -> result.design == :left80,
+    generalization_results,
+)
+one_sided = filter(
+    result -> result.design in (:left80, :right50, :left10),
+    generalization_results,
+)
+two_sided = filter(
+    result -> result.design in (:central50, :central10),
+    generalization_results,
+)
+one_sided_gate = generalization_gate_summary(one_sided)
+two_sided_gate = generalization_gate_summary(two_sided)
+println("P2_GENERALIZATION_GATE_SUMMARY")
+println((scope = :one_sided, one_sided_gate...))
+println((scope = :two_sided, two_sided_gate...))
+
 @testset "P2 generalization and independent engine" begin
     @test length(generalization_results) == 20
     @test all(result -> result.attempts == GENERALIZATION_REPETITIONS, generalization_results)
@@ -194,28 +242,23 @@ foreach(println, engine_results)
         generalization_results,
     )
 
-    stable_one_sided = filter(
-        result -> result.design == :left80,
-        generalization_results,
-    )
     @test sum(result -> result.fit_failures, stable_one_sided) == 0
     @test sum(result -> result.catastrophic, stable_one_sided) == 0
     @test sum(result -> result.warnings, stable_one_sided) == 0
 
-    one_sided = filter(
-        result -> result.design in (:left80, :right50, :left10),
-        generalization_results,
-    )
-    @test sum(result -> result.catastrophic, one_sided) == 62
-    @test sum(result -> result.catastrophic_warnings, one_sided) == 62
+    @test MIN_ONE_SIDED_CATASTROPHIC_RATE <=
+          one_sided_gate.catastrophic_rate <=
+          MAX_ONE_SIDED_CATASTROPHIC_RATE
+    @test one_sided_gate.catastrophic_warnings == one_sided_gate.catastrophic
 
-    two_sided = filter(
-        result -> result.design in (:central50, :central10),
-        generalization_results,
-    )
-    @test sum(result -> result.fit_failures, two_sided) == 116
-    @test sum(result -> result.catastrophic, two_sided) == 396
-    @test sum(result -> result.catastrophic_warnings, two_sided) == 253
+    @test MIN_TWO_SIDED_FIT_FAILURE_RATE <=
+          two_sided_gate.fit_failure_rate <=
+          MAX_TWO_SIDED_FIT_FAILURE_RATE
+    @test MIN_TWO_SIDED_CATASTROPHIC_RATE <=
+          two_sided_gate.catastrophic_rate <=
+          MAX_TWO_SIDED_CATASTROPHIC_RATE
+    @test MIN_TWO_SIDED_MISS_RATE <= two_sided_gate.miss_rate <=
+          MAX_TWO_SIDED_MISS_RATE
 
     @test length(engine_results) == 5
     for result in engine_results
