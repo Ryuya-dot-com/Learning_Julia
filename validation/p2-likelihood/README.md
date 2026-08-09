@@ -125,6 +125,8 @@ julia --startup-file=no --project=validation/p2-likelihood scripts/p2-identifica
 
 現行のdata-only warningは、大きく異なるlocation・scaleでも片側truncationの破局的逸脱62件をすべて検出しました。しかし両側truncationでは、fitが受理された844試行のうち396件が破局的で、143件を見逃しました。したがって、片側の結果を両側へ外挿せず、両側は明示的な公開blockerとします。
 
+表の集計値はJulia 1.12.5で記録した結果です。CIでは、片側の破局的逸脱率3〜6%かつ全件捕捉、両側のfit失敗率10〜15%、受理fit中の破局的逸脱率40〜55%、その未捕捉率30〜45%を契約とします。件数が数件変わっても、片側で成立した診断を両側へ外挿できないという公開blockerを検証し続けます。
+
 独立engine照合は、SciPy公式の`CensoredData + norm.fit`を2データ、`truncate + optimize.minimize(method="Nelder-Mead")`を片側2・両側1データに使いました。Julia BFGSとSciPy Nelder–Meadの負の対数尤度差は5比較の最大2.1×10⁻⁶、推定parameter差は真のsigmaの10⁻⁴未満でした。これは尤度実装の独立一致を支持しますが、両側の識別問題は解決しません。`P2_GENERALIZATION_ENGINE_CHECK_PASS`はこの成功と失敗の境界を再現できたことを表し、公開昇格を意味しません。
 
 両側選択確率は、裾の位置に応じて`logcdf`・`logccdf`・`log1p`を切り替えます。これにより、`logdiffcdf`で見つかった二階ForwardDiffの型曖昧性を回避し、関数値だけでなくHessianまで検証します。
@@ -146,6 +148,8 @@ julia --startup-file=no --project=validation/p2-likelihood scripts/p2-generaliza
 | 完全未使用holdout | 1,920 | 192 | 446 | 307 | 436 | 10 | 480試行でwarning 0 |
 
 異なる母数とseedのholdoutで、破局的逸脱の検出は307/446から436/446（97.8%）へ改善し、中央99%保持の安定条件480試行で誤warning 0でした。一方、難条件では破局的逸脱に該当しないfitも1,010件停止しました。これらを直ちに誤warningとは呼びません。広いsource scaleが95%尤度比域に残るため、通常の狭いWald報告へ進めないという意味です。
+
+この表もJulia 1.12.5の再現記録です。CIは難条件1,920試行という設計を固定し、破局的逸脱率20〜30%、広域profile併用による検出改善、95%超の破綻捕捉、なお未検出が残ること、安定条件でfit失敗・破綻・warningが0であることを検証します。
 
 残る10件は、選択後dataが「母分布自体が境界内に狭く集中していた」という解を95%尤度比で支持したケースです。選択後の値だけから、この解と「広い母分布のまれな選択標本」を常に区別することはできません。100%検出に合わせてcutoffを後付けせず、次は選別前総数・選択数または事前に既知の保持率をdesign metadataとして尤度へ入れる経路を比較します。
 
@@ -177,6 +181,8 @@ sum(log f(x_selected)) + (N - m) * log(1 - p)
 | holdout | 193 | 446 | 0 | 0 | 73.54% / 91.25% |
 
 人数情報は点推定の破局的逸脱を463件・446件からともに0へ減らしました。しかし局所HessianのWald区間は、とくに対称な中央10%選択で`mu`の不確かさを大幅に過小評価しました。点推定の回復だけを根拠に公開昇格させません。
+
+表の集計値はJulia 1.12.5で記録した結果です。CIでは、人数を捨てた条件付き尤度のfit失敗率10〜15%・破局的逸脱率28〜35%を反例として再現し、selection-count likelihoodのfit失敗と破局的逸脱がともに0であることを検証します。境界付近のoptimizer acceptanceが数件変わっても、「人数情報で点推定は回復するがWald区間だけでは不十分」という教材上の結論を維持します。
 
 そこで校正・holdoutの中央10%（目標40・120件）と非対称50%（目標40件）を各80反復profileしました。全480試行でprofile_okとなり、fit失敗、`search_limit`、profile例外はいずれも0でした。
 

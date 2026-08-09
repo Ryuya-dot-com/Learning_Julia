@@ -16,6 +16,10 @@ using .P2LikelihoodContracts
 
 const SELECTION_COUNT_REPETITIONS = 120
 const SELECTION_COUNT_PROFILE_REPETITIONS = 80
+const MIN_CONDITIONAL_FIT_FAILURE_RATE = 0.10
+const MAX_CONDITIONAL_FIT_FAILURE_RATE = 0.15
+const MIN_CONDITIONAL_CATASTROPHIC_RATE = 0.28
+const MAX_CONDITIONAL_CATASTROPHIC_RATE = 0.35
 const SELECTION_COUNT_CALIBRATION_TRUTHS = (
     Normal(-2, 0.35), Normal(1200, 250),
 )
@@ -323,10 +327,14 @@ println(teaching_example)
         )
     end
     @test calibration.attempts == holdout.attempts == 1_440
-    @test calibration.conditional_fit_failures == 174
-    @test calibration.conditional_catastrophic == 463
-    @test holdout.conditional_fit_failures == 193
-    @test holdout.conditional_catastrophic == 446
+    for summary in (calibration, holdout)
+        @test MIN_CONDITIONAL_FIT_FAILURE_RATE <=
+              summary.conditional_fit_failures / summary.attempts <=
+              MAX_CONDITIONAL_FIT_FAILURE_RATE
+        @test MIN_CONDITIONAL_CATASTROPHIC_RATE <=
+              summary.conditional_catastrophic / summary.attempts <=
+              MAX_CONDITIONAL_CATASTROPHIC_RATE
+    end
     @test calibration.count_fit_failures == holdout.count_fit_failures == 0
     @test calibration.count_catastrophic == holdout.count_catastrophic == 0
     @test calibration.count_coverage_mu < 0.8
