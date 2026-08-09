@@ -12,6 +12,8 @@ on:
       - 'public/data/**'
       - 'scripts/nb-exec-check.jl'
       - 'scripts/run-notebook-smoke.jl'
+      - 'scripts/p2-likelihood-contracts.jl'
+      - 'scripts/p2-selection-count-notebook-exec.jl'
       - 'scripts/setup-validation-env.jl'
       - 'validation/**'
       - '.github/workflows/pluto-smoke.yml'
@@ -36,8 +38,12 @@ jobs:
           project: validation
       - uses: julia-actions/cache@v3
         with:
-          cache-name: julia-pluto-${{ hashFiles('validation/Project.toml') }}
+          cache-name: julia-pluto-${{ hashFiles('validation/Project.toml', 'validation/p2-likelihood/Project.toml') }}
       - name: Instantiate validation environment
         run: julia --project=validation scripts/setup-validation-env.jl
+      - name: Instantiate P2 likelihood feasibility environment
+        run: julia --startup-file=no --project=validation/p2-likelihood scripts/setup-validation-env.jl
       - name: Execute public notebooks in initial state
         run: julia --project=validation scripts/run-notebook-smoke.jl
+      - name: Execute P2 research notebook in isolated environment
+        run: julia --startup-file=no --project=validation scripts/p2-selection-count-notebook-exec.jl

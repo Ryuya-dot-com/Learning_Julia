@@ -12,6 +12,12 @@ const CHECKS = [
     "scripts/p2-generalization-engine-check.jl",
     "scripts/p2-two-sided-identification-check.jl",
     "scripts/p2-selection-count-check.jl",
+    "scripts/p2-selection-count-robustness-check.jl",
+    "scripts/p2-selection-count-interval-check.jl",
+    "scripts/p2-selection-count-report-io-check.jl",
+    "scripts/p2-selection-count-api-boundary-check.jl",
+    "scripts/p2-selection-count-local-server-check.jl",
+    "scripts/p2-learner-usability-protocol-check.jl",
     "scripts/data-persistence-check.jl",
     "scripts/reproducible-workflow-check.jl",
     "scripts/reproducible-template-check.jl",
@@ -43,11 +49,7 @@ for (i, relative_path) in enumerate(CHECKS)
     path = joinpath(ROOT, relative_path)
     check_project = if endswith(relative_path, "categorical-outcomes-check.jl")
         categorical_project_dir
-    elseif occursin("p2-likelihood-", relative_path) ||
-           endswith(relative_path, "p2-identification-profile-check.jl") ||
-           endswith(relative_path, "p2-generalization-engine-check.jl") ||
-           endswith(relative_path, "p2-two-sided-identification-check.jl") ||
-           endswith(relative_path, "p2-selection-count-check.jl")
+    elseif startswith(basename(relative_path), "p2-")
         p2_likelihood_project_dir
     else
         project_dir

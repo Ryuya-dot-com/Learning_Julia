@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:learning-julia:p2:selection-count-api-response:1",
+  "title": "Learning Julia P2 selection-count API response envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "request_id", "request_sha256", "engine", "report_bundle"],
+  "properties": {
+    "schema_id": { "const": "learning-julia.p2.selection-count-api-response" },
+    "schema_version": { "const": "1.0.0" },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "request_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["julia_version", "project_environment", "manifest_sha256", "report_schema_version", "generated_at_utc"],
+      "properties": {
+        "julia_version": { "type": "string", "minLength": 1 },
+        "project_environment": { "const": "validation/p2-likelihood" },
+        "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "report_schema_version": { "const": "1.0.0" },
+        "generated_at_utc": { "type": "string", "format": "date-time" }
+      }
+    },
+    "report_bundle": {
+      "$ref": "selection-count-report-v1.schema.json"
+    }
+  }
+}

@@ -1,0 +1,236 @@
+{
+    "schema_id": "learning-julia.p2.selection-count-report",
+    "schema_version": "1.0.0",
+    "model_scope": {
+        "family": "Normal",
+        "selection_rule": "strict_open_interval",
+        "automatic_interval_selection": false
+    },
+    "reports": [
+        {
+            "report_id": "review",
+            "status": "review_profile_and_bootstrap",
+            "automatic_interval": null,
+            "input_contract": {
+                "total_screened": 400,
+                "selected_count": 43,
+                "lower_boundary": 36.78637571034638,
+                "upper_boundary": 37.21362428965362,
+                "boundary_rule": "lower < value < upper"
+            },
+            "methods": [
+                {
+                    "method": "wald",
+                    "status": "ok",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": 35.76820874627668,
+                            "upper": 36.30743696780582
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": 0.3036826523240285,
+                            "upper": 2.836880740804658
+                        }
+                    ],
+                    "diagnostics": null
+                },
+                {
+                    "method": "profile",
+                    "status": "ok",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": 35.704861778896735,
+                            "upper": 38.14528672724458
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": 0.4479716702473726,
+                            "upper": 2.0609445479313133
+                        }
+                    ],
+                    "diagnostics": null
+                },
+                {
+                    "method": "bootstrap",
+                    "status": "ok",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": 35.86410720627198,
+                            "upper": 38.03876454496614
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": 0.420883359709997,
+                            "upper": 1.7211002539028368
+                        }
+                    ],
+                    "diagnostics": {
+                        "total_screened": 400,
+                        "repetitions": 499,
+                        "successes": 499,
+                        "success_rate": 1,
+                        "minimum_success_rate": 0.9
+                    }
+                }
+            ],
+            "messages": [
+                "wald_is_local_approximation",
+                "compare_profile_and_bootstrap"
+            ]
+        },
+        {
+            "report_id": "unresolvedProfile",
+            "status": "unresolved_profile",
+            "automatic_interval": null,
+            "input_contract": {
+                "total_screened": 400,
+                "selected_count": 43,
+                "lower_boundary": 36.78637571034638,
+                "upper_boundary": 37.21362428965362,
+                "boundary_rule": "lower < value < upper"
+            },
+            "methods": [
+                {
+                    "method": "wald",
+                    "status": "ok",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": 35.76820874627668,
+                            "upper": 36.30743696780582
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": 0.3036826523240285,
+                            "upper": 2.836880740804658
+                        }
+                    ],
+                    "diagnostics": null
+                },
+                {
+                    "method": "profile",
+                    "status": "search_limit",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": null,
+                            "upper": null
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": null,
+                            "upper": null
+                        }
+                    ],
+                    "diagnostics": null
+                },
+                {
+                    "method": "bootstrap",
+                    "status": "ok",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": 35.796700050349756,
+                            "upper": 37.94420817865662
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": 0.42756497931815485,
+                            "upper": 1.749716425817133
+                        }
+                    ],
+                    "diagnostics": {
+                        "total_screened": 400,
+                        "repetitions": 99,
+                        "successes": 99,
+                        "success_rate": 1,
+                        "minimum_success_rate": 0.9
+                    }
+                }
+            ],
+            "messages": [
+                "wald_is_local_approximation",
+                "profile_interval_unresolved"
+            ]
+        },
+        {
+            "report_id": "unresolvedBootstrap",
+            "status": "unresolved_bootstrap",
+            "automatic_interval": null,
+            "input_contract": {
+                "total_screened": 400,
+                "selected_count": 43,
+                "lower_boundary": 36.78637571034638,
+                "upper_boundary": 37.21362428965362,
+                "boundary_rule": "lower < value < upper"
+            },
+            "methods": [
+                {
+                    "method": "wald",
+                    "status": "ok",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": 35.76820874627668,
+                            "upper": 36.30743696780582
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": 0.3036826523240285,
+                            "upper": 2.836880740804658
+                        }
+                    ],
+                    "diagnostics": null
+                },
+                {
+                    "method": "profile",
+                    "status": "ok",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": 35.704861778896735,
+                            "upper": 38.14528672724458
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": 0.4479716702473726,
+                            "upper": 2.0609445479313133
+                        }
+                    ],
+                    "diagnostics": null
+                },
+                {
+                    "method": "bootstrap",
+                    "status": "insufficient_success",
+                    "intervals": [
+                        {
+                            "parameter": "mu",
+                            "lower": null,
+                            "upper": null
+                        },
+                        {
+                            "parameter": "sigma",
+                            "lower": null,
+                            "upper": null
+                        }
+                    ],
+                    "diagnostics": {
+                        "total_screened": 10,
+                        "repetitions": 99,
+                        "successes": 28,
+                        "success_rate": 0.2828282828282828,
+                        "minimum_success_rate": 0.9
+                    }
+                }
+            ],
+            "messages": [
+                "wald_is_local_approximation",
+                "bootstrap_success_rate_too_low"
+            ]
+        }
+    ]
+}

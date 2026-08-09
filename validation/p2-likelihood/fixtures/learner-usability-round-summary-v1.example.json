@@ -1,0 +1,58 @@
+{
+  "schema_id": "learning-julia.p2.learner-usability-round-summary",
+  "schema_version": "1.0.0",
+  "record_kind": "synthetic_example",
+  "data_classification": "aggregate_without_direct_identifiers",
+  "round_id": "round-01",
+  "round_kind": "formative",
+  "completed_sessions": 5,
+  "cumulative_completed_sessions": 5,
+  "task_summaries": [
+    {
+      "task_id": "denominator",
+      "attempted": 5,
+      "completed_independently": 5,
+      "teach_back_score_2": 5
+    },
+    {
+      "task_id": "missingness",
+      "attempted": 5,
+      "completed_independently": 3,
+      "teach_back_score_2": 4
+    },
+    {
+      "task_id": "conditional_vs_count",
+      "attempted": 5,
+      "completed_independently": 4,
+      "teach_back_score_2": 4
+    },
+    {
+      "task_id": "unresolved_interval",
+      "attempted": 5,
+      "completed_independently": 3,
+      "teach_back_score_2": 3
+    },
+    {
+      "task_id": "family_scope",
+      "attempted": 5,
+      "completed_independently": 4,
+      "teach_back_score_2": 4
+    }
+  ],
+  "issues": [
+    {
+      "issue_code": "automatic_fallback_assumed",
+      "severity": "major",
+      "occurrences": 2,
+      "status": "open",
+      "action_code": "revise_interval_status_copy"
+    }
+  ],
+  "keyboard_only_gate_met": false,
+  "decision": "revise_retest",
+  "decision_reason_codes": [
+    "critical_teach_back_below_full",
+    "major_issue_open",
+    "formative_round_never_promotes"
+  ]
+}

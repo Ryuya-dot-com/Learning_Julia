@@ -88,7 +88,7 @@ describe("観測境界・依存・混合分布の学習契約", () => {
       expect(checker, `${contract}がJulia検証にない`).toContain(contract);
     }
     expect(runner).toContain('"scripts/distribution-structure-check.jl"');
-    expect(deploy).toContain("Run 26 numerical regression checks");
+    expect(deploy).toContain("Run 32 numerical regression checks");
   });
 
   it("公式文書・P0-C・NB2・ロードマップ・READMEを同期する", () => {
