@@ -138,9 +138,13 @@ describe("P2 尤度feasibilityの研究境界", () => {
     for (const contract of [
       "GEOMETRY_REPETITIONS = 160",
       "PROFILE_REPETITIONS = 80",
+      "MIN_CHALLENGING_CATASTROPHIC_RATE = 0.02",
+      "MAX_CHALLENGING_CATASTROPHIC_RATE = 0.08",
+      "MAX_STABLE_WARNING_RATE = 0.01",
       "20261000 + 10i + j",
       "20262400 + 10i + j",
       "catastrophic_warnings",
+      "gate.catastrophic_warnings == gate.catastrophic",
       "P2_IDENTIFICATION_PROFILE_CHECK_PASS",
       "julianlsolvers.github.io/Optim.jl/stable/user/config",
     ]) {
