@@ -157,6 +157,19 @@ h1{
 .sq p{margin:0; font-size:12.5px; color:var(--faint)}
 .sq code{font-family:var(--mono); font-size:11px; background:#F5F2EC; color:#5A4470; padding:1px 6px; border-radius:5px}
 
+/* ---------- 完了スプリントと長期運用計画 ---------- */
+.planned{border-style:dashed}
+.planned p + p{margin-top:8px}
+.plan-gate{
+  margin-top:16px; background:#fff; border:1px solid var(--line);
+  border-radius:16px; padding:18px 20px;
+}
+.plan-gate h3{margin:0 0 8px; font-size:15px}
+.plan-gate ul{margin:0; padding-left:1.35em}
+.plan-gate li{margin:4px 0; font-size:12.8px; color:var(--sub)}
+.plan-gate p{margin:10px 0 0; font-size:12.8px; color:var(--sub)}
+.plan-gate code{font-family:var(--mono); font-size:11.5px; background:#F5F2EC; color:#5A4470; padding:2px 6px; border-radius:5px}
+
 /* ---------- ゴール ---------- */
 .goal-card{
   margin-top:16px; background:var(--purple-soft); border:1px solid #DCC9E8;
@@ -215,7 +228,7 @@ html.js .reveal.in{opacity:1; transform:none}
 
   <header class="reveal">
     <p class="backlink"><a href="./">← アプリにもどる</a></p>
-    <p class="eyebrow">学習アプリ「はじめてのJulia」続編構想</p>
+    <p class="eyebrow">学習アプリ「はじめてのJulia」公開教材の全体像</p>
     <h1>学習ロードマップ</h1>
     <p class="lede">文法の土台(基礎編)から、データハンドリング、確率分布、標本分布、推定、相関・回帰、そして混合モデルと研究計画まで。R との連携ルートも備え、分布を作り乱数を引くJuliaのコードを縦糸に、統計を「体験」で積み上げるロードマップです。</p>
     <p class="meta"><span>基礎編〜測定・依存構造・研究計画編 全37レッスン公開中</span><span class="sep">/</span><span>R連携・補講は独立トラック</span><span class="sep">/</span><span>対象:プログラミング未経験〜</span></p>
@@ -314,7 +327,7 @@ html.js .reveal.in{opacity:1; transform:none}
 
     <!-- STEP 2 統計・可視化編 -->
     <section class="phase reveal" style="--pc:#389826; --ps:#EAF6E6;">
-      <span class="node" aria-hidden="true"></span>
+      <span class="node node-done" aria-hidden="true">✓</span>
       <div>
         <span class="pstep">STEP 2 / 統計・可視化編・公開中</span>
         <h2>レッスン 17–19 <span class="psub">経験分布から確率分布へ</span></h2>
@@ -344,7 +357,7 @@ html.js .reveal.in{opacity:1; transform:none}
 
     <!-- STEP 3 確率・推論・シミュレーション編 -->
     <section class="phase reveal" style="--pc:#9558B2; --ps:#F3ECF7;">
-      <span class="node" aria-hidden="true"></span>
+      <span class="node node-done" aria-hidden="true">✓</span>
       <div>
         <span class="pstep">STEP 3 / 確率・推論・シミュレーション編・公開中</span>
         <h2>レッスン 20–25 <span class="psub">抽出、標本分布、推定、検定</span></h2>
@@ -415,7 +428,7 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
 
     <!-- STEP 4 関連と一般線形モデル編 -->
     <section class="phase reveal" style="--pc:#4063D8; --ps:#EBF0FB;">
-      <span class="node" aria-hidden="true"></span>
+      <span class="node node-done" aria-hidden="true">✓</span>
       <div>
         <span class="pstep">STEP 4 / 関連と一般線形モデル編・公開中</span>
         <h2>レッスン 26–32 <span class="psub">尺度に応じた関連から多カテゴリGLMへ</span></h2>
@@ -469,7 +482,7 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
 
     <!-- STEP 5 測定・依存構造・研究計画編 -->
     <section class="phase reveal" style="--pc:#6D3E86; --ps:#F3ECF7;">
-      <span class="node" aria-hidden="true"></span>
+      <span class="node node-done" aria-hidden="true">✓</span>
       <div>
         <span class="pstep">STEP 5 / 測定・依存構造・研究計画編・公開中</span>
         <h2>レッスン 33–37 <span class="psub">測定、依存構造、研究計画</span></h2>
@@ -567,17 +580,145 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
           <p><code>status／diff／commit</code>からbranch・annotated tagへ進み、公開合成例とprivate rawを分離します。ignoreは履歴削除ではなく、Git LFSも匿名化ではないという境界を、実行可能templateで確認します。</p>
         </div>
         <div class="sq">
-          <h3>エラーメッセージの読み方</h3>
-          <p>MethodError を恐れない。基礎編「データの型」の続きとして。</p>
+          <h3>エラーメッセージの読み方(公開中)</h3>
+          <p><code>MethodError</code>・scope・配列の形・stacktraceを、最小再現例と安全な共有手順へつなぎます。</p>
         </div>
         <div class="sq">
-          <h3>文字列処理</h3>
-          <p>ログファイルの整形と、正規表現のさわりだけ。</p>
+          <h3>文字列処理(公開中)</h3>
+          <p><code>split／strip／Regex</code>でlogを構造化し、Unicode・欠測表現・privacyの境界まで監査します。</p>
         </div>
         <div class="sq">
-          <h3>分布のカタログ</h3>
-          <p><code>Distributions.jl</code> の世界。正規・二項・ポアソン——シミュレーションの材料庫です。</p>
+          <h3>分布のカタログ(公開中)</h3>
+          <p><code>Distributions.jl</code>の離散・連続分布を、support・生成過程・parameterizationから選びます。</p>
         </div>
+        <div class="sq">
+          <h3>複数CSVと分析成果物の入出力(公開中)</h3>
+          <p><code>readdir</code>・<code>CSV.File(files)</code>・<code>source</code>で入力集合を監査し、schemaつき読込から役割別の結果表、上書き拒否、round tripまでを一つの経路にします。</p>
+        </div>
+        <div class="sq">
+          <h3>分布の推定と予測診断(公開中)</h3>
+          <p><code>fit</code>・<code>fit_mle</code>で推定した分布を、同じ標本サイズのreplicate dataへ戻し、0・SD・分位点・最大値で反証します。</p>
+        </div>
+        <div class="sq">
+          <h3>観測境界・依存・混合分布(公開中)</h3>
+          <p><code>truncated</code>・<code>censored</code>・<code>MvNormal</code>・<code>MixtureModel</code>で、除外、測定限界、共分散、異質性を別の生成過程として復元します。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 完了した拡充スプリント -->
+    <section id="next-expansion" class="phase reveal" style="--pc:#276DC3; --ps:#E9F0FA;">
+      <span class="node node-hollow" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">拡充スプリント・P0〜P1完了</span>
+        <h2>入力から予測診断までを一本につないだ <span class="psub">番号付き37本は維持</span></h2>
+        <p class="ptag">新しい概念を本編へ詰めこまず、補講4本とPluto演習へ分けました。P0-A・P0-B・P0-C・P1を公開し、入力から観測過程を含む予測診断までを接続しました。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson" data-roadmap-status="published">
+          <span class="lnum">P0-A</span>
+          <h3>複数CSVを安全に一つの表へ(公開中)</h3>
+          <p><strong>導線:</strong> L16から新補講「複数CSVと分析成果物の入出力」へ進み、NB1で実際の複数ファイルを読みます。</p>
+          <p><strong>範囲:</strong> <code>readdir</code>による列挙と順序固定、空入力、入力元列、型・欠測・必須列、列不一致、行数、主キー重複を入口で検査します。</p>
+          <p><strong>完了条件:</strong> 正常系に加え、0件・型違反・列違反・重複キーが意図した場所で停止することをJuliaで検証します。</p>
+          <div class="chips"><code>CSV.File(files)</code><code>source</code><code>strict</code><code>cols=:setequal</code></div>
+        </article>
+        <article class="lesson" data-roadmap-status="published">
+          <span class="lnum">P0-B</span>
+          <h3>分析成果物を再利用できる形で書き出す(公開中)</h3>
+          <p><strong>導線:</strong> 同じ入出力補講で、読込から集計、書出し、別processでの読戻しまでを一つの課題にします。</p>
+          <p><strong>範囲:</strong> 要約・係数・区間・予測・診断・除外記録を単純な表へ分離し、図とrun metadataを同じrun IDへ結びます。</p>
+          <p><strong>完了条件:</strong> rawを上書きせず、行数・列名・型・欠測・checksumをround tripで照合し、同名異内容の出力を拒否します。</p>
+          <div class="chips"><code>CSV.write</code><code>Arrow.write</code><code>round trip</code><code>run metadata</code></div>
+        </article>
+        <article class="lesson" data-roadmap-status="published">
+          <span class="lnum">P0-C</span>
+          <h3>分布を当てはめ、予測で反証する(公開中)</h3>
+          <p><strong>導線:</strong> L19と「分布のカタログ」から新補講「分布の推定と予測診断」へ進み、NB2で実データへ適用します。</p>
+          <p><strong>範囲:</strong> <code>fit</code>・<code>fit_mle</code>、parameter推定と不確かさの区別、同じ標本サイズのreplicate data、裾・0・分位点・最大値の診断を扱います。</p>
+          <p><strong>完了条件:</strong> 乱数の特定列ではなく、support・有限性・理論量・予測要約を検査し、平均だけ合う誤モデルの反例を含めます。</p>
+          <div class="chips"><code>fit / fit_mle</code><code>rand(rng, d, n)</code><code>replicate data</code><code>model check</code></div>
+        </article>
+        <article class="lesson" data-roadmap-status="published">
+          <span class="lnum">P1</span>
+          <h3>観測境界と依存を分布へ戻す(公開中)</h3>
+          <p><strong>導線:</strong> 分布推定の後半を、切断・打切り、多変量、異質性の順に進め、相関・混合モデルの既存回へ接続します。</p>
+          <p><strong>範囲:</strong> <code>truncated</code>と<code>censored</code>、<code>MvNormal</code>の共分散、<code>MixtureModel</code>による生成を扱います。</p>
+          <p><strong>完了条件:</strong> 除外と測定限界を区別し、独立生成と相関生成の差を復元します。混合分布は生成・読解までとし、推定機能があるとは説明しません。</p>
+          <div class="chips"><code>truncated / censored</code><code>MvNormal</code><code>MixtureModel</code><code>simulation</code></div>
+        </article>
+      </div>
+      <div class="plan-gate">
+        <h3>共通の公開ゲート</h3>
+        <ul>
+          <li>公式stableドキュメントでAPI・parameterization・非対応範囲を確認し、検証したJulia・package versionを教材へ記録する。</li>
+          <li>アプリは1画面1トピックと即時フィードバックを維持し、詳細実装は補講、統合課題はNB1／NB2へ分ける。</li>
+          <li>掲載コードは正常系と意図的失敗例を独立Julia scriptで検証し、乱数の具体値ではなく性質へtestを置く。</li>
+          <li>教材catalog、ロードマップ、Plutoノート、download、Vitest、build、Playwrightの同期がすべて通ってから公開中へ変更する。</li>
+        </ul>
+        <p><strong>今回の境界:</strong> 番号付き本編の増設・改番は行いません。<code>CSV.Rows</code>／<code>CSV.Chunks</code>は大規模データの任意発展、混合分布の推定は別packageを要する将来課題とします。</p>
+      </div>
+    </section>
+
+    <!-- 長期運用ロードマップ -->
+    <section id="strategic-horizons" class="phase reveal" style="--pc:#6B5B95; --ps:#F1EDF7;">
+      <span class="node node-hollow" aria-hidden="true"></span>
+      <div>
+        <span class="pstep">長期運用ロードマップ・判断規準</span>
+        <h2>追加する前に、学習価値と維持可能性を確かめる <span class="psub">Now / Next / Later / Hold</span></h2>
+        <p class="ptag">日付だけで約束せず、学習上の必要性、公式仕様、回復試験、依存コストが揃った項目だけを次の状態へ進めます。各段階は独立して見直せ、保留は失敗ではなく教材の焦点を守る判断です。</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson" data-strategy-horizon="now">
+          <span class="lnum">NOW</span>
+          <h3>P0〜P1を定着させる</h3>
+          <p><strong>目的:</strong> 新機能より先に、入力、成果物、分布推定、観測過程を一人で往復できる学習経路を安定させます。</p>
+          <p><strong>観測するもの:</strong> 誤答が曖昧でないか、Notebookへ知識を移せるか、リンク・download・clean runが壊れていないかを、課題rubricと自動検証で追います。行動追跡のための外部telemetryは導入しません。</p>
+          <p><strong>完了条件:</strong> Julia数値回帰、Pluto、Vitest、build、Playwrightが揃って通り、既知のscope boundaryとpackage versionが教材から辿れます。個別検証に加え、複数CSVからfit・予測診断・forward観測設計・監査済み出力までを一時directory内で通す横断検証を維持します。</p>
+          <div class="chips"><code>P0_P1_PIPELINE_CHECK_PASS</code><code>learner path</code><code>no telemetry</code><code>regression gate</code></div>
+        </article>
+        <article class="lesson" data-strategy-horizon="next" data-strategy-status="research">
+          <span class="lnum">NEXT / P2 · RESEARCH</span>
+          <h3>観測過程を尤度へ入れる検証トラック(研究中・未公開)</h3>
+          <p><strong>候補:</strong> 左・右打切りとtruncationについて、naiveなclamp後解析と専用尤度を同じ合成dataで比較します。初心者本編ではなく、生成過程を理解した後の任意補講から始めます。</p>
+          <p><strong>research gateの結果:</strong> <code>Optim 2.2.1</code>を隔離し、Normalの左右打切り・左truncationを240反復で検証しました。平均・SDの平均推定値は真値520・85へ回復し、4種類の95% Wald区間coverageは各0.95、両側選択確率とselection-count尤度の値・勾配・Hessianを含む基礎scriptは53検査を通過しました。</p>
+          <p><strong>stress境界:</strong> 標本数40・120・400と20%・60%・90%の打切り／切断を組み合わせた18条件を各160反復（2,880試行）で測定しました。40件・90%打切りでは通常観測不足が11/160、40件・90%左truncationではOptimが157/160を受理しても23/160が合成真値から破局的に逸脱し、試行全体の95%区間包含率は平均・SDで76.25%・80.62%でした。5開始値が同じ停留点へ収束しても回復を保証しないため、収束flagだけで公開可とは判定しません。</p>
+          <p><strong>識別・区間gate:</strong> 条件数、parameter相関、相対SE、推定選択確率によるdata-only warningを追加しました。閾値決定とseedを分けたholdoutでは破局的逸脱55/55を警告しました。さらに480試行のprofile likelihood pilotでは、90%左truncationのprofile解決率がn=40・120・400で13.75%・48.75%・91.25%と変化しました。解けた試行のcoverageはWaldより改善しても、未解決試行が多い条件を公開可能とは見なしません。</p>
+          <p><strong>外部妥当性と独立engine:</strong> 別の2母数・5種の片側/両側切断・n=40/120の20条件を各120反復しました。片側1,440試行の破局的逸脱62件はすべてwarningで検出できましたが、両側960試行ではfit失敗116件、受理後の破局的逸脱396件のうち143件を見逃しました。SciPy 1.17.1の<code>CensoredData + norm.fit</code>と<code>truncate + Nelder–Mead</code>による5照合は負の対数尤度が最大2.1×10⁻⁶差で一致しました。尤度実装の独立一致は確認しましたが、両側識別gateは不合格です。</p>
+          <p><strong>両側profile screenの再設計:</strong> 区間幅の1・2・4倍の広いsource scaleをprofileし、95%尤度比域に残るfitを停止させました。完全未使用の別母数・別seed holdoutで、破局的逸脱の検出は307/446から436/446（97.8%）へ改善し、中央99%保持480試行でwarningは0でした。ただし難条件の正常域fitも1,010件停止し、10件は未検出です。選択後dataだけでは狭い母分布とまれな選択標本を常に区別できないため、閾値を後付けせずdesign metadataを次のgateとします。</p>
+          <p><strong>選別人数を使う次のgate:</strong> 選別前総数と選択数を加えたselection-count likelihoodを、校正・完全未使用holdoutの計2,880試行で比較しました。条件付き解析のfit失敗174・193件、破局的逸脱463・446件に対し、人数情報を使うfitは両matrixとも失敗0・破局的逸脱0でした。ただしWaldの<code>mu</code> coverageは73.96%・73.54%に留まりました。中央10%と非対称50%を各80反復した追加pilotは全480試行でprofile_okとなり、中央10%の<code>mu</code> coverageはWald 38.75%〜50.00%からprofile 93.75%〜95.00%へ回復しました。人数情報は同定を改善しますが、対称で強い選択には非線形な区間法も必要です。</p>
+          <p><strong>教材化の進捗:</strong> 400人から43人を選ぶ具体例、100人中10人の手計算、条件付き密度と人数項の相殺、固定seedのJulia反例、Waldとprofileの直感的比較、観測契約、用語集、ヒント付き5問を研究用教材ドラフトへまとめました。技術記録をそのまま初心者へ見せず、「直感 → 手計算 → 実装 → 反例 → 演習」の順で移植できる状態です。ただし公開catalogには登録していません。</p>
+          <p><strong>依存・install時間:</strong> 直接依存4、Manifest 69項目。空の一時depotでの取得＋precompileはこの検証機で83.4秒・142.5MBでした。既存の本編・Notebook環境には追加せず、CIだけが隔離環境を復元します。</p>
+          <p><strong>公開前の残課題:</strong> 外部検証、独立engine照合、両側の広域profile holdout、選別人数を使う尤度比較は実施済みです。固定境界・独立screening・正確な総数という観測契約を教材化し、Waldを既定にしないprofile／bootstrap API、Normal以外や人数記録誤差へのstress、誤答feedbackを満たすまで公開中へ昇格させません。<code>PASS</code>は既知の成功と失敗の境界が再現できた意味です。</p>
+          <div class="chips"><code>P2_LIKELIHOOD_CHECK_PASS</code><code>P2_LIKELIHOOD_STRESS_CHECK_PASS</code><code>P2_IDENTIFICATION_PROFILE_CHECK_PASS</code><code>P2_GENERALIZATION_ENGINE_CHECK_PASS</code><code>P2_TWO_SIDED_IDENTIFICATION_CHECK_PASS</code><code>P2_SELECTION_COUNT_CHECK_PASS</code><code>TEACHING_DRAFT</code><code>research only</code></div>
+        </article>
+        <article class="lesson" data-strategy-horizon="later">
+          <span class="lnum">LATER / P3</span>
+          <h3>大規模dataと外部engineは必要性から始める</h3>
+          <p><strong>候補:</strong> <code>CSV.Rows</code>／<code>CSV.Chunks</code>、partitioned Arrow、R・Stanとの最小bridgeを別々の任意トラックとして評価します。</p>
+          <p><strong>着手条件:</strong> 全件materializeが実際の教材fixtureでmemory bottleneckになる、または同じ分析を外部engineへ受け渡す具体的な研究課題があること。少なくとも2つの利用例か再現可能benchmarkを要求します。</p>
+          <p><strong>公開条件:</strong> 小規模dataで同値な基準結果、schema・欠測・カテゴリ・seed・versionの往復、外部runtimeがなくても本編を修了できるfallbackを用意します。</p>
+          <div class="chips"><code>evidence-triggered</code><code>streaming</code><code>R / Stan bridge</code><code>fallback</code></div>
+        </article>
+        <article class="lesson" data-strategy-horizon="hold">
+          <span class="lnum">HOLD</span>
+          <h3>自動化が理解を追い越す項目は保留する</h3>
+          <p><strong>保留:</strong> 混合分布の自動推定、component数の自動選択、外部serviceへの学習履歴送信、単一例のためだけの重い依存追加は現在のscopeに入れません。</p>
+          <p><strong>再検討条件:</strong> 識別不能性・label switching・モデル比較の不確かさを説明でき、公式に維持された実装と回復試験を用意できること。privacyを弱める変更は、教育上の便益と明示的同意の設計がない限り採用しません。</p>
+          <p><strong>原則:</strong> 「できる」だけでは追加せず、学習者が仮定、失敗条件、結果の限界を説明できるところまでを一単位にします。</p>
+          <div class="chips"><code>scope control</code><code>identifiability</code><code>privacy</code><code>dependency budget</code></div>
+        </article>
+      </div>
+      <div class="plan-gate">
+        <h3>候補を公開教材へ昇格させる5つの問い</h3>
+        <ol>
+          <li><strong>学習課題:</strong> 誰の、どの分析上の詰まりを解消し、既存教材のどこから接続するか。</li>
+          <li><strong>概念境界:</strong> 何を扱い、何を扱わず、どの誤解を反例で壊すか。</li>
+          <li><strong>技術境界:</strong> 公式stable docs、互換version、依存・install・runtimeのcostを説明できるか。</li>
+          <li><strong>検証境界:</strong> 正常系、意図的失敗、parameter recoveryまたはround tripを独立実行できるか。</li>
+          <li><strong>撤退可能性:</strong> 新packageや外部engineが使えなくても、本編の学習経路と既存成果物を壊さないか。</li>
+        </ol>
+        <p><strong>見直しの契機:</strong> Julia minor更新、主要package更新、教材追加、再現不能報告のたびに該当gateを再実行します。ロードマップの状態変更は、実装と検証が揃った同じ差分で行います。</p>
       </div>
     </section>
 
@@ -587,7 +728,7 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
       <div class="goal-card">
         <span class="dots"><i class="r"></i><i class="g"></i><i class="p"></i></span>
         <h2>ゴール:自分のデータを、自分の手で。</h2>
-        <p>統計はどの回も「生成 → 推定 → 復元」の一本線。続編もすべて今のアプリ形式(1画面1トピック・即時フィードバック)で追加できます。仕上げは Pluto.jl ノートブックでの実データ演習へ。</p>
+        <p>統計はどの回も「生成 → 推定 → 復元」の一本線。本編37レッスンと補講を今のアプリ形式(1画面1トピック・即時フィードバック)で学び、仕上げは Pluto.jl ノートブックでの実データ演習へ。複数CSVの入力監査、成果物の書出し、分布の推定と予測診断、観測境界・依存・異質性までを接続しました。R・Stan連携と専用尤度による推定は、独立した任意トラックとして検証します。</p>
       </div>
     </section>
 

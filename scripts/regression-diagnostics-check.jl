@@ -277,13 +277,16 @@ end
     raw_condition = cond(X_raw)
     centered_condition = cond(X_centered)
     standardized_condition = cond(X_standardized)
-    prediction_difference = maximum(abs.(
-        X_raw * beta_raw - X_centered * beta_centered))
+    raw_prediction = X_raw * beta_raw
+    centered_prediction = X_centered * beta_centered
+    prediction_difference = maximum(abs.(raw_prediction - centered_prediction))
 
     @test raw_condition > 1e12
     @test centered_condition < 3.5
     @test standardized_condition < 1.01
-    @test prediction_difference < 2e-9
+    # raw側は条件数が1e12を超えるため、Julia 1.12内のBLAS差を最下位桁まで
+    # 固定せず、予測値の尺度に対する絶対・相対許容誤差を明示する。
+    @test isapprox(raw_prediction, centered_prediction; atol = 1e-8, rtol = 1e-8)
     @test isapprox(beta_raw[2], beta_centered[2]; atol = 1e-8)
     @test isapprox(beta_standardized[2],
                    beta_centered[2] * std(timestamp_c); atol = 1e-10)

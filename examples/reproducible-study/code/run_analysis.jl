@@ -1,6 +1,7 @@
 import Pkg
 
-const PROJECT_ROOT = normpath(joinpath(@__DIR__, ".."))
+# macOSの /var → /private/var のようなpath aliasも、入力のrealpathと同じ表現へ揃える。
+const PROJECT_ROOT = realpath(normpath(joinpath(@__DIR__, "..")))
 Pkg.activate(PROJECT_ROOT; io = devnull)
 
 using CSV

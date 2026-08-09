@@ -17,6 +17,12 @@ const html = readFileSync(join(root, "public", "roadmap.html"), "utf8");
 
 const publishedDirs = new Set(LESSONS.map((l) => l.section));
 const numberedCount = LESSONS.filter((l) => l.num != null).length;
+const NEXT_EXPANSION = [
+  ["複数CSVを安全に一つの表へ", "公開中"],
+  ["分析成果物を再利用できる形で書き出す", "公開中"],
+  ["分布を当てはめ、予測で反証する", "公開中"],
+  ["観測境界と依存を分布へ戻す", "公開中"],
+];
 
 describe("roadmap.html とレッスンデータの同期", () => {
   it(`メタ行: 「全${numberedCount}レッスン公開中」`, () => {
@@ -56,6 +62,57 @@ describe("roadmap.html とレッスンデータの同期", () => {
   it("番号なしトラックの公開済みレッスンはカードに(公開中)が付く", () => {
     for (const l of LESSONS.filter((l) => l.num == null)) {
       expect(html, `「${l.title}」のカード`).toContain(`${l.title}(公開中)`);
+    }
+  });
+
+  it("完了した拡充を順序・完了条件・対象外の境界まで記録する", () => {
+    expect(html).toContain("拡充スプリント・P0〜P1完了");
+    expect(html).toContain("番号付き37本は維持");
+
+    let previousIndex = -1;
+    for (const [title, status] of NEXT_EXPANSION) {
+      const index = html.indexOf(`${title}(${status})`);
+      expect(index, `「${title}」の計画カード`).toBeGreaterThan(previousIndex);
+      previousIndex = index;
+    }
+
+    for (const contract of [
+      "0件・型違反・列違反・重複キー",
+      "同名異内容の出力を拒否",
+      "平均だけ合う誤モデルの反例",
+      "混合分布は生成・読解まで",
+      "共通の公開ゲート",
+      "CSV.Rows",
+      "CSV.Chunks",
+    ]) {
+      expect(html, `${contract}が完了スプリントにない`).toContain(contract);
+    }
+  });
+
+  it("長期計画はNow・Next・Later・Holdを昇格条件つきで分ける", () => {
+    expect(html).toContain('id="strategic-horizons"');
+    expect(html).toContain("長期運用ロードマップ・判断規準");
+
+    const horizons = ["now", "next", "later", "hold"];
+    let previousIndex = -1;
+    for (const horizon of horizons) {
+      const marker = `data-strategy-horizon="${horizon}"`;
+      const index = html.indexOf(marker);
+      expect(index, `${horizon} horizon`).toBeGreaterThan(previousIndex);
+      previousIndex = index;
+      expect(html.match(new RegExp(marker, "g"))).toHaveLength(1);
+    }
+
+    for (const contract of [
+      "候補を公開教材へ昇格させる5つの問い",
+      "parameter recovery",
+      "install時間",
+      "少なくとも2つの利用例か再現可能benchmark",
+      "外部telemetryは導入しません",
+      "混合分布の自動推定",
+      "撤退可能性",
+    ]) {
+      expect(html, `${contract}が長期判断規準にない`).toContain(contract);
     }
   });
 });

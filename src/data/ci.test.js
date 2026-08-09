@@ -44,7 +44,7 @@ describe("CIの検証境界", () => {
     expect(dependabot).toContain("package-ecosystem: npm");
   });
 
-  it("数値runnerが公開済み16検証スクリプトを漏れなく列挙する", () => {
+  it("数値runnerが公開済み＋research中の26検証スクリプトを漏れなく列挙する", () => {
     const actual = readdirSync(join(ROOT, "scripts"))
       .filter((name) => name.endsWith("-check.jl") && name !== "nb-exec-check.jl")
       .map((name) => `scripts/${name}`)
@@ -53,7 +53,13 @@ describe("CIの検証境界", () => {
       .map((match) => match[1])
       .sort();
     expect(listed).toEqual(actual);
-    expect(listed).toHaveLength(16);
+    expect(listed).toHaveLength(26);
+    expect(numericRunner).toContain('occursin("p2-likelihood-", relative_path)');
+    expect(numericRunner).toContain('endswith(relative_path, "p2-identification-profile-check.jl")');
+    expect(numericRunner).toContain('endswith(relative_path, "p2-generalization-engine-check.jl")');
+    expect(numericRunner).toContain('endswith(relative_path, "p2-two-sided-identification-check.jl")');
+    expect(numericRunner).toContain('endswith(relative_path, "p2-selection-count-check.jl")');
+    expect(numericRunner).toContain('joinpath(ROOT, "validation", "p2-likelihood")');
   });
 
   it("Pluto smokeは公開Notebook 5本を変更時・定期実行する", () => {
@@ -72,5 +78,12 @@ describe("CIの検証境界", () => {
       expect(workflow).toContain("--project=validation scripts/setup-validation-env.jl");
     }
     expect(read("validation/Project.toml")).toContain('RegressionTables = "=0.5.10"');
+    expect(deploy).toContain("Instantiate P2 likelihood feasibility environment");
+    expect(deploy).toContain("--project=validation/p2-likelihood scripts/setup-validation-env.jl");
+    expect(deploy).toContain("validation/p2-likelihood/Project.toml");
+    expect(deploy).toContain("actions/setup-python@v6");
+    expect(deploy).toContain("python-version: '3.13'");
+    expect(deploy).toContain("cache-dependency-path: validation/p2-scipy/requirements.txt");
+    expect(deploy).toContain("python -m pip install -r validation/p2-scipy/requirements.txt");
   });
 });

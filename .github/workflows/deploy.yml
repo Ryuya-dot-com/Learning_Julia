@@ -45,14 +45,23 @@ jobs:
         with:
           version: '1.12'
           project: validation
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: validation/p2-scipy/requirements.txt
       - uses: julia-actions/cache@v3
         with:
-          cache-name: julia-numeric-${{ hashFiles('validation/Project.toml', 'validation/categorical/Project.toml') }}
+          cache-name: julia-numeric-${{ hashFiles('validation/Project.toml', 'validation/categorical/Project.toml', 'validation/p2-likelihood/Project.toml') }}
       - name: Instantiate validation environment
         run: julia --project=validation scripts/setup-validation-env.jl
       - name: Instantiate categorical-model validation environment
         run: julia --project=validation/categorical scripts/setup-categorical-validation-env.jl
-      - name: Run 16 numerical regression checks
+      - name: Instantiate P2 likelihood feasibility environment
+        run: julia --startup-file=no --project=validation/p2-likelihood scripts/setup-validation-env.jl
+      - name: Install SciPy independent reference environment
+        run: python -m pip install -r validation/p2-scipy/requirements.txt
+      - name: Run 26 numerical regression checks
         run: julia --project=validation scripts/run-numeric-checks.jl
 
   browser-smoke:

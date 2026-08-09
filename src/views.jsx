@@ -510,7 +510,7 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
       </h1>
       <p className="mb-6 text-sm leading-6" style={{ color: C.sub }}>
         ゼロから学ぶ、研究のためのプログラミング。番号付き全{numberedLessons}レッスン
-        {supplementalLessons > 0 && `＋補講${supplementalLessons}本`}で、データ解析の入り口まで案内します。
+        {supplementalLessons > 0 && `＋補講${supplementalLessons}本`}で、データ解析の入り口から研究計画まで案内します。
       </p>
 
       <div className="mb-6 rounded-2xl bg-white p-5" style={{ border: "1px solid " + C.line }}>

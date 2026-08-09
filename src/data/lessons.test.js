@@ -203,7 +203,7 @@ describe("データの整形・保存・再利用回の学習契約", () => {
     expect(text).toContain('formula = \\"rt ~ condition\\"');
   });
 
-  it("保守script・validation環境・CIが16本の検証に保存往復を含む", () => {
+  it("保守script・validation環境・CIが17本の検証に保存往復を含む", () => {
     const checker = readFileSync(join(ROOT, "scripts", "data-persistence-check.jl"), "utf8");
     const runner = readFileSync(join(ROOT, "scripts", "run-numeric-checks.jl"), "utf8");
     const project = readFileSync(join(ROOT, "validation", "Project.toml"), "utf8");
@@ -216,7 +216,7 @@ describe("データの整形・保存・再利用回の学習契約", () => {
     expect(checker).toContain("sha256");
     expect(checker).toContain("eltype(arrow_data.condition) <: CategoricalValue");
     expect(runner).toContain('"scripts/data-persistence-check.jl"');
-    expect(deploy).toContain("Run 16 numerical regression checks");
+    expect(deploy).toContain("Run 26 numerical regression checks");
   });
 
   it("ロードマップがRData・RDSを訂正し、Stanを任意bridgeにする", () => {
@@ -251,6 +251,7 @@ describe("再現可能な研究プロジェクト補講の学習契約", () => {
       "instantiate",
       "--project=.",
       "@__DIR__",
+      "realpath",
       "data dictionary",
       "schema.toml",
       "ArgumentError",
@@ -289,7 +290,7 @@ describe("再現可能な研究プロジェクト補講の学習契約", () => {
       expect(checker, `${concept} がworkflow検証にない`).toContain(concept);
     }
     expect(runner).toContain('"scripts/reproducible-workflow-check.jl"');
-    expect(deploy).toContain("Run 16 numerical regression checks");
+    expect(deploy).toContain("Run 26 numerical regression checks");
   });
 
   it("ロードマップと保存回から公開補講へ到達できる", () => {
@@ -418,7 +419,7 @@ describe("Gitで研究履歴と公開境界を管理する補講の学習契約"
       expect(checker, `${concept} がGit境界検証にない`).toContain(concept);
     }
     expect(runner).toContain('"scripts/version-control-boundary-check.jl"');
-    expect(deploy).toContain("Run 16 numerical regression checks");
+    expect(deploy).toContain("Run 26 numerical regression checks");
   });
 
   it("ロードマップとdownload版へ到達できる", () => {
@@ -490,7 +491,7 @@ describe("浮動小数点と数値安定性の学習契約", () => {
     expect(notebook).toContain("stability_summary");
     expect(notebook).toContain("log(rare_probability^repetitions)");
     expect(notebook).toContain("ccdf(standard_normal, 10)");
-    expect(checker).toContain('"nb2-stats.jl" => 6');
+    expect(checker).toContain('"nb2-stats.jl" => 12');
   });
 });
 
