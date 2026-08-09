@@ -34,6 +34,8 @@ describe("CIの検証境界", () => {
     expect(deploy).toContain("npm run test:p2-ui");
     expect(deploy).toContain("npm run test:p2-api");
     expect(deploy).toContain("needs: [build, julia-numeric, browser-smoke]");
+    expect(deploy.split("  julia-numeric:")[1].split("  browser-smoke:")[0])
+      .toContain("timeout-minutes: 45");
     const beforeJobs = deploy.split("jobs:")[0];
     const deployJob = deploy.split("  deploy:")[1];
     expect(beforeJobs).not.toContain("pages: write");

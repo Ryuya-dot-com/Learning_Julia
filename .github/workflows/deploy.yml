@@ -35,7 +35,10 @@ jobs:
 
   julia-numeric:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Fresh runners spend about 14 minutes preparing the three Julia/Python
+    # environments before the 32-check suite starts. Keep failure bounds while
+    # leaving enough room for the full gate on slower hosted runners.
+    timeout-minutes: 45
     permissions:
       contents: read
       actions: write
