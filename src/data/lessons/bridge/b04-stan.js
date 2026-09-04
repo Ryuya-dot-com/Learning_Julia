@@ -1,5 +1,5 @@
 // R・Stan連携4: JuliaからStanを呼ぶ
-// 事実確認(2026-09-05): Stan.jl stable docs / CmdStan User's Guide 2.39。macOS arm64・Linux arm64で新規導入、Linux x86_64でCmdStan buildとbridgeを実走確認。
+// 事実確認(2026-09-05): Stan.jl stable docs / CmdStan User's Guide 2.39。macOS arm64・Linux arm64・Linux x86_64・Windows x86_64でCmdStan buildとbridgeを実走確認。
 export default {
   id: "julia-to-stan",
   title: "StanSampleでStanを呼ぶ",
@@ -17,7 +17,7 @@ export default {
       b: [
         "この演習にはJulia packageのStanSampleだけでなく、CmdStanとC++ toolchainが必要です。Stan.jlのstable文書では、StanSample v6はCmdStan 2.35.0以上を必要とします。環境構築に時間がかかるため、本編修了の条件にはしません。",
         "CMDSTANまたはJULIA_CMDSTAN_HOMEへCmdStan directoryを設定してからStanSampleを読み込みます。使用するStanSampleとCmdStanの組合せは、実行時の公式文書で再確認します。",
-        "配布templateではStanSample 7.10.3とCmdStan 2.39.0を固定し、公式archiveのSHA-256照合、一時directoryでの安全な展開、project内build、4 chainのsampling、stansummaryとdiagnoseまでを二つのscriptで実行できます。macOS arm64とLinux arm64では新規導入全体、Linux x86_64ではCmdStan buildとR／Stan実行を確認済みです。x86_64でのJulia依存取得は定期CI、Windowsは別環境での確認が残っています。",
+        "配布templateではStanSample 7.10.3とCmdStan 2.39.0を固定し、公式archiveのSHA-256照合、一時directoryでの安全な展開、project内build、4 chainのsampling、stansummaryとdiagnoseまでを二つのscriptで実行できます。macOS arm64とLinux arm64での新規導入に加え、GitHub ActionsのLinux x86_64とWindows x86_64でもCmdStanの新規buildからR／Stan成果物の生成・再利用まで確認済みです。",
       ],
       code: `pkg> activate path/to/stan-analysis
 pkg> add StanSample

@@ -57,7 +57,7 @@ julia --project=examples/reproducible-study examples/reproducible-study/code/set
 RUN_STAN_TEMPLATE_CHECK=1 julia --project=examples/reproducible-study scripts/reproducible-template-check.jl
 ```
 
-同じ完全検査を`.github/workflows/bridge-smoke.yml`がLinuxで変更時・毎週実行します。Windowsでの実走確認と、第三者による引き継ぎ確認は未実施です。
+同じ完全検査を`.github/workflows/bridge-smoke.yml`がLinux／Windowsで変更時・毎週実行します。2026-09-05に両環境でCmdStanの新規buildからR／Stan成果物の生成・再利用まで確認済みです。第三者による引き継ぎ確認は未実施です。
 
 P2の打切り・切断尤度は、公開教材へ入れる前のresearch検証です。既存環境へ依存を増やさず、`validation/p2-likelihood/`の隔離環境でだけ実行します。実参加者へ共有する静的な[研究UI preview](https://ryuya-dot-com.github.io/Learning_Julia/validation/p2-likelihood/ui-preview.html)だけは、検索非掲載・教材catalog非掲載で公開します。固定合成fixtureだけを使い、入力の送信・保存、telemetry、公開計算APIはありません。
 
