@@ -69,7 +69,9 @@ jobs:
 
   browser-smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Fresh runners can spend over 20 minutes precompiling the isolated P2
+    # environment before Chromium setup and the three browser suites start.
+    timeout-minutes: 45
     permissions:
       contents: read
       actions: write

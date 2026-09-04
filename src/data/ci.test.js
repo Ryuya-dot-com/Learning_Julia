@@ -48,6 +48,8 @@ describe("CIの検証境界", () => {
   });
 
   it("browser smokeはproduction previewとChromiumを使う", () => {
+    const browserJob = deploy.split("  browser-smoke:")[1].split("  deploy:")[0];
+    expect(browserJob).toContain("timeout-minutes: 45");
     expect(deploy).toContain("playwright install --with-deps chromium");
     expect(playwrightConfig).toContain('command: "vite preview --outDir .e2e-dist');
     expect(playwrightConfig).toContain("/Learning_Julia/");

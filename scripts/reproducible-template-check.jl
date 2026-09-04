@@ -70,10 +70,14 @@ end
         input_before = file_sha256(input_path)
         manifest_before = file_sha256(manifest_path)
         entrypoint = joinpath(template, "code", "run_analysis.jl")
+        instantiate_command = `$(Base.julia_cmd()) --project=$template -e 'using Pkg; Pkg.instantiate()'`
         command = `$(Base.julia_cmd()) --project=$template $entrypoint`
 
         elsewhere = mktempdir()
         try
+            cd(elsewhere) do
+                run(instantiate_command)
+            end
             first_output = cd(elsewhere) do
                 read(command, String)
             end
