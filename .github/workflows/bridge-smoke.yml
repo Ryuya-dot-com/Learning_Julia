@@ -12,6 +12,12 @@ on:
       - 'public/templates/reproducible-study-template.tar'
       - 'scripts/reproducible-template-check.jl'
       - '.github/workflows/bridge-smoke.yml'
+  pull_request:
+    paths:
+      - 'examples/reproducible-study/**'
+      - 'public/templates/reproducible-study-template.tar'
+      - 'scripts/reproducible-template-check.jl'
+      - '.github/workflows/bridge-smoke.yml'
 
 permissions:
   contents: read

@@ -97,6 +97,7 @@ describe("CIの検証境界", () => {
 
   it("R・Stan bridgeはLinux空環境で定期実行する", () => {
     expect(bridge).toContain("schedule:");
+    expect(bridge).toContain("pull_request:");
     expect(bridge).toContain("runs-on: ubuntu-latest");
     expect(bridge).toContain("build-essential r-base-core");
     expect(bridge).toContain("code/setup_cmdstan.jl");
