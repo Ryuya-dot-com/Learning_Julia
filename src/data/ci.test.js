@@ -102,7 +102,9 @@ describe("CIの検証境界", () => {
     expect(bridge).toContain("build-essential r-base-core");
     expect(bridge).toContain("code/setup_cmdstan.jl");
     expect(bridge).toContain('RUN_STAN_TEMPLATE_CHECK: "1"');
-    expect(bridge).toContain("scripts/reproducible-template-check.jl");
+    expect(bridge).toContain(
+      "run: julia --project=examples/reproducible-study scripts/reproducible-template-check.jl"
+    );
     expect(repositoryReadme).toContain("## R・Stan配布templateの検査");
     expect(repositoryReadme).toContain(
       "RUN_STAN_TEMPLATE_CHECK=1 julia --project=examples/reproducible-study"

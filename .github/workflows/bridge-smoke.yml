@@ -49,4 +49,4 @@ jobs:
       - name: Run extracted-template R and Stan checks
         env:
           RUN_STAN_TEMPLATE_CHECK: "1"
-        run: julia scripts/reproducible-template-check.jl
+        run: julia --project=examples/reproducible-study scripts/reproducible-template-check.jl
