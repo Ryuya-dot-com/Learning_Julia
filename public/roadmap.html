@@ -230,8 +230,8 @@ html.js .reveal.in{opacity:1; transform:none}
     <p class="backlink"><a href="./">← アプリにもどる</a></p>
     <p class="eyebrow">学習アプリ「はじめてのJulia」公開教材の全体像</p>
     <h1>学習ロードマップ</h1>
-    <p class="lede">文法の土台(基礎編)から、データハンドリング、確率分布、標本分布、推定、相関・回帰、そして混合モデルと研究計画まで。R との連携ルートも備え、分布を作り乱数を引くJuliaのコードを縦糸に、統計を「体験」で積み上げるロードマップです。</p>
-    <p class="meta"><span>基礎編〜測定・依存構造・研究計画編 全37レッスン公開中</span><span class="sep">/</span><span>R連携・補講は独立トラック</span><span class="sep">/</span><span>対象:プログラミング未経験〜</span></p>
+    <p class="lede">文法の土台(基礎編)から、データハンドリング、確率分布、標本分布、推定、相関・回帰、そして混合モデルと研究計画まで。R・Stanとの連携ルートも備え、分布を作り乱数を引くJuliaのコードを縦糸に、統計を「体験」で積み上げるロードマップです。</p>
+    <p class="meta"><span>基礎編〜測定・依存構造・研究計画編 全37レッスン公開中</span><span class="sep">/</span><span>R・Stan連携4本・補講9本も公開中</span><span class="sep">/</span><span>対象:プログラミング未経験〜</span></p>
   </header>
 
   <div class="route">
@@ -528,34 +528,39 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
       <span class="node" aria-hidden="true"></span>
       <div>
         <span class="pstep">ブリッジ / R・Stanとの連携</span>
-        <h2>Juliaと外部の統計環境を、置き換えずに分業する <span class="psub">必要なengineだけ橋を架ける</span></h2>
-        <p class="ptag">どのレッスンの後からでも合流できる任意トラック。外部環境を本編の前提にせず、data・code・結果・versionを一組で受け渡します。</p>
+        <h2>Juliaと外部の統計環境を、置き換えずに分業する <span class="psub">公開中・全4本</span></h2>
+        <p class="ptag">「データの整形・保存・再利用」を終えた後の任意トラック。受け渡し契約から始め、Julia→R、R→Julia、Julia→Stanの順に進みます。外部環境がなくてもNB6で境界設計を演習できます。</p>
       </div>
       <div class="lessons">
         <article class="lesson">
-          <span class="lnum">Julia → R</span>
-          <h3>RCall.jl</h3>
-          <p>R"..." マクロで lavaan や emmeans をそのまま実行。$x で Julia の変数を R 側へ渡し、@rput / @rget で往復。REPL で $ を押すと R モードに切り替わります。</p>
-          <div class="chips"><code>R"t.test($x)"</code><code>@rput</code><code>@rget</code></div>
+          <span class="lnum">橋1 / 受け渡し</span>
+          <h3>R・Stanへ渡すデータの契約(公開中)</h3>
+          <p>一行の観測単位、列型、欠損、カテゴリ水準、主keyを先に決めます。RData.jlが文書化するのは.rda／.RDataの読込です。RCallからRDSを扱い、言語中立の表にはCSV・Arrowを使います。入力hash、schema版、実行環境も結果と一緒に残します。</p>
+          <div class="chips"><code>schema</code><code>round trip</code><code>RCall: RDS</code><code>SHA-256</code></div>
         </article>
         <article class="lesson">
-          <span class="lnum">R → Julia</span>
-          <h3>JuliaCall・JuliaConnectoR</h3>
-          <p>研究室が R 中心でも、GLMM や重いシミュレーションだけ Julia に任せる分業が可能。R のスクリプトから Julia の関数を呼び出せます。</p>
-          <div class="chips"><code>JuliaCall</code><code>JuliaConnectoR</code></div>
+          <span class="lnum">橋2 / Julia → R</span>
+          <h3>RCallでJuliaからRを呼ぶ(公開中)</h3>
+          <p>@rputで値を渡し、R側で必要な処理だけを実行し、rcopy／@rgetで最小の結果を戻します。R_HOME、R package版、factor・NAの変換も確認します。</p>
+          <div class="chips"><code>RCall</code><code>@rput / @rget</code><code>rcopy</code></div>
         </article>
         <article class="lesson">
-          <span class="lnum">データ形式</span>
-          <h3>ファイルと構文の橋渡し</h3>
-          <p>RData.jlが文書化するのは.rda／.RDataの読込です。RDSそのものはRCallからsaveRDS／readRDSを使い、言語中立の表交換にはArrowまたはCSVを使います。</p>
-          <div class="chips"><code>RData.jl: .RData読込</code><code>RCall: RDS</code><code>Arrow / CSV</code></div>
+          <span class="lnum">橋3 / R → Julia</span>
+          <h3>JuliaCallでRからJuliaを呼ぶ(公開中)</h3>
+          <p>Rを解析全体の入口に保ち、Juliaの関数だけを呼びます。julia_setup、projectの固定、型変換、起動・compile時間を含む測定までを扱います。</p>
+          <div class="chips"><code>JuliaCall</code><code>julia_setup</code><code>julia_call</code></div>
         </article>
         <article class="lesson">
-          <span class="lnum">Julia → Stan</span>
-          <h3>StanSample.jl／CmdStan（任意発展）</h3>
-          <p>外部CmdStanとC++ toolchainを要するため本編では実行しません。.stan、入力data、seed、chain設定、生のdraws CSV、R̂・ESS・divergence、engine versionを一組で保存するbridgeとして扱います。</p>
-          <div class="chips"><code>.stan</code><code>draws CSV</code><code>R̂ / ESS</code><code>optional</code></div>
+          <span class="lnum">橋4 / Julia → Stan</span>
+          <h3>StanSampleでStanを呼ぶ(公開中)</h3>
+          <p>StanSample 7.10.3／CmdStan 2.39.0の実行例として、公式archiveのSHA-256照合、model compile、4 chainのsampling、stansummary・diagnoseを一続きで確認します。Beta(6, 2)の解析解と事後予測平均でも検算し、生のdraws CSV、入力JSON、実行log、R̂・ESS・divergence、全成果物hashを保存します。macOS arm64とLinux arm64では新規導入全体、Linux x86_64ではCmdStan buildとR／Stan実行を確認済みです。x86_64でのJulia依存取得は定期CI、Windowsは別環境での確認が残っています。</p>
+          <div class="chips"><code>StanSample</code><code>CmdStan 2.39</code><code>解析解</code><code>事後予測</code><code>新規導入確認済み</code></div>
         </article>
+      </div>
+      <div class="plan-gate">
+        <h3>公開後の引き継ぎ確認</h3>
+        <p>配布templateのREADMEに、第三者が通常分析、R連携、Stan連携を説明なしで実行し、成果物と<code>created／reused</code>、sampling成功と診断を区別できるか確認する手順を収録しました。自動検証と開発環境でのclean runは完了していますが、第三者による確認は未実施です。最初の1人の結果は導線修正にだけ使い、理解率や教育効果の根拠にはしません。</p>
+        <div class="chips"><code>HANDOFF_CHECK_READY</code><code>ACTUAL_HANDOFFS_0</code><code>NO_TELEMETRY</code><code>aggregate only</code></div>
       </div>
     </section>
 
@@ -699,11 +704,11 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
         </article>
         <article class="lesson" data-strategy-horizon="later">
           <span class="lnum">LATER / P3</span>
-          <h3>大規模dataと外部engineは必要性から始める</h3>
-          <p><strong>候補:</strong> <code>CSV.Rows</code>／<code>CSV.Chunks</code>、partitioned Arrow、R・Stanとの最小bridgeを別々の任意トラックとして評価します。</p>
-          <p><strong>着手条件:</strong> 全件materializeが実際の教材fixtureでmemory bottleneckになる、または同じ分析を外部engineへ受け渡す具体的な研究課題があること。少なくとも2つの利用例か再現可能benchmarkを要求します。</p>
-          <p><strong>公開条件:</strong> 小規模dataで同値な基準結果、schema・欠測・カテゴリ・seed・versionの往復、外部runtimeがなくても本編を修了できるfallbackを用意します。</p>
-          <div class="chips"><code>evidence-triggered</code><code>streaming</code><code>R / Stan bridge</code><code>fallback</code></div>
+          <h3>大規模dataへの拡張は必要性から始める</h3>
+          <p><strong>候補:</strong> <code>CSV.Rows</code>／<code>CSV.Chunks</code>、partitioned Arrowを評価します。R・Stan連携は小さな受け渡し契約として公開済みで、個別packageの追加は利用例がある場合に限ります。</p>
+          <p><strong>着手条件:</strong> 全件materializeが実際の教材fixtureでmemory bottleneckになること。少なくとも2つの利用例か再現可能benchmarkを要求します。</p>
+          <p><strong>公開条件:</strong> 小規模dataで同値な基準結果、schema・欠測・カテゴリ・順序の往復、通常経路を保つfallbackを用意します。</p>
+          <div class="chips"><code>evidence-triggered</code><code>streaming</code><code>fallback</code></div>
         </article>
         <article class="lesson" data-strategy-horizon="hold">
           <span class="lnum">HOLD</span>
@@ -733,7 +738,7 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
       <div class="goal-card">
         <span class="dots"><i class="r"></i><i class="g"></i><i class="p"></i></span>
         <h2>ゴール:自分のデータを、自分の手で。</h2>
-        <p>統計はどの回も「生成 → 推定 → 復元」の一本線。本編37レッスンと補講を今のアプリ形式(1画面1トピック・即時フィードバック)で学び、仕上げは Pluto.jl ノートブックでの実データ演習へ。複数CSVの入力監査、成果物の書出し、分布の推定と予測診断、観測境界・依存・異質性までを接続しました。R・Stan連携と専用尤度による推定は、独立した任意トラックとして検証します。</p>
+        <p>統計はどの回も「生成 → 推定 → 復元」の一本線。本編37レッスンと補講を今のアプリ形式(1画面1トピック・即時フィードバック)で学び、仕上げは Pluto.jl ノートブックでの実データ演習へ。複数CSVの入力監査、成果物の書出し、分布の推定と予測診断、観測境界・依存・異質性までを接続しました。R・Stan連携は公開済みの任意トラック、専用尤度による推定は独立した研究検証として扱います。</p>
       </div>
     </section>
 

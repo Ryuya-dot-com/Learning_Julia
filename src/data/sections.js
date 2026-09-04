@@ -9,6 +9,6 @@ export const SECTIONS = [
   { dir: "4-sim",      title: "STEP 3 / 確率・推論・シミュレーション編", sub: "抽出、標本分布、推定、検定",   color: "#9558B2", numbered: true, notebook: "nb3-sim.jl" },
   { dir: "5-model",    title: "STEP 4 / 関連と一般線形モデル編",         sub: "関連から回帰とGLMへ",          color: "#4063D8", numbered: true, notebook: "nb4-model.jl" },
   { dir: "6-advanced", title: "STEP 5 / 測定・依存構造・研究計画編",     sub: "尺度、混合モデル、検定力",     color: "#6D3E86", numbered: true, notebook: "nb5-advanced.jl" },
-  { dir: "bridge",     title: "R・Stanとの連携",              sub: "任意の外部engine",       color: "#276DC3", numbered: false, mark: "橋", notebook: "nb6-r.jl" },
+  { dir: "bridge",     title: "R・Stanとの連携",              sub: "外部エンジンを再現可能につなぐ", color: "#276DC3", numbered: false, mark: "橋", notebook: "nb6-r.jl" },
   { dir: "extra",      title: "補講",                        sub: "いつでも差しこめる",      color: "#A79FB0", numbered: false, mark: "補" },
 ];

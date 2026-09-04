@@ -260,14 +260,18 @@ end
     {
       t: "実行可能templateを展開し、clean runする",
       b: [
-        "ここまでの構成を、教材用の公開合成data、最初からignoreされるprivate raw directory、固定済みManifest、schema、dictionary、入口scriptを含む小型projectとして配布します。archiveを展開すると`reproducible-study/`ができるので、そのrootで初回準備と分析を実行します。",
+        "ここまでの構成を、教材用の公開合成data、最初からignoreされるprivate raw directory、固定済みManifest、schema、dictionary、入口scriptを含む小型projectとして配布します。RscriptとのCSV往復に加え、CmdStan 2.39.0の検証つきsetupとStanSample 7.10.3によるsamplingも同梱しています。archiveを展開すると`reproducible-study/`ができるので、そのrootで初回準備と分析を実行します。",
         "入口scriptは`study.toml`で選んだ入力を上書きせず、検査済みdata、条件別summary、run metadataを内容由来IDつきで生成します。もう一度実行すると同じderived dataとsummaryを再利用し、別の実行時刻を持つmetadataを追加します。",
       ],
       code: `tar -xf reproducible-study-template.tar
 cd reproducible-study
 
 julia --project=. -e "using Pkg; Pkg.instantiate()"
-julia --project=. code/run_analysis.jl`,
+julia --project=. code/run_analysis.jl
+
+# Stanを実行する場合だけ
+julia --project=. code/setup_cmdstan.jl
+julia --project=. code/run_stan_bridge.jl`,
       lang: "ターミナル",
       download: {
         path: "templates/reproducible-study-template.tar",
@@ -275,7 +279,7 @@ julia --project=. code/run_analysis.jl`,
       },
       a: [
         "展開機能つきfile managerを使っても構いません。公開合成例を実データで上書きせず、READMEに従って`data/raw/`へ別fileとして置きます。schema、dictionary、study.toml、primary key、欠測・除外規則、privacy方針も研究固有の定義へ変更してください。",
-        "配布archiveも最終成果物ではなくsource templateから再生成できる派生物です。CIはarchiveを一時directoryへ展開し、sourceとのchecksum一致、新しいJulia processでの2回実行、未知水準での停止を検査します。",
+        "配布archiveも最終成果物ではなくsource templateから再生成できる派生物です。CIはarchiveを一時directoryへ展開し、sourceとのchecksum一致、新しいJulia processでの2回実行、未知水準での停止を検査します。Stanの実走検査はtoolchainと時間を要するため、通常検査から分けて明示的に有効化します。",
       ],
     },
   ],

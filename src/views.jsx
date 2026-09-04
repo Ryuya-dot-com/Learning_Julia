@@ -486,7 +486,8 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
   const doneEx = lessons.reduce((s, l) => s + (progress.done[l.id] || []).length, 0);
   const doneLessons = lessons.filter((l) => (progress.done[l.id] || []).length === l.exCount).length;
   const numberedLessons = lessons.filter((l) => l.num != null).length;
-  const supplementalLessons = lessons.length - numberedLessons;
+  const supplementalLessons = lessons.filter((l) => l.section === "extra").length;
+  const bridgeLessons = lessons.filter((l) => l.section === "bridge").length;
   const allDone = doneLessons === lessons.length;
   const firstIncomplete = lessons.find((l) => (progress.done[l.id] || []).length < l.exCount);
   const pct = Math.round((doneEx / totalEx) * 100);
@@ -510,7 +511,8 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
       </h1>
       <p className="mb-6 text-sm leading-6" style={{ color: C.sub }}>
         ゼロから学ぶ、研究のためのプログラミング。番号付き全{numberedLessons}レッスン
-        {supplementalLessons > 0 && `＋補講${supplementalLessons}本`}で、データ解析の入り口から研究計画まで案内します。
+        {supplementalLessons > 0 && `＋補講${supplementalLessons}本`}
+        {bridgeLessons > 0 && `＋R・Stan連携${bridgeLessons}本`}で、データ解析の入り口から研究計画まで案内します。
       </p>
 
       <div className="mb-6 rounded-2xl bg-white p-5" style={{ border: "1px solid " + C.line }}>

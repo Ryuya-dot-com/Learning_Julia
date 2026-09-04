@@ -165,7 +165,7 @@ println((rows = nrow(cache.analysis_data), formula = cache.formula_text))`,
       t: "RDataとRDSを同じものとして扱わない",
       b: [
         "`.rda`／`.RData`は複数の名前つきR objectを保存でき、RData.jlの公式READMEはこれらの読み込みとJulia型への変換を説明しています。書き出しや`.rds`の直接対応を同じAPIの機能として仮定しません。",
-        "`.rds`はRの単一object保存形式です。RDSそのものを確実に交換する必要があるなら、任意発展としてRCallでRを起動し、`@rput analysis_data`の後にR側の`saveRDS`、読み込みは`readRDS`と`rcopy`／`@rget`を使います。これはJulia native形式ではなく、Rの実行環境を必要とします。",
+        "`.rds`はRの単一object保存形式です。RDSそのものを確実に交換する必要があるなら、任意発展としてRCallでRを起動し、`@rput analysis_data`の後にR側の`saveRDS`、読み込みは`readRDS`と`rcopy`／`@rget`を使います。これはJulia native形式ではなく、Rの実行環境を必要とします。実行環境の固定と安全な値の受け渡しは、R・Stan連携トラックの「RCallでJuliaからRを呼ぶ」で扱います。",
         "表をRとJuliaで往復するだけなら、RDSへ固定せずArrowまたはCSVを第一候補にします。R固有class、factor contrast、label、timezoneなどが研究上重要なら、両側でclassとmetadataを明示的に照合します。",
       ],
     },
@@ -180,7 +180,7 @@ println((rows = nrow(cache.analysis_data), formula = cache.formula_text))`,
     {
       t: "Stan連携ではdrawsより前後も保存する",
       b: [
-        "StanSample.jlはJuliaからCmdStanを呼べますが、別途CmdStan、C++ toolchain、path設定が必要で、package repositoryにも保守継続上の注意があります。本編の必須実行にはせず、混合モデルとベイズ推論を学んだ後の任意bridgeとします。",
+        "StanSample.jlはJuliaからCmdStanを呼べますが、別途CmdStan、C++ toolchain、path設定が必要で、package repositoryにも保守継続上の注意があります。本編の必須実行にはせず、混合モデルとベイズ推論を学んだ後の任意bridgeとします。実行契約と診断は、R・Stan連携トラックの「StanSampleでStanを呼ぶ」へ進みます。",
         "Stanでは`.stan` model、入力data(JSON等)、初期値、seed、chain・warmup設定、CmdStan／interface version、生のdraws CSV（chain別CSV）、summary、divergence・treedepth・R̂・ESS、事後予測を一組で残します。compile済みbinaryだけ、整形済みdrawsだけでは生成過程を復元できません。",
         "この保存原則はTuringでも同じです。推定engineを比較するときは、同じdata・parameterization・prior・乱数設定・診断基準を揃え、結果ファイルの拡張子の違いをmodel差と取り違えません。",
       ],

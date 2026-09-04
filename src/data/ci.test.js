@@ -9,6 +9,7 @@ const read = (path) => readFileSync(join(ROOT, path), "utf8");
 describe("CIの検証境界", () => {
   const deploy = read(".github/workflows/deploy.yml");
   const pluto = read(".github/workflows/pluto-smoke.yml");
+  const bridge = read(".github/workflows/bridge-smoke.yml");
   const numericRunner = read("scripts/run-numeric-checks.jl");
   const notebookRunner = read("scripts/run-notebook-smoke.jl");
   const playwrightConfig = read("playwright.config.js");
@@ -18,11 +19,13 @@ describe("CIの検証境界", () => {
   const packageJson = read("package.json");
   const participantBuildCheck = read("scripts/p2-participant-preview-build-check.mjs");
   const dependabot = read(".github/dependabot.yml");
+  const repositoryReadme = read("README.md");
 
   it("実在するAction majorと共通Node版ファイルを使う", () => {
     expect(deploy).toContain("actions/checkout@v7");
     expect(deploy).toContain("actions/setup-node@v7");
     expect(pluto).toContain("actions/checkout@v7");
+    expect(bridge).toContain("actions/checkout@v7");
     expect(deploy).toContain("node-version-file: .node-version");
   });
 
@@ -80,16 +83,32 @@ describe("CIの検証境界", () => {
     expect(numericRunner).toContain('joinpath(ROOT, "validation", "p2-likelihood")');
   });
 
-  it("Pluto smokeは公開Notebook 5本と隔離P2研究Notebookを変更時・定期実行する", () => {
+  it("Pluto smokeは公開Notebook 6本と隔離P2研究Notebookを変更時・定期実行する", () => {
     expect(pluto).toContain("schedule:");
     expect(pluto).toContain("public/notebooks/**");
     expect(pluto).toContain("scripts/run-notebook-smoke.jl");
     const listed = [...notebookRunner.matchAll(/"(public\/notebooks\/nb[^"\n]+\.jl)"/g)]
       .map((match) => match[1]);
-    expect(listed).toHaveLength(5);
+    expect(listed).toHaveLength(6);
     expect(pluto).toContain("validation/p2-likelihood/Project.toml");
     expect(pluto).toContain("Instantiate P2 likelihood feasibility environment");
     expect(pluto).toContain("scripts/p2-selection-count-notebook-exec.jl");
+  });
+
+  it("R・Stan bridgeはLinux空環境で定期実行する", () => {
+    expect(bridge).toContain("schedule:");
+    expect(bridge).toContain("pull_request:");
+    expect(bridge).toContain("runs-on: ubuntu-latest");
+    expect(bridge).toContain("build-essential r-base-core");
+    expect(bridge).toContain("code/setup_cmdstan.jl");
+    expect(bridge).toContain('RUN_STAN_TEMPLATE_CHECK: "1"');
+    expect(bridge).toContain(
+      "run: julia --project=examples/reproducible-study scripts/reproducible-template-check.jl"
+    );
+    expect(repositoryReadme).toContain("## R・Stan配布templateの検査");
+    expect(repositoryReadme).toContain(
+      "RUN_STAN_TEMPLATE_CHECK=1 julia --project=examples/reproducible-study"
+    );
   });
 
   it("Julia jobsはコミット済みvalidation環境と公式cache actionを共有する", () => {

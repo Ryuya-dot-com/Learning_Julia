@@ -1,0 +1,52 @@
+name: R and Stan bridge smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 毎週月曜03:47 JST。Pluto smokeの後にずらす。
+    - cron: '47 18 * * 0'
+  push:
+    branches: [main]
+    paths:
+      - 'examples/reproducible-study/**'
+      - 'public/templates/reproducible-study-template.tar'
+      - 'scripts/reproducible-template-check.jl'
+      - '.github/workflows/bridge-smoke.yml'
+  pull_request:
+    paths:
+      - 'examples/reproducible-study/**'
+      - 'public/templates/reproducible-study-template.tar'
+      - 'scripts/reproducible-template-check.jl'
+      - '.github/workflows/bridge-smoke.yml'
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: bridge-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: '1.12'
+          project: examples/reproducible-study
+      - uses: julia-actions/cache@v3
+        with:
+          cache-name: bridge-${{ hashFiles('examples/reproducible-study/Project.toml', 'examples/reproducible-study/Manifest.toml') }}
+      - name: Install R and C++ toolchain
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential r-base-core
+      - name: Instantiate bridge environment
+        run: julia --project=examples/reproducible-study -e 'using Pkg; Pkg.instantiate()'
+      - name: Build clean project-local CmdStan
+        run: julia --project=examples/reproducible-study examples/reproducible-study/code/setup_cmdstan.jl
+      - name: Run extracted-template R and Stan checks
+        env:
+          RUN_STAN_TEMPLATE_CHECK: "1"
+        run: julia --project=examples/reproducible-study scripts/reproducible-template-check.jl

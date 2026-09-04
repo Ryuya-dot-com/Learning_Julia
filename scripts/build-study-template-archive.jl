@@ -11,12 +11,18 @@ const TEMPLATE_FILES = [
     "Project.toml",
     "Manifest.toml",
     "code/run_analysis.jl",
+    "code/run_r_bridge.jl",
+    "code/run_stan_bridge.jl",
+    "code/setup_cmdstan.jl",
+    "code/summarize_trials.R",
     "data/example/trials_synthetic.csv",
     "data/raw/README.md",
     "metadata/data_dictionary.csv",
     "metadata/schema.toml",
     "metadata/study.toml",
     "metadata/DATA_LICENSE.txt",
+    "models/README.md",
+    "models/bernoulli.stan",
 ]
 
 function file_sha256(path)

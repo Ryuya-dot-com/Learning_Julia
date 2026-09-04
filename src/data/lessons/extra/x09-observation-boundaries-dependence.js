@@ -260,7 +260,7 @@ true`,
       b: [
         "truncatedでは行数減少と境界内の再正規化、censoredでは行数保持と境界への確率質量を確認します。MvNormalではshape、共分散の正定値性、経験相関、joint eventを確認します。MixtureModelではcomponent・weights・全体moment・谷や裾を確認します。",
         "成果物には観測規則、境界、共分散matrixと変数順、component parameterとweights、RNG、sample size、replicate数を保存します。raw値や打切りflagを上書きせず、P0-Bのround trip契約で診断表を読み戻します。",
-        "これでP0-Aの入力監査、P0-Bの成果物、P0-Cのfitと予測診断、P1の観測境界・依存・異質性が一本につながります。次の拡充では、専用尤度による推定やR・Stan連携を、検証可能な任意トラックとして分離します。",
+        "これでP0-Aの入力監査、P0-Bの成果物、P0-Cのfitと予測診断、P1の観測境界・依存・異質性が一本につながります。R・Stan連携は公開済みの任意トラックへ進み、専用尤度による推定は研究検証として分離します。",
       ],
     },
   ],

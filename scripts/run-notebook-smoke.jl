@@ -7,6 +7,7 @@ const NOTEBOOKS = [
     "public/notebooks/nb3-sim.jl",
     "public/notebooks/nb4-model.jl",
     "public/notebooks/nb5-advanced.jl",
+    "public/notebooks/nb6-r.jl",
 ]
 
 active_project = Base.active_project()
