@@ -38,6 +38,7 @@ end
 function install_cmdstan()
     tar = Sys.which("tar")
     make = Sys.which(Sys.iswindows() ? "mingw32-make" : "make")
+    Sys.iswindows() && isnothing(make) && (make = Sys.which("make"))
     isnothing(tar) && error("tarが見つかりません")
     isnothing(make) && error("makeが見つかりません")
     mkpath(INSTALL_ROOT)
