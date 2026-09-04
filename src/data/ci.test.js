@@ -100,8 +100,7 @@ describe("CIの検証境界", () => {
   it("R・Stan bridgeはLinux・Windows空環境で定期実行する", () => {
     expect(bridge).toContain("schedule:");
     expect(bridge).toContain("pull_request:");
-    expect(bridge).toContain("os: ubuntu-latest");
-    expect(bridge).toContain("os: windows-latest");
+    expect(bridge).toContain("os: [ubuntu-latest, windows-latest]");
     expect(bridge).toContain("build-essential r-base-core");
     expect(bridge).toContain("r-lib/actions/setup-r@v2");
     expect(bridge).toContain("rtools-version: '45'");
