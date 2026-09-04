@@ -55,7 +55,7 @@ end
     @test isfile(ARCHIVE)
     @test portable_files(SOURCE) == EXPECTED_FILES
 
-    mktempdir(ROOT) do extraction
+    mktempdir() do extraction
         Tar.extract(ARCHIVE, extraction)
         template = joinpath(extraction, "reproducible-study")
         @test isdir(template)
