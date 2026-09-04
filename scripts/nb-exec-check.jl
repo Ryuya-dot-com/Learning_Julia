@@ -15,6 +15,7 @@ const EXPECTED_JUDGES = Dict(
     "nb3-sim.jl" => 5,
     "nb4-model.jl" => 14,
     "nb5-advanced.jl" => 9,
+    "nb6-r.jl" => 5,
 )
 
 length(ARGS) in (1, 2) || error("usage: nb-exec-check.jl NOTEBOOK [ANSWERS]")

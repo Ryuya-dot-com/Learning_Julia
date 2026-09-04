@@ -7,8 +7,9 @@
 
 - 基礎編から測定・混合モデル・研究計画まで、番号付き全37レッスンを公開中
 - エラー診断、文字列処理、分布選択・推定・予測診断、観測境界・依存・混合生成、複数CSV入出力、再現可能な研究、Gitなど、番号なし補講も公開中
-- データ操作から発展編まで、実際に手を動かすPluto演習ノートブック5本を収録
-- 全体像、Now／Next／Later／保留の判断規準、今後のR・Stan連携構想は [学習ロードマップ](https://ryuya-dot-com.github.io/Learning_Julia/roadmap.html) を参照
+- RCall、JuliaCall、StanSampleを扱う番号なしのR・Stan連携トラック4本も公開中
+- データ操作から外部エンジン連携まで、実際に手を動かすPluto演習ノートブック6本を収録
+- 全体像とNow／Next／Later／保留の判断規準は [学習ロードマップ](https://ryuya-dot-com.github.io/Learning_Julia/roadmap.html) を参照
 - 進みぐあいはページを開いているあいだだけ記録されます(サーバには何も送信しません)
 
 ## レッスンの追加方法
@@ -39,6 +40,24 @@ npm run build && npm run preview  # 公開と同条件での確認(base パス�
 ```
 
 `main` に push すると GitHub Actions がテスト → ビルド → GitHub Pages への公開を自動で行います。
+
+## R・Stan配布templateの検査
+
+通常分析と、利用できる場合のR連携は次で確認します。
+
+```bash
+julia --project=examples/reproducible-study -e 'using Pkg; Pkg.instantiate()'
+julia --project=examples/reproducible-study scripts/reproducible-template-check.jl
+```
+
+CmdStanを含む完全検査はC++ toolchainと約51 MBのdownloadを要します。macOS／Linuxでは次を実行します。
+
+```bash
+julia --project=examples/reproducible-study examples/reproducible-study/code/setup_cmdstan.jl
+RUN_STAN_TEMPLATE_CHECK=1 julia --project=examples/reproducible-study scripts/reproducible-template-check.jl
+```
+
+同じ完全検査を`.github/workflows/bridge-smoke.yml`がLinuxで変更時・毎週実行します。Windowsでの実走確認と、第三者による引き継ぎ確認は未実施です。
 
 P2の打切り・切断尤度は、公開教材へ入れる前のresearch検証です。既存環境へ依存を増やさず、`validation/p2-likelihood/`の隔離環境でだけ実行します。実参加者へ共有する静的な[研究UI preview](https://ryuya-dot-com.github.io/Learning_Julia/validation/p2-likelihood/ui-preview.html)だけは、検索非掲載・教材catalog非掲載で公開します。固定合成fixtureだけを使い、入力の送信・保存、telemetry、公開計算APIはありません。
 

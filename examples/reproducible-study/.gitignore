@@ -8,6 +8,7 @@ output/
 metadata/runs/
 
 # local設定・秘密情報・Julia固有の一時保存。
+.cmdstan/
 .env
 .env.*
 !.env.example

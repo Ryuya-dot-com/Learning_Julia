@@ -224,7 +224,7 @@ describe("データの整形・保存・再利用回の学習契約", () => {
     expect(roadmap).toContain("データの整形・保存・再利用");
     expect(roadmap).toContain("RData.jlが文書化するのは.rda／.RDataの読込");
     expect(roadmap).toContain("RCall: RDS");
-    expect(roadmap).toContain("StanSample.jl／CmdStan（任意発展）");
+    expect(roadmap).toContain("StanSample 7.10.3／CmdStan 2.39.0の実行例");
     expect(roadmap).not.toContain(".RData・.rds は RData.jl で直接読めます");
   });
 });

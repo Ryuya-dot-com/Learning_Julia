@@ -38,6 +38,7 @@ test("ホームから教材を遅延読込し、解答と進捗反映まで操�
   await expect(page).toHaveTitle(/はじめてのJulia/);
   await expect(page.getByRole("heading", { level: 1, name: "はじめてのJulia" })).toBeVisible();
   await expect(page.getByText(/番号付き全37レッスン＋補講9本/)).toBeVisible();
+  await expect(page.getByText(/R・Stan連携4本/)).toBeVisible();
 
   await page.getByRole("button", { name: "レッスン1をはじめる" }).click();
   await expect(page.getByRole("heading", { level: 2, name: "Juliaへようこそ" })).toBeVisible();
@@ -73,12 +74,30 @@ test("意図的なMethodErrorは教材として表示し、実行時エラーに
 test("ロードマップとNotebook配布リンクがPagesのbase pathで到達できる", async ({ page }) => {
   await page.goto("./");
 
+  await page.getByRole("button", { name: /R・Stanへ渡すデータの契約/ }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "連携の第一歩は、packageを入れることではない" })).toBeVisible();
+  for (let i = 0; i < 7; i += 1) {
+    await page.getByRole("button", { name: "次へ →" }).click();
+  }
+  await expect(page.getByRole("link", { name: "R・Stan bridge入り研究projectをdownload (.tar)" })).toHaveAttribute(
+    "href",
+    "/Learning_Julia/templates/reproducible-study-template.tar"
+  );
+  await page.getByRole("button", { name: "← レッスン一覧" }).click();
+
   const notebook = page.getByRole("link", { name: "演習ノート ↓" }).first();
   await expect(notebook).toHaveAttribute("href", "/Learning_Julia/notebooks/nb1-data.jl");
   const notebookHref = await notebook.getAttribute("href");
   const notebookResponse = await page.request.get(new URL(notebookHref, page.url()).href);
   expect(notebookResponse.ok()).toBe(true);
   expect(await notebookResponse.text()).toContain("### A Pluto.jl notebook ###");
+
+  const bridgeNotebook = page.getByRole("link", { name: "演習ノート ↓" }).nth(5);
+  await expect(bridgeNotebook).toHaveAttribute("href", "/Learning_Julia/notebooks/nb6-r.jl");
+  const bridgeHref = await bridgeNotebook.getAttribute("href");
+  const bridgeResponse = await page.request.get(new URL(bridgeHref, page.url()).href);
+  expect(bridgeResponse.ok()).toBe(true);
+  expect(await bridgeResponse.text()).toContain("R・Stan連携の演習ノート");
 
   await page.getByRole("link", { name: "この先の学習ロードマップを見る" }).click();
   await expect(page).toHaveURL(/\/Learning_Julia\/roadmap\.html$/);
