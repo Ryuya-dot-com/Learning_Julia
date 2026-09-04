@@ -38,6 +38,7 @@ end
 function install_cmdstan()
     tar = Sys.which("tar")
     make = Sys.which(Sys.iswindows() ? "mingw32-make" : "make")
+    Sys.iswindows() && isnothing(make) && (make = Sys.which("make"))
     isnothing(tar) && error("tarが見つかりません")
     isnothing(make) && error("makeが見つかりません")
     mkpath(INSTALL_ROOT)
@@ -50,7 +51,9 @@ function install_cmdstan()
             actual_sha256 == CMDSTAN_ARCHIVE_SHA256 || error(
                 "CmdStan archiveのSHA-256が公式release情報と一致しません: $actual_sha256",
             )
-            run(Cmd([tar, "-xzf", archive, "-C", staging]))
+            cd(staging) do
+                run(Cmd([tar, "-xzf", basename(archive)]))
+            end
             staged_home = joinpath(staging, "cmdstan-$(CMDSTAN_VERSION)")
             isfile(joinpath(staged_home, "makefile")) || error(
                 "CmdStan archiveのdirectory構成が想定と異なります",

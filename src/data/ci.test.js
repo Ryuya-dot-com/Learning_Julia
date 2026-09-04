@@ -97,11 +97,13 @@ describe("CIの検証境界", () => {
     expect(pluto).toContain("scripts/p2-selection-count-notebook-exec.jl");
   });
 
-  it("R・Stan bridgeはLinux空環境で定期実行する", () => {
+  it("R・Stan bridgeはLinux・Windows空環境で定期実行する", () => {
     expect(bridge).toContain("schedule:");
     expect(bridge).toContain("pull_request:");
-    expect(bridge).toContain("runs-on: ubuntu-latest");
+    expect(bridge).toContain("os: [ubuntu-latest, windows-latest]");
     expect(bridge).toContain("build-essential r-base-core");
+    expect(bridge).toContain("r-lib/actions/setup-r@v2");
+    expect(bridge).toContain("rtools-version: '45'");
     expect(bridge).toContain("code/setup_cmdstan.jl");
     expect(bridge).toContain('RUN_STAN_TEMPLATE_CHECK: "1"');
     expect(bridge).toContain(

@@ -14,7 +14,7 @@ julia --project=. code/run_stan_bridge.jl
 
 setupはCmdStan 2.39.0の公式archiveだけを使い、releaseのSHA-256と展開後のdirectory構成を一時領域で確認してからproject内の`.cmdstan/`へ移し、最終pathでbuildします。別の導入済みCmdStanを使う場合は、`CMDSTAN`または`JULIA_CMDSTAN_HOME`を`run_stan_bridge.jl`の起動前に指定できます。
 
-2026-09-05にmacOS arm64とLinux arm64（Debian 12 container）で配布archiveを新規展開し、CmdStan未導入の状態からdownload・build、R／Stan成果物の生成、同一入力での再利用まで確認済みです。Linux x86_64でもCmdStanのdownload・buildとR／Stanの生成・再利用を確認しましたが、Julia依存はLinux arm64で取得した一時depotを使いました。x86_64での依存取得は定期CIの初回実行、Windowsは別環境での確認が残っています。
+2026-09-05にmacOS arm64とLinux arm64（Debian 12 container）で配布archiveを新規展開し、CmdStan未導入の状態からdownload・build、R／Stan成果物の生成、同一入力での再利用まで確認済みです。GitHub ActionsのLinux x86_64とWindows x86_64でも新規runner上でJulia環境を用意し、CmdStanのdownload・buildからR／Stanの生成・再利用まで確認しました。Windowsの確認環境はWindows Server 2025、Julia 1.12.7、R 4.5.3、RTools45、CmdStan 2.39.0です。
 
 実行条件はseed 20260904、4 chain、各chainでwarmup 250・sampling 500、NUTSです。Beta(1, 1) priorと成功数5／全6試行から得る解析的な事後分布Beta(6, 2)に対し、theta平均0.75と事後予測成功数の平均4.5をStan drawsで照合します。
 

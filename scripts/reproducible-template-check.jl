@@ -285,7 +285,8 @@ end
                     "CMDSTAN",
                     get(ENV, "JULIA_CMDSTAN_HOME", local_cmdstan),
                 )
-                isfile(joinpath(cmdstan, "bin", "stanc")) || error(
+                stanc = "stanc" * (Sys.iswindows() ? ".exe" : "")
+                isfile(joinpath(cmdstan, "bin", stanc)) || error(
                     "RUN_STAN_TEMPLATE_CHECK=1ですがCmdStanがありません: $cmdstan",
                 )
                 stan_command = addenv(

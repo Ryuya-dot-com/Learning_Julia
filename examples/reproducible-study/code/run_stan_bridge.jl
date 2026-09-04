@@ -338,7 +338,8 @@ function main()
     mkpath(run_directory)
     result = try
         staging = run_directory
-        model = SampleModel("bernoulli", read(MODEL_PATH, String), staging)
+        model_directory = Sys.iswindows() ? replace(staging, '\\' => '/') * "/" : staging
+        model = SampleModel("bernoulli", read(MODEL_PATH, String), model_directory)
         rc = stan_sample(
             model;
             data = Dict("N" => SETTINGS.N, "successes" => SETTINGS.successes),
