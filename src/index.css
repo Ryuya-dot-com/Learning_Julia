@@ -1,2 +1,18 @@
 @import "tailwindcss";
 @source not "./research";
+
+main { overflow-wrap: anywhere; }
+main pre:focus-visible { outline-offset: -3px; }
+.code-source:focus-visible { outline-color: white; }
+
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  transform: translateY(-200%);
+  padding: 0.75rem 1rem;
+  background: white;
+  color: #6D3E86;
+}
+.skip-link:focus { transform: none; }

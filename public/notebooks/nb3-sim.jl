@@ -9,6 +9,28 @@ begin
     using CSV, DataFrames, Random, Statistics, Distributions
     using HypothesisTests
     using StatsPlots
+    finite_number_nb3(x) = x isa Real && !(x isa Bool) && isfinite(x)
+    valid_ses_nb3(x, sizes) = x isa AbstractVector && length(x) == length(sizes) &&
+        all(finite_number_nb3, x) &&
+        all(isapprox.(x, 50 ./ sqrt.(sizes); rtol = 0.04)) && issorted(x; rev = true)
+    valid_trial_list_nb3(x) = x isa AbstractVector && length(x) == 8 &&
+        all(v -> v isa AbstractString, x) &&
+        count(==("cong"), x) == 4 && count(==("incong"), x) == 4
+
+    function checked_trials_nb3(f)
+        applicable(f, 1) || return (lists = nothing, status = :not_callable)
+        # 共有配列を返す関数でも、各呼出し時点の内容を別々に確認する。
+        snapshot(p) = let x = f(p)
+            x isa AbstractVector ? collect(x) : x
+        end
+        lists = [snapshot(p) for p in 1:5]
+        all(ismissing, lists) && return (lists = missing, status = :pending)
+        all(valid_trial_list_nb3, lists) || return (lists = nothing, status = :invalid)
+        all(p -> isequal(lists[p], snapshot(p)), 1:5) ||
+            return (lists = nothing, status = :not_reproducible)
+        length(unique(lists)) == 5 || return (lists = nothing, status = :same_order)
+        return (; lists, status = :ok)
+    end
 end
 
 # ╔═╡ beefca02-0000-11f1-9a01-000000000002
@@ -36,16 +58,16 @@ md"""
 make_trials(p) = missing # TODO: shuffle(Xoshiro(100 + p), repeat(...))
 
 # ╔═╡ beefca05-0000-11f1-9a01-000000000005
-let r = make_trials(1)
-    if r === missing
+let
+    if trial_check_nb3.lists === missing
         md"⏳ `shuffle(Xoshiro(100 + p), repeat([\"cong\", \"incong\"], 4))` —— RNGを第1引数へ渡します。"
-    elseif !(r isa AbstractVector) || length(r) != 8
-        md"🤔 8試行の配列を返しましょう。`repeat([\"cong\", \"incong\"], 4)` で8試行になります。"
-    elseif count(==("cong"), r) != 4
-        md"🤔 cong と incong が4:4になっていません。`repeat` の中身を確認しましょう。"
-    elseif make_trials(2) != make_trials(2)
+    elseif trial_check_nb3.status == :not_callable
+        md"🤔 参加者番号を1つ受け取る関数にしてください。"
+    elseif trial_check_nb3.status == :invalid
+        md"🤔 参加者1〜5のすべてで、congとincongを各4個含む8試行の文字列配列を返してください。欠測や別の条件名も確認しましょう。"
+    elseif trial_check_nb3.status == :not_reproducible
         md"🤔 同じ参加者番号なのに、呼ぶたびに順序が変わっています。`Xoshiro(100 + p)` を `shuffle` の第1引数へ渡していますか?"
-    elseif length(unique([make_trials(p) for p in 1:5])) != 5
+    elseif trial_check_nb3.status == :same_order
         md"🤔 参加者ごとに順序が変わっていません。種に `p` が入っていますか?"
     else
         md"✅ **正解!** ランダムなのに再現できる刺激リストです。`make_trials(2)` は何度呼んでも同じ並びを返します。"
@@ -56,16 +78,19 @@ end
 md"""
 ## 課題2: 実験リストをCSVに書き出す（「乱数・標本抽出・再現性」）
 
-5人分の刺激リストを1つの表にまとめました(下のセル。課題1が終わると自動で表になります)。これをファイルに書き出しましょう。
+5人分の刺激リストを1つの表にまとめます(下のセル。課題1が終わると自動で表になります)。各参加者の返り値を調べ、再度呼んだときの再現性・参加者間の順序の違いも確認してから、確認した同じ内容を表にします。不正な返り値の間は表を作りません。関数自身が例外を投げた場合は、そのエラーを表示します。
 
 書き出しは `CSV.write("ファイル名", 表)` です。「CSV.jl & DataFrames.jl 入門」の `CSV.read` の逆ですね。実験プログラムは、こうして作ったリストを読んで動きます。
 """
 
 # ╔═╡ beefca07-0000-11f1-9a01-000000000007
-trials_df = make_trials(1) === missing ? missing :
-    DataFrame(participant = repeat(1:5, inner = 8),
-              trial = repeat(1:8, outer = 5),
-              cond = reduce(vcat, [make_trials(p) for p in 1:5]))
+begin
+    trial_check_nb3 = checked_trials_nb3(make_trials)
+    trials_df = trial_check_nb3.status == :ok ?
+        DataFrame(participant = repeat(1:5, inner = 8),
+                  trial = repeat(1:8, outer = 5),
+                  cond = reduce(vcat, trial_check_nb3.lists)) : missing
+end
 
 # ╔═╡ beefca08-0000-11f1-9a01-000000000008
 csv_path = missing # TODO: trials_df を "trials.csv" に書き出す
@@ -75,8 +100,20 @@ if trials_df === missing
     md"⏳ まず課題1を完成させましょう。この表は課題1の関数から自動で作られます。"
 elseif csv_path === missing
     md"⏳ `CSV.write(\"trials.csv\", trials_df)` です。"
-elseif csv_path isa AbstractString && isfile(csv_path) && nrow(CSV.read(csv_path, DataFrame)) == 40
-    md"✅ **正解!** 40行(5人 × 8試行)の実験リストができました。`CSV.write` は書き出したファイル名を返すので、それがそのまま `csv_path` に入っています。"
+elseif csv_path isa AbstractString
+    let restored_trials = try
+            isfile(csv_path) ? CSV.read(csv_path, DataFrame; strict = true) : nothing
+        catch err
+            err isa Union{CSV.Error, ArgumentError, SystemError, Base.IOError, EOFError} || rethrow()
+            nothing
+        end
+        if restored_trials isa AbstractDataFrame && nrow(restored_trials) == 40 &&
+           isequal(restored_trials, trials_df)
+            md"✅ **正解!** 40行(5人 × 8試行)の表を読み戻し、確認した刺激リストとの一致を確かめました。"
+        else
+            md"🤔 CSVを読めるか、40行の値と列が`trials_df`と一致するかを確認してください。"
+        end
+    end
 else
     md"🤔 ファイルがうまく書けていません。`CSV.write(\"trials.csv\", trials_df)` の返り値をそのまま入れてください。"
 end
@@ -107,8 +144,7 @@ ses = missing # TODO: ns の各 n について empirical_se(n) を並べた配�
 # ╔═╡ beefca14-0000-11f1-9a01-000000000014
 if ses === missing
     md"⏳ `[empirical_se(n) for n in ns]` —— 「内包表記」の出番です。"
-elseif ses isa AbstractVector && length(ses) == 3 &&
-       all(isapprox.(ses, 50 ./ sqrt.(ns); rtol = 0.04)) && issorted(ses; rev = true)
+elseif valid_ses_nb3(ses, ns)
     md"""✅ **正解!** 経験SEは $(round.(ses, digits = 1))。
 
     nを25倍にしてもSEは5分の1です。精度を2倍にするには、おおむね4倍の標本が必要になります。"""
@@ -123,6 +159,8 @@ md"""
 ## 課題4: SEの縮み方を図にする（「標本分布」×「探索の可視化」）
 
 `ns` を横軸、`ses` を縦軸にした折れ線グラフを描きましょう。点マーカー(`marker = :circle`)を付け、y軸を `SE of mean` とします。
+
+両軸は通常の線形目盛りにします。判定は課題3の値、xとyの対応、円マーカー、縦軸ラベルを確認します。色・タイトル・凡例は自由です。
 """
 
 # ╔═╡ beefca16-0000-11f1-9a01-000000000016
@@ -131,10 +169,20 @@ p4 = missing # TODO: plot(ns, ses) に marker や軸ラベルを添えて
 # ╔═╡ beefca17-0000-11f1-9a01-000000000017
 if p4 === missing
     md"⏳ `plot(ns, ses, marker = :circle, legend = false, xlabel = \"n\", ylabel = \"SE of mean\")` あたりから始めましょう。"
-elseif p4 isa Plots.Plot
+elseif ses === missing
+    md"⏳ まず課題3の`ses`を完成させましょう。"
+elseif !valid_ses_nb3(ses, ns)
+    md"🤔 まず課題3の`ses`を確認してください。不正な値を描いた図は合格にしません。"
+elseif p4 isa Plots.Plot && length(p4.subplots) == 1 && length(p4.series_list) == 1 &&
+       isequal(p4.series_list[1][:seriestype], :path) &&
+       isequal(p4.series_list[1][:x], ns) && isequal(p4.series_list[1][:y], ses) &&
+       isequal(p4.series_list[1][:markershape], :circle) &&
+       isequal(p4[1][:yaxis][:guide], "SE of mean") &&
+       all(isequal(p4[1][axis][:scale], :identity) && isequal(p4[1][axis][:flip], false)
+           for axis in (:xaxis, :yaxis))
     md"✅ **正解!** nを増やすほどSEは縮みますが、直線ではなく次第に緩やかになる形が見えます。"
 else
-    md"🤔 `plot(...)` の結果をそのまま `p4` に入れましょう。"
+    md"🤔 横軸`ns`・縦軸`ses`の折れ線、`marker = :circle`、`ylabel = \"SE of mean\"`を確認しましょう。"
 end
 
 # ╔═╡ beefca19-0000-11f1-9a01-000000000019
@@ -162,6 +210,7 @@ if rank_summary === missing
     md"⏳ `p` は `pvalue(rank_test)`、`superiority` は全組合せの `rank_pair_score` の平均です。"
 elseif rank_summary isa NamedTuple &&
        hasproperty(rank_summary, :p) && hasproperty(rank_summary, :superiority) &&
+       all(k -> finite_number_nb3(getproperty(rank_summary, k)), (:p, :superiority)) &&
        isapprox(rank_summary.p, 0.007109; atol = 1e-6) &&
        isapprox(rank_summary.superiority, 0.855; atol = 1e-12)
     md"""✅ **正解!** 近似p値は$(round(rank_summary.p; digits = 6))、経験的優越確率は$(round(rank_summary.superiority; digits = 3))です。

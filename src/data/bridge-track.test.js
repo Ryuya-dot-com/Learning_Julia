@@ -131,7 +131,7 @@ describe("R・Stan連携トラック", () => {
     );
   });
 
-  it("第三者による引き継ぎ確認を未実施のまま明示する", () => {
+  it("実行検査と、未確認の埋め込み連携・第三者引き継ぎを区別する", () => {
     const templateReadme = read("examples/reproducible-study/README.md");
     const roadmap = read("public/roadmap.html");
 
@@ -139,5 +139,13 @@ describe("R・Stan連携トラック", () => {
     expect(templateReadme).toContain("第三者による引き継ぎ確認は未実施です");
     expect(roadmap).toContain("ACTUAL_HANDOFFS_0");
     expect(roadmap).toContain("理解率や教育効果の根拠にはしません");
+    expect(roadmap).toContain("Linux／WindowsのCI");
+    expect(roadmap).not.toContain("Windowsは別環境での確認が残っています");
+    expect(roadmap).toContain("RCall・JuliaCallの埋め込み実行は定期CIの対象ではありません");
+    for (const id of ["julia-to-r", "r-to-julia"]) {
+      const text = JSON.stringify(LESSONS.find((lesson) => lesson.id === id).pages[0]);
+      expect(text).toContain("定期CIの実行対象ではありません");
+      expect(text).toContain("Rscript経由の連携とは別です");
+    }
   });
 });

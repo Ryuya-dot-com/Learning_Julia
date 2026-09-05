@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useId } from "react";
 import { C, MONO } from "./theme.js";
 import { isCodey } from "./highlight.js";
 import { seededOrder } from "./shuffle.js";
 import { T, CodeBlock, TriDots, Btn, ResetButton, Feedback } from "./components.jsx";
 import { SECTIONS } from "./data/sections.js";
 import { CHEATS } from "./data/cheats.js";
+import { buildLessonItems } from "./data/lessons/registry.js";
 
 /* ============================================================
    練習問題コンポーネント
@@ -83,6 +84,7 @@ function ChoiceEx({ ex, seedKey, solved, onCorrect }) {
 }
 
 function FillEx({ ex, solved, onCorrect }) {
+  const questionId = useId();
   const [val, setVal] = useState(solved ? ex.show : "");
   const [status, setStatus] = useState(solved ? "correct" : "idle");
   const [showHint, setShowHint] = useState(false);
@@ -106,11 +108,11 @@ function FillEx({ ex, solved, onCorrect }) {
 
   return (
     <div>
-      <p className="mb-1 text-base font-bold leading-relaxed" style={{ color: C.ink }}>
+      <p id={questionId} className="mb-1 text-base font-bold leading-relaxed" style={{ color: C.ink }}>
         <T>{ex.q}</T>
       </p>
       {ex.code && <CodeBlock code={ex.code} />}
-      <div className="mt-4 flex items-stretch gap-2">
+      <div className="mt-4 flex flex-col items-stretch gap-2 sm:flex-row">
         <input
           value={val}
           onChange={(e) => {
@@ -124,8 +126,10 @@ function FillEx({ ex, solved, onCorrect }) {
           }}
           disabled={status === "correct"}
           aria-label={ex.placeholder || "答えを入力"}
+          aria-describedby={questionId}
+          aria-invalid={status === "wrong"}
           placeholder={ex.placeholder || "答えを入力"}
-          className="w-full rounded-xl px-4 py-3 text-sm"
+          className="min-w-0 w-full rounded-xl px-4 py-3 text-sm"
           style={{
             border:
               "1.5px solid " +
@@ -153,6 +157,7 @@ function FillEx({ ex, solved, onCorrect }) {
 // tf形式: 3つの記述それぞれに○×を付け、全問正解でクリア(ロードマップ仕様5節)。
 // 判定時は項目別の正誤と解説を必ず開示する。「初見で全問正解」は別フラグで記録する2層設計
 function TfEx({ ex, solved, onCorrect }) {
+  const statementId = useId();
   const [marks, setMarks] = useState(() => (solved ? ex.items.map((it) => it.a) : ex.items.map(() => null)));
   const [checked, setChecked] = useState(solved);
   const [status, setStatus] = useState(solved ? "correct" : "idle");
@@ -202,8 +207,8 @@ function TfEx({ ex, solved, onCorrect }) {
                 border: "1.5px solid " + (right ? C.green : wrong ? C.red : C.line),
               }}
             >
-              <div className="flex items-start justify-between gap-3">
-                <p className="min-w-0 flex-1 pt-1 text-sm leading-6" style={{ color: C.ink }}>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <p id={`${statementId}-${i}`} className="min-w-0 flex-1 pt-1 text-sm leading-6" style={{ color: C.ink }}>
                   <T>{it.s}</T>
                 </p>
                 <div className="flex shrink-0 gap-1.5" role="group" aria-label={`記述${i + 1}の判定`}>
@@ -217,6 +222,7 @@ function TfEx({ ex, solved, onCorrect }) {
                       disabled={status === "correct"}
                       aria-pressed={marks[i] === v}
                       aria-label={`記述${i + 1}を「${v ? "正しい" : "まちがい"}」にする`}
+                      aria-describedby={`${statementId}-${i}`}
                       className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold disabled:cursor-default"
                       style={
                         marks[i] === v
@@ -244,7 +250,7 @@ function TfEx({ ex, solved, onCorrect }) {
           答え合わせ
         </Btn>
       </div>
-      <div role="status" aria-live="polite">
+      <Feedback status={status} showHint={showHint}>
         {status === "correct" && (
           <div className="pop mt-4 rounded-xl p-4" style={{ background: C.greenSoft, border: "1px solid #BFE3B4" }}>
             <p className="text-sm font-bold" style={{ color: C.greenText }}>
@@ -272,7 +278,7 @@ function TfEx({ ex, solved, onCorrect }) {
             )}
           </div>
         )}
-      </div>
+      </Feedback>
     </div>
   );
 }
@@ -281,24 +287,47 @@ function TfEx({ ex, solved, onCorrect }) {
    レッスン画面
    ============================================================ */
 
+function PageBody({ page }) {
+  return (
+    <>
+      {(page.b || []).map((s, i) => (
+        <p key={i} className="mb-3 text-sm leading-7" style={{ color: C.body }}>
+          <T>{s}</T>
+        </p>
+      ))}
+      {page.code && <CodeBlock code={page.code} output={page.out} error={page.err} lang={page.lang} />}
+      {page.download && (
+        <a
+          href={import.meta.env.BASE_URL + page.download.path}
+          download
+          className="mb-4 inline-flex min-h-11 items-center rounded-full px-5 py-2.5 text-sm font-bold transition-opacity hover:opacity-85"
+          style={{ background: C.purple, color: "#FFFFFF" }}
+        >
+          ↓ {page.download.label}
+        </a>
+      )}
+      {(page.a || []).map((s, i) => (
+        <p key={i} className="mb-3 text-sm leading-7" style={{ color: C.body }}>
+          <T>{s}</T>
+        </p>
+      ))}
+    </>
+  );
+}
+
 function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, hasNext, onCheat }) {
   // 番号なしレッスン(bridge/extra)は「LESSON null」にならないようセクション名を表示する(仕様4.4b)
   const sec = SECTIONS.find((s) => s.dir === lesson.section);
   const headLabel = lesson.num != null ? `LESSON ${lesson.num}` : (sec ? sec.title : "");
   const doneLabel = lesson.num != null ? `レッスン${lesson.num} 修了!` : `${lesson.title} 修了!`;
-  const items = useMemo(() => {
-    const arr = lesson.pages.map((p) => ({ kind: "page", p }));
-    lesson.ex.forEach((e, i) => arr.push({ kind: "ex", e, i }));
-    arr.push({ kind: "done" });
-    return arr;
-  }, [lesson]);
+  const items = useMemo(() => buildLessonItems(lesson), [lesson]);
 
   const [idx, setIdx] = useState(0);
+  const headingRef = useRef(null);
 
   useEffect(() => {
-    try {
-      window.scrollTo({ top: 0 });
-    } catch (e) {}
+    headingRef.current?.focus();
+    window.scrollTo({ top: 0 });
   }, [idx]);
 
   const cur = items[idx];
@@ -309,6 +338,7 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
   return (
     <div>
       <div className="mb-5">
+        <h1 className="sr-only" tabIndex={-1}>{lesson.title}</h1>
         <div className="mb-3 flex items-center justify-between">
           <button
             className="inline-flex min-h-11 items-center text-sm font-bold"
@@ -339,42 +369,24 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
             <div className="mb-2 text-xs font-bold tracking-widest" style={{ color: C.purpleDeep, fontFamily: MONO }}>
               {headLabel}
             </div>
-            <h2 className="mb-4 text-xl font-bold" style={{ color: C.ink }}>
+            <h2 ref={headingRef} tabIndex={-1} className="mb-4 text-xl font-bold" style={{ color: C.ink }}>
               {cur.p.t}
             </h2>
-            {(cur.p.b || []).map((s, i) => (
-              <p key={i} className="mb-3 text-sm leading-7" style={{ color: C.body }}>
-                <T>{s}</T>
-              </p>
-            ))}
-            {cur.p.code && <CodeBlock code={cur.p.code} output={cur.p.out} error={cur.p.err} lang={cur.p.lang} />}
-            {cur.p.download && (
-              <a
-                href={import.meta.env.BASE_URL + cur.p.download.path}
-                download
-                className="mb-4 inline-flex min-h-11 items-center rounded-full px-5 py-2.5 text-sm font-bold transition-opacity hover:opacity-85"
-                style={{ background: C.purple, color: "#FFFFFF" }}
-              >
-                ↓ {cur.p.download.label}
-              </a>
-            )}
-            {(cur.p.a || []).map((s, i) => (
-              <p key={i} className="mb-3 text-sm leading-7" style={{ color: C.body }}>
-                <T>{s}</T>
-              </p>
-            ))}
+            <PageBody page={cur.p} />
           </div>
         )}
 
         {cur.kind === "ex" && (
           <div>
-            <div className="mb-4 flex items-center gap-2">
-              <span
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <h2
+                ref={headingRef}
+                tabIndex={-1}
                 className="rounded-full px-3 py-1 text-xs font-bold"
                 style={{ background: C.purpleSoft, color: C.purpleDeep }}
               >
                 練習問題 {cur.i + 1} / {total}
-              </span>
+              </h2>
               {doneSet.has(cur.i) && (
                 <span className="text-xs font-bold" style={{ color: C.greenText }}>
                   クリア済み ✓
@@ -404,6 +416,16 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
                 onCorrect={(first) => onSolve(cur.i, first)}
               />
             )}
+            {cur.reviewPage && (
+              <details className="mt-5 border-t pt-3" style={{ borderColor: C.line }}>
+                <summary className="min-h-11 cursor-pointer text-sm font-bold leading-7" style={{ color: C.purpleDeep }}>
+                  説明を読み直す: {cur.reviewPage.t}
+                </summary>
+                <div className="mt-3">
+                  <PageBody page={cur.reviewPage} />
+                </div>
+              </details>
+            )}
           </div>
         )}
 
@@ -414,7 +436,7 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
                 <div className="mb-4 flex justify-center">
                   <TriDots filled={3} size={14} />
                 </div>
-                <h2 className="mb-2 text-2xl font-bold" style={{ color: C.ink }}>
+                <h2 ref={headingRef} tabIndex={-1} className="mb-2 text-2xl font-bold" style={{ color: C.ink }}>
                   {doneLabel}
                 </h2>
                 <p className="mb-6 text-sm" style={{ color: C.sub }}>
@@ -438,7 +460,7 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
                   {/* クリア数を3点満点に比例配分する。旧実装は 2/3 クリアでも1点だった(監査A13) */}
                   <TriDots filled={Math.min(2, Math.floor((solvedCount / total) * 3))} size={14} />
                 </div>
-                <h2 className="mb-2 text-xl font-bold" style={{ color: C.ink }}>
+                <h2 ref={headingRef} tabIndex={-1} className="mb-2 text-xl font-bold" style={{ color: C.ink }}>
                   おつかれさまでした
                 </h2>
                 <p className="mb-5 text-sm" style={{ color: C.sub }}>
@@ -448,7 +470,7 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
                   {lesson.ex.map(
                     (e, i) =>
                       !doneSet.has(i) && (
-                        <Btn key={i} kind="ghost" onClick={() => setIdx(lesson.pages.length + i)}>
+                        <Btn key={i} kind="ghost" onClick={() => setIdx(items.findIndex((item) => item.kind === "ex" && item.i === i))}>
                           練習問題 {i + 1} にもどる
                         </Btn>
                       )
@@ -463,7 +485,7 @@ function LessonView({ lesson, doneSet, firstSet, onSolve, onHome, onNextLesson, 
         )}
       </div>
 
-      <div className="mt-5 flex items-center justify-between">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-2">
         <Btn kind="quiet" onClick={() => setIdx(idx - 1)} disabled={idx === 0}>
           ← 前へ
         </Btn>
@@ -506,7 +528,7 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
         </button>
       </div>
 
-      <h1 className="mb-1.5 text-3xl font-bold tracking-tight" style={{ color: C.ink }}>
+      <h1 tabIndex={-1} className="mb-1.5 text-3xl font-bold tracking-tight" style={{ color: C.ink }}>
         はじめてのJulia
       </h1>
       <p className="mb-6 text-sm leading-6" style={{ color: C.sub }}>
@@ -516,7 +538,7 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
       </p>
 
       <div className="mb-6 rounded-2xl bg-white p-5" style={{ border: "1px solid " + C.line }}>
-        <div className="mb-2 flex items-baseline justify-between">
+        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
           <span className="text-sm font-bold" style={{ color: C.ink }}>
             学習の進みぐあい
           </span>
@@ -566,7 +588,7 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
           if (ls.length === 0) return null;
           return (
             <div key={sec.dir}>
-              <div className="mb-2.5 flex items-baseline gap-2">
+              <div className="mb-2.5 flex flex-wrap items-baseline gap-2">
                 <span
                   className="h-2.5 w-2.5 shrink-0 self-center rounded-full"
                   style={{ background: sec.color }}
@@ -575,7 +597,7 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
                 <h2 className="text-sm font-bold" style={{ color: C.ink }}>
                   {sec.title}
                 </h2>
-                <span className="min-w-0 flex-1 truncate text-xs" style={{ color: C.sub }}>
+                <span className="order-last w-full text-xs sm:order-none sm:min-w-0 sm:flex-1" style={{ color: C.sub }}>
                   {sec.sub}
                 </span>
                 {sec.notebook && (
@@ -583,6 +605,7 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
                     className="inline-flex min-h-11 shrink-0 items-center text-xs font-bold underline"
                     style={{ color: C.purpleDeep }}
                     href={import.meta.env.BASE_URL + "notebooks/" + sec.notebook}
+                    aria-label={`${sec.title}の演習ノート ↓`}
                     download
                   >
                     演習ノート ↓
@@ -599,7 +622,7 @@ function Home({ lessons, progress, onOpen, onCheat, onReset }) {
                     <button
                       key={l.id}
                       onClick={() => onOpen(l.id)}
-                      className="flex items-center gap-4 rounded-2xl bg-white p-4 text-left transition-shadow hover:shadow-md"
+                      className="flex flex-wrap items-center gap-3 rounded-2xl bg-white p-4 text-left transition-shadow hover:shadow-md"
                       style={{ border: "1px solid " + (all ? "#BFE3B4" : C.line) }}
                     >
                       <span
@@ -770,7 +793,7 @@ function CheatSheet({ onHome }) {
         </button>
         <TriDots filled={3} size={10} />
       </div>
-      <h1 className="mb-1 text-2xl font-bold tracking-tight" style={{ color: C.ink }}>
+      <h1 tabIndex={-1} className="mb-1 text-2xl font-bold tracking-tight" style={{ color: C.ink }}>
         Julia チートシート
       </h1>
       <p className="mb-5 text-sm" style={{ color: C.sub }}>
@@ -778,15 +801,15 @@ function CheatSheet({ onHome }) {
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {CHEATS.map((sec, i) => (
-          <div key={i} className="rounded-2xl bg-white p-4" style={{ border: "1px solid " + C.line }}>
+          <div key={i} className="min-w-0 rounded-2xl bg-white p-4" style={{ border: "1px solid " + C.line }}>
             <h2 className="mb-3 text-sm font-bold" style={{ color: C.purple }}>
               {sec.title}
             </h2>
             <div className="flex flex-col gap-2.5">
               {sec.rows.map((r, j) => (
-                <div key={j} className="flex items-start justify-between gap-3">
+                <div key={j} className="flex flex-wrap items-start justify-between gap-2">
                   <code
-                    className="shrink-0 rounded px-1.5 py-0.5 text-xs leading-5"
+                    className="max-w-full rounded px-1.5 py-0.5 text-xs leading-5"
                     style={{ background: "#F5F2EC", color: "#5A4470", fontFamily: MONO }}
                   >
                     {r[0]}

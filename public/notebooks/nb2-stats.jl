@@ -8,6 +8,28 @@ using InteractiveUtils
 begin
     using CSV, DataFrames, Statistics, Random, Distributions
     using StatsPlots
+    finite_number_nb2(x) = x isa Real && !(x isa Bool) && isfinite(x)
+    valid_replicates_nb2(x, n) = x isa AbstractMatrix && size(x) == (n, 2000) &&
+        all(v -> finite_number_nb2(v) && v > 0, x)
+
+    function same_plot_nb2(p, make_reference)
+        p isa Plots.Plot && length(p.subplots) == 1 || return false
+        previous = Plots.isplotnull() ? p : Plots.current()
+        reference = try
+            make_reference()
+        finally
+            Plots.current(previous)
+        end
+        length(p.series_list) == length(reference.series_list) || return false
+        # ponytail: Plots 1.xの描画系列を照合。更新時は実際の図で再検査する。
+        all(isequal(a[k], b[k]) for (a, b) in zip(p.series_list, reference.series_list)
+            for k in (:seriestype, :x, :y, :primary)) || return false
+        all(isequal(p[1][axis][k], reference[1][axis][k]) for axis in (:xaxis, :yaxis)
+            for k in (:scale, :flip, :discrete_values, :continuous_values)) || return false
+        isempty(reference[1][:xaxis][:discrete_values]) ||
+            isequal(xticks(p), xticks(reference)) || return false
+        return true
+    end
 end
 
 # ╔═╡ c0ffee02-0000-11f1-9a01-000000000002
@@ -47,6 +69,7 @@ q1 = missing # TODO: quantile に [0.25, 0.5, 0.75] を渡す
 if q1 === missing
     md"⏳ `quantile` に列と、割合の配列を渡します。"
 elseif q1 isa AbstractVector && length(q1) == 3 &&
+       all(finite_number_nb2, q1) &&
        isapprox(collect(q1), quantile(df.rt, [0.25, 0.5, 0.75]); atol = 1e-6)
     md"✅ **正解!** 箱ひげ図の箱は、この3つの数字でできています。"
 elseif q1 isa Number
@@ -59,7 +82,9 @@ end
 md"""
 ## 課題2: ヒストグラムを描く（「探索の可視化」）
 
-`df.rt` の分布を、棒6本のヒストグラムにしましょう。軸ラベルは英数字で構いません(この描画エンジンは日本語を豆腐にしてしまうのでした)。
+`df.rt` の分布を、`bins = 6` のヒストグラムにしましょう。横軸を反応時間、縦軸を度数にします。整数の`bins`は本数の目安で、境界が切りのよい値に調整されるため、このデータでは棒は4本になります。厳密に6区間にしたい場合は境界を7個指定しますが、この課題では`bins = 6`を使います。
+
+判定は標準設定の縦向きの棒と度数を照合します。色・タイトル・凡例・軸ラベルは自由です。軸ラベルは英数字で構いません（環境によっては日本語の文字が表示されません）。
 """
 
 # ╔═╡ c0ffee08-0000-11f1-9a01-000000000008
@@ -68,10 +93,11 @@ p2 = missing # TODO: histogram(df.rt, bins = 6, ...)
 # ╔═╡ c0ffee09-0000-11f1-9a01-000000000009
 if p2 === missing
     md"⏳ `histogram` に `df.rt` と `bins = 6` を渡しましょう。"
-elseif p2 isa Plots.Plot
-    md"✅ **正解!** 12試行では山のかたちは見えにくいですが、道具はこれで使えています。"
+elseif same_plot_nb2(p2, () -> histogram(df.rt; bins = 6)) &&
+       all(s -> isequal(s[:bins], 6), p2.series_list)
+    md"✅ **正解!** 区間と度数が`df.rt`に対応しています。12試行では山のかたちは見えにくいので、分布の形の判断は慎重に。"
 else
-    md"🤔 図になっていないようです。`histogram(...)` の結果をそのまま `p2` に入れてください。"
+    md"🤔 `histogram(df.rt, bins = 6)` の結果を`p2`に入れてください。横軸の反応時間、縦軸の度数、ビンの設定を確認しましょう。"
 end
 
 # ╔═╡ c0ffee10-0000-11f1-9a01-000000000010
@@ -79,6 +105,8 @@ md"""
 ## 課題3: 条件を並べて比べる（「探索の可視化」）
 
 `@df` を使って、条件(`:cond`)ごとの反応時間(`:rt`)の箱ひげ図を描きましょう。
+
+横軸を条件、縦軸を反応時間にし、箱とひげは標準設定のまま使います。判定は条件名と箱・中央値・ひげの座標を照合します。色・タイトル・凡例・軸ラベルは自由です。
 """
 
 # ╔═╡ c0ffee11-0000-11f1-9a01-000000000011
@@ -87,10 +115,10 @@ p3 = missing # TODO: @df df boxplot(...) の形で
 # ╔═╡ c0ffee12-0000-11f1-9a01-000000000012
 if p3 === missing
     md"⏳ `@df df boxplot(:cond, :rt)` の形です。"
-elseif p3 isa Plots.Plot
-    md"✅ **正解!** 2つの箱が離れていれば、条件差がはっきりしている印です。"
+elseif same_plot_nb2(p3, () -> boxplot(df.cond, df.rt))
+    md"✅ **正解!** 条件名と箱・中央値・ひげが元データに対応しています。箱の位置の違いだけで、有意差や因果関係があるとは判断しません。"
 else
-    md"🤔 図になっていないようです。`@df df boxplot(:cond, :rt, legend = false)` を試してみましょう。"
+    md"🤔 `@df df boxplot(:cond, :rt, legend = false)` を確認しましょう。条件と反応時間の対応、箱・ひげの標準設定も確認してください。"
 end
 
 # ╔═╡ c0ffee13-0000-11f1-9a01-000000000013
@@ -111,7 +139,7 @@ p550 = missing # TODO: d_rt から550以下となる確率を cdf で求める
 # ╔═╡ c0ffee16-0000-11f1-9a01-000000000016
 if p550 === missing
     md"⏳ `cdf(d_rt, 550)` と書きます。"
-elseif p550 isa Number && isapprox(p550, 0.841344746; atol = 1e-6)
+elseif finite_number_nb2(p550) && isapprox(p550, 0.841344746; atol = 1e-6)
     md"✅ **正解!** 550以下となる確率は約$(round(100p550, digits = 1))%です。`ccdf(d_rt, 550)` なら550を超える確率を直接求められます。"
 else
     md"🤔 `pdf` の高さではなく、550までを積み上げた `cdf` を使います。"
@@ -133,6 +161,7 @@ sim_rt = missing # TODO: rand(Xoshiro(2026), d_rt, 2000)
 if sim_rt === missing
     md"⏳ `rand(Xoshiro(2026), d_rt, 2000)` です。RNG、分布、個数の順に渡します。"
 elseif sim_rt isa AbstractVector && length(sim_rt) == 2000 &&
+       all(finite_number_nb2, sim_rt) &&
        abs(mean(sim_rt) - mean(d_rt)) < 5 && abs(std(sim_rt) - std(d_rt)) < 5
     md"✅ **正解!** 分布オブジェクトから2000個を生成できました。経験平均・SDも理論値へ近づいています。"
 else
@@ -172,6 +201,9 @@ elseif stability_summary isa NamedTuple &&
        hasproperty(stability_summary, :sum_logs) &&
        hasproperty(stability_summary, :tail_subtraction) &&
        hasproperty(stability_summary, :tail_direct) &&
+       stability_summary.log_product isa Real && !(stability_summary.log_product isa Bool) &&
+       all(k -> finite_number_nb2(getproperty(stability_summary, k)),
+           (:sum_logs, :tail_subtraction, :tail_direct)) &&
        stability_summary.log_product == -Inf &&
        isapprox(stability_summary.sum_logs, -921.0340371976183; atol = 1e-10) &&
        stability_summary.tail_subtraction == 0.0 &&
@@ -224,9 +256,10 @@ rt_replicates = missing # TODO: rand(Xoshiro(2027), fitted_rt, nrow(df), 2000)
 # ╔═╡ c0ffee30-0000-11f1-9a01-000000000030
 if rt_replicates === missing
     md"⏳ `rand(Xoshiro(2027), fitted_rt, nrow(df), 2000)`で行列を作ります。"
-elseif rt_replicates isa AbstractMatrix &&
-       size(rt_replicates) == (nrow(df), 2000) &&
-       all(isfinite, rt_replicates) &&
+elseif fitted_rt === missing
+    md"⏳ 先に課題7でfit済み分布を用意してください。"
+elseif valid_replicates_nb2(rt_replicates, nrow(df)) &&
+       fitted_rt isa LogNormal && all(isfinite, params(fitted_rt)) &&
        all(x -> insupport(fitted_rt, x), rt_replicates) &&
        abs(mean(rt_replicates) - mean(fitted_rt)) < 10
     md"✅ **正解!** 観測と同じ$(nrow(df))行を持つreplicate datasetを2000本生成できました。"
@@ -259,11 +292,19 @@ predictive_check = missing # TODO: 上のNamedTupleを作る
 # ╔═╡ c0ffee33-0000-11f1-9a01-000000000033
 if predictive_check === missing
     md"⏳ 各列のq95・最大値を配列にしてから、`quantile(..., [0.025, 0.975])`で予測区間を作ります。"
+elseif rt_replicates === missing
+    md"⏳ 先に課題8のreplicate行列を用意してください。"
+elseif !valid_replicates_nb2(rt_replicates, nrow(df))
+    md"🤔 課題8の行列は12×2000の、正の有限な数値ですか? その値を確認してから区間を比較します。"
 elseif predictive_check isa NamedTuple &&
        hasproperty(predictive_check, :observed_q95) &&
        hasproperty(predictive_check, :predicted_q95) &&
        hasproperty(predictive_check, :observed_max) &&
        hasproperty(predictive_check, :predicted_max) &&
+       all(k -> finite_number_nb2(getproperty(predictive_check, k)), (:observed_q95, :observed_max)) &&
+       all(k -> getproperty(predictive_check, k) isa AbstractVector &&
+                length(getproperty(predictive_check, k)) == 2 &&
+                all(finite_number_nb2, getproperty(predictive_check, k)), (:predicted_q95, :predicted_max)) &&
        isapprox(predictive_check.observed_q95, quantile(df.rt, 0.95); atol = 1e-8) &&
        isapprox(collect(predictive_check.predicted_q95), quantile([quantile(column, 0.95) for column in eachcol(rt_replicates)], [0.025, 0.975]); atol = 1e-8) &&
        isapprox(predictive_check.observed_max, maximum(df.rt); atol = 1e-8) &&
@@ -304,6 +345,11 @@ if boundary_models === missing
 elseif boundary_models isa NamedTuple &&
        hasproperty(boundary_models, :selected) &&
        hasproperty(boundary_models, :recorded) &&
+       boundary_models.selected isa Truncated{<:Normal} &&
+       boundary_models.recorded isa Distributions.Censored{<:Normal} &&
+       boundary_models.selected.untruncated == latent_boundary &&
+       boundary_models.recorded.uncensored == latent_boundary &&
+       maximum(boundary_models.selected) == maximum(boundary_models.recorded) == Inf &&
        minimum(boundary_models.selected) == detection_limit &&
        minimum(boundary_models.recorded) == detection_limit &&
        cdf(boundary_models.selected, detection_limit) == 0.0 &&
@@ -337,7 +383,7 @@ if dependent_draws === missing
     md"⏳ 明示RNG、MvNormal、観測数5000の順で`rand`へ渡します。"
 elseif dependent_draws isa AbstractMatrix &&
        size(dependent_draws) == (2, 5000) &&
-       all(isfinite, dependent_draws) &&
+       all(finite_number_nb2, dependent_draws) &&
        isapprox(mean(dependent_draws[1, :]), 0; atol = 0.05) &&
        isapprox(mean(dependent_draws[2, :]), 0; atol = 0.05) &&
        isapprox(cor(dependent_draws[1, :], dependent_draws[2, :]), 0.65; atol = 0.04)
@@ -369,7 +415,7 @@ if mixture_draws === missing
     md"⏳ `rand(Xoshiro(2033), mixture_rt, 10_000)`で生成します。"
 elseif mixture_draws isa AbstractVector &&
        length(mixture_draws) == 10_000 &&
-       all(isfinite, mixture_draws) &&
+       all(finite_number_nb2, mixture_draws) &&
        isapprox(mean(mixture_draws), mean(mixture_rt); atol = 3) &&
        isapprox(std(mixture_draws; corrected = false), std(mixture_rt); atol = 3) &&
        mean((520 .< mixture_draws) .& (mixture_draws .< 580)) < 0.02

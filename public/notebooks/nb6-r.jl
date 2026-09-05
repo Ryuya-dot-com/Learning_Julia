@@ -48,13 +48,25 @@ exchange_path = missing # TODO: (path = joinpath(bridge_dir, "trials.csv"); writ
 # ╔═╡ 6b1d0106-0000-11f1-9a01-000000000006
 if exchange_path === missing
     md"⏳ `bridge_dir` 内へ `bridge_table` をカンマ区切りで書き、pathを返します。"
-elseif exchange_path isa AbstractString && isfile(exchange_path)
-    restored, restored_header = readdlm(exchange_path, ',', header = true)
-    if size(restored) == (4, 3) &&
-       String.(vec(restored_header)) == ["participant_id", "condition", "rt_ms"]
-        md"✅ **正解!** 3列・4行と列名を、別の読込処理で確認できました。"
-    else
-        md"🤔 fileはありますが、列名または4行×3列の形が変わっています。"
+elseif exchange_path isa AbstractString
+    let restored_csv = try
+            let csv_text = isfile(exchange_path) ? read(exchange_path, String) : ""
+                isempty(strip(csv_text)) ? nothing : readdlm(IOBuffer(csv_text), ',', header = true)
+            end
+        catch err
+            # ponytail: 引用符エラーだけ文面で識別する。専用例外が提供されたら型判定へ移す。
+            quote_error = err isa ErrorException &&
+                (startswith(err.msg, "truncated column at row ") ||
+                 startswith(err.msg, "unexpected character '"))
+            quote_error || err isa Union{ArgumentError, SystemError, Base.IOError, EOFError} || rethrow()
+            nothing
+        end
+        if restored_csv !== nothing && size(restored_csv[1]) == (4, 3) &&
+           isequal(vec(restored_csv[2]), ["participant_id", "condition", "rt_ms"])
+            md"✅ **正解!** 3列・4行と列名を、別の読込処理で確認できました。"
+        else
+            md"🤔 CSVを読み戻せるか、列名と4行×3列の形が合っているかを確認してください。"
+        end
     end
 else
     md"🤔 `exchange_path`には、実際に作成したCSVのpathを入れます。"
@@ -96,7 +108,7 @@ if r_runner === missing
 elseif r_runner isa Cmd && length(r_runner.exec) == 5 &&
        basename(r_runner.exec[1]) in ("Rscript", "Rscript.exe") &&
        r_runner.exec[2] == "--vanilla" &&
-       r_runner.exec[3:5] == [r_script_path, exchange_path, r_output_path]
+       isequal(r_runner.exec[3:5], [r_script_path, exchange_path, r_output_path])
     md"✅ **正解!** 実行するR scriptと入出力pathが明示されたcommandです。"
 else
     md"🤔 `Cmd([実行file, \"--vanilla\", R script, 入力CSV, 出力CSV])` の順序を確認してください。"
@@ -125,8 +137,12 @@ if r_result === missing
     md"⏳ Rscriptの有無を確認し、`:unavailable`または読戻した要約を返します。"
 elseif r_result === :unavailable && isnothing(Sys.which("Rscript"))
     md"✅ **環境確認完了。** Rscriptは見つかりません。課題4へ進めます。実行するときはRを導入し、新しいJulia sessionで再確認してください。"
-elseif r_result isa NamedTuple && r_result.rows == 2 &&
-       r_result.header == ["condition", "mean_rt"] &&
+elseif r_result isa NamedTuple &&
+       all(k -> hasproperty(r_result, k), (:rows, :header, :values)) &&
+       r_result.rows isa Integer && !(r_result.rows isa Bool) && r_result.rows == 2 &&
+       isequal(r_result.header, ["condition", "mean_rt"]) &&
+       r_result.values isa AbstractVector && length(r_result.values) == 2 &&
+       all(x -> x isa Real && !(x isa Bool) && isfinite(x), r_result.values) &&
        isapprox(sort(r_result.values), [511.5, 557.0]; atol = 1e-10)
     md"✅ **正解!** Julia → CSV → R → CSV → Juliaの一往復が通り、条件別平均も照合できました。"
 else
@@ -176,9 +192,14 @@ if stan_run === missing
 elseif stan_run isa NamedTuple && hasproperty(stan_run, :model) &&
        hasproperty(stan_run, :data) && hasproperty(stan_run, :seed) &&
        hasproperty(stan_run, :chains) &&
-       stan_run.model == stan_model && stan_run.data["N"] == 10 &&
-       stan_run.data["y"] == stan_y && stan_run.seed == 20260904 &&
-       stan_run.chains == 4
+       stan_run.model isa AbstractString && stan_run.model == stan_model &&
+       stan_run.data isa AbstractDict && all(k -> haskey(stan_run.data, k), ("N", "y")) &&
+       stan_run.data["N"] isa Integer && !(stan_run.data["N"] isa Bool) && stan_run.data["N"] == 10 &&
+       stan_run.data["y"] isa AbstractVector &&
+       all(x -> x isa Integer && !(x isa Bool), stan_run.data["y"]) &&
+       isequal(stan_run.data["y"], stan_y) &&
+       stan_run.seed isa Integer && !(stan_run.seed isa Bool) && stan_run.seed == 20260904 &&
+       stan_run.chains isa Integer && !(stan_run.chains isa Bool) && stan_run.chains == 4
     md"✅ **正解!** Stanのmodel、入力data、seed、chain数を一つの実行契約にできました。"
 else
     md"🤔 data blockと同じ名前 `N`・`y`を使い、seedと4 chainsを明示してください。"
@@ -188,9 +209,9 @@ end
 md"""
 ## 課題5: 入力とmodelのhashを実行記録へ入れる
 
-入力CSVのbyte列と `stan_model` のSHA-256を計算し、`input_sha256`、`model_sha256`、`julia_version`、`rscript`を持つNamedTuple `bridge_manifest` を作ります。
+入力CSVのbyte列と `stan_model` のSHA-256を計算し、`input_sha256`、`model_sha256`、`julia_version`、`rscript`を持つNamedTuple `bridge_manifest` を作ります。判定セルは入力・modelからhashを計算し直し、実行環境の記録も照合します。
 
-Rscriptがなければ、`rscript`には`"not found"`を入れます。hashは内容の妥当性を証明するものではなく、再実行時に同じ入力・modelか照合する識別子です。
+Rscriptがなければ、`rscript`には`"not found"`を入れます。hashは内容の妥当性を証明するものではなく、再実行時に同じ入力・modelか照合する識別子です。外部ファイルを書き換えたときは、この判定セルも再実行してください。
 """
 
 # ╔═╡ 6b1d0119-0000-11f1-9a01-000000000019
@@ -199,17 +220,29 @@ bridge_manifest = missing # TODO: (input_sha256 = bytes2hex(sha256(read(exchange
 # ╔═╡ 6b1d0120-0000-11f1-9a01-000000000020
 if bridge_manifest === missing
     md"⏳ `bytes2hex(sha256(...))`で入力とmodelのhashを作り、版・実行fileとまとめます。"
+elseif exchange_path === missing
+    md"⏳ 先に課題1の入力CSVを作成してください。"
 elseif bridge_manifest isa NamedTuple &&
-       hasproperty(bridge_manifest, :input_sha256) &&
-       hasproperty(bridge_manifest, :model_sha256) &&
-       hasproperty(bridge_manifest, :julia_version) &&
-       hasproperty(bridge_manifest, :rscript) &&
-       length(bridge_manifest.input_sha256) == 64 &&
-       length(bridge_manifest.model_sha256) == 64 &&
-       bridge_manifest.julia_version == string(VERSION)
-    md"✅ **正解!** 入力とmodelを内容で識別し、実行環境と一緒に記録できました。"
+       all(k -> hasproperty(bridge_manifest, k) && getproperty(bridge_manifest, k) isa AbstractString,
+           (:input_sha256, :model_sha256, :julia_version, :rscript)) &&
+       bridge_manifest.model_sha256 == bytes2hex(sha256(stan_model)) &&
+       bridge_manifest.julia_version == string(VERSION) &&
+       bridge_manifest.rscript == something(Sys.which("Rscript"), "not found")
+    let input_hash = try
+            exchange_path isa AbstractString && isfile(exchange_path) ?
+                bytes2hex(sha256(read(exchange_path))) : nothing
+        catch err
+            err isa Union{ArgumentError, SystemError, Base.IOError, EOFError} || rethrow()
+            nothing
+        end
+        if isequal(bridge_manifest.input_sha256, input_hash)
+            md"✅ **正解!** 入力・modelのhashと実行環境の記録が一致しました。"
+        else
+            md"🤔 入力CSVを読めるか、記録した後に内容が変わっていないかを確認してください。"
+        end
+    end
 else
-    md"🤔 SHA-256の16進文字列は64文字です。二つのhashとJulia版、Rscriptの場所を確認してください。"
+    md"🤔 二つのhashを元の内容から計算し、Julia版とRscriptの場所も現在の環境に合わせてください。64文字にするだけでは一致しません。"
 end
 
 # ╔═╡ 6b1d0121-0000-11f1-9a01-000000000021

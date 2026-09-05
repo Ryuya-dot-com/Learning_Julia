@@ -8,6 +8,24 @@ using InteractiveUtils
 begin
     using DataFrames, Random, Statistics, Distributions, GLM
     using MixedModels
+    finite_number_nb5(x) = x isa Real && !(x isa Bool) && isfinite(x)
+    finite_vector_nb5(x, n) = x isa AbstractVector && length(x) == n &&
+        all(finite_number_nb5, x)
+
+    function same_lmm_design_nb(m, reference)
+        m isa LinearMixedModel && isfitted(m) &&
+        m.optsum.returnvalue in (:SUCCESS, :STOPVAL_REACHED, :FTOL_REACHED, :XTOL_REACHED) &&
+        finite_number_nb5(m.optsum.fmin) && m.optsum.sigma === nothing &&
+        all(==(1), m.sqrtwts) && coefnames(m) == coefnames(reference) &&
+        finite_vector_nb5(coef(m), length(coefnames(reference))) &&
+        modelmatrix(m) == modelmatrix(reference) && response(m) == response(reference) &&
+        MixedModels.fnames(m) == MixedModels.fnames(reference) || return false
+        # MixedModels 5.8のReMatで、行ごとの参加者・ランダム傾き・共分散構造を照合する。
+        all(zip(m.reterms, reference.reterms)) do (actual, expected)
+            actual.cnames == expected.cnames && actual.inds == expected.inds &&
+            actual.levels[actual.refs] == expected.levels[expected.refs] && actual.z == expected.z
+        end
+    end
 end
 
 # ╔═╡ 5eed1a02-0000-11f1-9a01-000000000002
@@ -18,7 +36,7 @@ md"""
 
 このノートは**任意実装ラボ**です。アプリ本文の必須概念と出力読解を終えたあと、Juliaで再現したい課題だけ選んでください。ノートを実行しなくてもSTEP 5の学習は完了できます。
 
-`# TODO` のセルを書きかえて、下の判定セルが ✅ になったらクリアです。順番どおりの完走は必須ではありません。最後の課題を研究計画へ転用するときは、数字を自分のデザインと根拠に置き換えてください。
+`# TODO` のセルを書きかえて、下の判定セルで計算結果を確認します。順番どおりの完走は必須ではありません。課題6の ✅ は計算例の確認であり、卒業制作の達成判定ではありません。研究計画へ転用するときは、数字を自分のデザインと根拠に置き換え、末尾の6観点で設計書を点検してください。
 
 MixedModels の初回準備には数分かかることがあります。packageの準備や計算時間が負担なら、本文の掲載出力を読む段階で止めて構いません。
 
@@ -70,18 +88,20 @@ if ctt_stats === missing
 elseif ctt_stats isa NamedTuple && hasproperty(ctt_stats, :pass_rate) &&
        hasproperty(ctt_stats, :corrected) &&
        hasproperty(ctt_stats, :alpha) && hasproperty(ctt_stats, :kr20) &&
-       length(ctt_stats.pass_rate) == 8 && length(ctt_stats.corrected) == 8 &&
-       isapprox(ctt_stats.pass_rate[4], 0.518; atol = 0.002) &&
-       isapprox(ctt_stats.corrected[8], -0.197; atol = 0.002) &&
+       finite_vector_nb5(ctt_stats.pass_rate, 8) && finite_vector_nb5(ctt_stats.corrected, 8) &&
+       finite_number_nb5(ctt_stats.alpha) && finite_number_nb5(ctt_stats.kr20) &&
+       isapprox(ctt_stats.pass_rate, vec(mean(ctt_items, dims = 1)); atol = 0.002) &&
+       isapprox(ctt_stats.corrected,
+           [cor(ctt_items[:, j], ctt_total .- ctt_items[:, j]) for j in 1:8]; atol = 0.002) &&
        isapprox(ctt_stats.alpha, 0.642; atol = 0.002) &&
        isapprox(ctt_stats.kr20, ctt_stats.alpha; atol = 1e-10)
-    md"""✅ **正解!** 項目4の通過率は0.518、逆採点の項目8は修正済み相関−0.197です。再得点後のαとKR-20はともに0.642でした。
+    md"""✅ **正解!** 全8項目の通過率・修正済み相関を確認しました。項目4の通過率は0.518、逆採点の項目8は修正済み相関−0.197です。再得点後のαとKR-20はともに0.642でした。
 
     負の値は採点キー・項目内容・回答過程へ戻る警告です。KR-20が別の妥当性証拠ではなく、二値項目におけるαと同じ分散分解であることも確認できました。"""
 elseif ctt_stats isa NamedTuple
     md"🤔 NamedTupleはできています。修正済み相関、再得点後のα、同じ標本分散規約のKR-20を確認してください。"
 else
-    md"🤔 `pass_rate` と `corrected` の2要素を持つNamedTupleにしましょう。"
+    md"🤔 `pass_rate`、`corrected`、`alpha`、`kr20`の4要素を持つNamedTupleにしましょう。"
 end
 
 # ╔═╡ 5eed1a35-0000-11f1-9a01-000000000035
@@ -118,6 +138,7 @@ if mtmm_pattern === missing
 elseif mtmm_pattern isa NamedTuple &&
        hasproperty(mtmm_pattern, :convergent) &&
        hasproperty(mtmm_pattern, :same_method) &&
+       finite_number_nb5(mtmm_pattern.convergent) && finite_number_nb5(mtmm_pattern.same_method) &&
        isapprox(mtmm_pattern.convergent, 0.669; atol = 0.002) &&
        isapprox(mtmm_pattern.same_method, 0.286; atol = 0.002)
     md"""✅ **正解!** 収束平均は$(round(mtmm_pattern.convergent, digits = 3))、異trait×同method平均は$(round(mtmm_pattern.same_method, digits = 3))です。
@@ -136,6 +157,8 @@ md"""
 個人差つきの反応時間データを作る `make_rt_data` を用意しました。切片500・残差SD50に加え、参加者切片SD30・条件傾きSD20が入っています。
 
 `make_rt_data(20, 10, 40)` — 20人×10試行・条件効果40ms — に、**参加者のランダム切片と `condition_centered` のランダム傾き**を持つモデルを当てはめ、`m1` に入れましょう。
+
+判定では元の行順・観測値・参加者の対応も照合します。重みは省略またはすべて1とし、残差SDは固定せず推定します。課題6と同じ4つの正常停止コードを確認し、回数上限などで止まったモデルは合格にしません。
 """
 
 # ╔═╡ 5eed1a04-0000-11f1-9a01-000000000004
@@ -162,13 +185,14 @@ m1 = missing # TODO: fit(MixedModel, ランダム切片・傾きつきの式, ma
 # ╔═╡ 5eed1a06-0000-11f1-9a01-000000000006
 if m1 === missing
     md"⏳ `fit(MixedModel, @formula(rt ~ 1 + condition_centered + (1 + condition_centered | subj)), make_rt_data(20, 10, 40))` です。"
-elseif m1 isa MixedModel && length(coef(m1)) == 2 &&
-       length(m1.σs.subj) > 1 && 25 <= coef(m1)[2] <= 55
+elseif m1 isa LinearMixedModel && same_lmm_design_nb(m1,
+       LinearMixedModel(@formula(rt ~ 1 + condition_centered + (1 + condition_centered | subj)),
+                        make_rt_data(20, 10, 40))) && 25 <= coef(m1)[2] <= 55
     md"""✅ **正解!** 条件効果の推定は $(round(coef(m1)[2], digits = 1))(真の値40)、参加者切片SDは$(round(subj_sd_of(m1), digits = 1))(真の値30)です。ランダム傾きSDも$(round(last(m1.σs.subj), digits = 1))(真の値20)と推定されました。
 
     ランダム切片だけでは条件差の個人差を表せません。固定効果と二種類の分散成分を分けて読めました。"""
 elseif m1 isa MixedModel
-    md"🤔 モデルはできていますが係数かランダム構造が想定と合いません。式に `(1 + condition_centered | subj)` が入っていますか?"
+    md"🤔 Gaussian LMMで、式・元データ・参加者の対応は合っていますか? `(1 + condition_centered | subj)`、重み・残差SDの指定、停止コードも確認してください。"
 else
     md"🤔 `fit(MixedModel, @formula(...), データ)` の結果をそのまま `m1` に入れましょう。"
 end
@@ -186,8 +210,8 @@ sds = missing # TODO: subj_sd を 10, 30, 60 にしたモデルから subj_sd_of
 # ╔═╡ 5eed1a09-0000-11f1-9a01-000000000009
 if sds === missing
     md"⏳ `[subj_sd_of(fit(MixedModel, @formula(rt ~ 1 + condition_centered + (1 + condition_centered | subj)), make_rt_data(20, 10, 40; subj_sd = s))) for s in [10, 30, 60]]` です。"
-elseif sds isa AbstractVector && length(sds) == 3 &&
-       sds[1] < 15 && 15 <= sds[2] <= 45 && 40 <= sds[3] <= 80 && issorted(sds)
+elseif finite_vector_nb5(sds, 3) &&
+       0 <= sds[1] < 15 && 15 <= sds[2] <= 45 && 40 <= sds[3] <= 80 && issorted(sds)
     md"""✅ **正解!** 推定は $(round(sds[1], digits = 1)) → $(round(sds[2], digits = 1)) → $(round(sds[3], digits = 1))。真の値(10 → 30 → 60)を順序どおり追いかけています。
 
     ただし真の値10のときの推定はかなり小さめです。個人差が残差(SD50)に埋もれる規模だと、分散成分の推定は不安定になる——これも回してみたから分かることです。"""
@@ -233,12 +257,10 @@ elseif glmm_probability_summary isa NamedTuple &&
        hasproperty(glmm_probability_summary, :marginal) &&
        hasproperty(glmm_probability_summary, :conditional_or) &&
        hasproperty(glmm_probability_summary, :marginal_or) &&
-       glmm_probability_summary.fixed isa AbstractVector{<:Real} &&
-       glmm_probability_summary.marginal isa AbstractVector{<:Real} &&
-       glmm_probability_summary.conditional_or isa Real &&
-       glmm_probability_summary.marginal_or isa Real &&
-       length(glmm_probability_summary.fixed) == 2 &&
-       length(glmm_probability_summary.marginal) == 2 &&
+       finite_vector_nb5(glmm_probability_summary.fixed, 2) &&
+       finite_vector_nb5(glmm_probability_summary.marginal, 2) &&
+       finite_number_nb5(glmm_probability_summary.conditional_or) &&
+       finite_number_nb5(glmm_probability_summary.marginal_or) &&
        isapprox(glmm_probability_summary.fixed[1], 0.377541; atol = 1e-5) &&
        isapprox(glmm_probability_summary.fixed[2], 0.598688; atol = 1e-5) &&
        isapprox(glmm_probability_summary.marginal[1], 0.393814; atol = 1e-5) &&
@@ -267,6 +289,8 @@ md"""
 - `marginal`: `marginal_deployment_probability`のBrier scoreとlog loss
 
 小さい方が良い指標です。ただし、真のランダム効果を使う`known`は実際の交差検証性能ではありません。
+
+確率は9000行と同じ順序の、0以上1以下の有限値にします。範囲外の値や欠測は丸めて採点しません。log lossだけは0・1での無限大を避けるため機械精度の内側に制限し、Brier scoreには元の確率を使います。
 """
 
 # ╔═╡ 5eed1a44-0000-11f1-9a01-000000000044
@@ -297,9 +321,13 @@ begin
         for c in deployment_condition]
 
     function deployment_score_nb(probability)
+        finite_vector_nb5(probability, length(deployment_response)) &&
+            all(p -> 0 <= p <= 1, probability) ||
+            throw(ArgumentError("確率は観測と同じ長さの、0以上1以下の有限な実数配列にします"))
+        # ponytail: log lossの端点は機械精度で制限。厳密な無限損失を扱う用途では規則を替える。
         q = clamp.(probability, eps(Float64), 1 - eps(Float64))
         return (
-            brier = mean((deployment_response .- q) .^ 2),
+            brier = mean((deployment_response .- probability) .^ 2),
             log_loss = mean(-deployment_response .* log.(q) .-
                             (1 .- deployment_response) .* log1p.(-q)),
         )
@@ -325,12 +353,8 @@ elseif deployment_metric_summary isa NamedTuple &&
        hasproperty(deployment_metric_summary.fixed_zero, :log_loss) &&
        hasproperty(deployment_metric_summary.marginal, :brier) &&
        hasproperty(deployment_metric_summary.marginal, :log_loss) &&
-       deployment_metric_summary.known.brier isa Real &&
-       deployment_metric_summary.known.log_loss isa Real &&
-       deployment_metric_summary.fixed_zero.brier isa Real &&
-       deployment_metric_summary.fixed_zero.log_loss isa Real &&
-       deployment_metric_summary.marginal.brier isa Real &&
-       deployment_metric_summary.marginal.log_loss isa Real &&
+       all(k -> all(field -> finite_number_nb5(getproperty(getproperty(deployment_metric_summary, k), field)),
+                    (:brier, :log_loss)), (:known, :fixed_zero, :marginal)) &&
        isapprox(deployment_metric_summary.known.brier, 0.136946; atol = 1e-5) &&
        isapprox(deployment_metric_summary.known.log_loss, 0.424227; atol = 1e-5) &&
        isapprox(deployment_metric_summary.fixed_zero.brier, 0.212773; atol = 1e-5) &&
@@ -358,6 +382,8 @@ md"""
 - ランダム効果: 参加者ごとの切片とtime傾き
 
 formulaの交互作用は`time_since_baseline & treatment`、ランダム項は`(1 + time_since_baseline | subj)`です。
+
+課題3と同じく、用意した表の行順・観測値・参加者の対応を保ち、重みは省略またはすべて1、残差SDは推定します。モデルとデータの一致を確認してから、参加者内の残差lag-1相関を計算します。
 """
 
 # ╔═╡ 5eed1a48-0000-11f1-9a01-000000000048
@@ -417,13 +443,9 @@ panel_model_nb = missing # TODO: 固定効果6項と参加者別の切片・time
 # ╔═╡ 5eed1a50-0000-11f1-9a01-000000000050
 if panel_model_nb === missing
     md"⏳ `fit(MixedModel, @formula(outcome ~ 1 + time_since_baseline + treatment + time_since_baseline & treatment + x_between + x_within + (1 + time_since_baseline | subj)), panel_nb)`です。"
-elseif panel_model_nb isa MixedModel &&
-       length(coef(panel_model_nb)) == 6 &&
-       "time_since_baseline & treatment" in coefnames(panel_model_nb) &&
-       "x_between" in coefnames(panel_model_nb) &&
-       "x_within" in coefnames(panel_model_nb) &&
-       hasproperty(panel_model_nb.σs, :subj) &&
-       length(panel_model_nb.σs.subj) == 2 &&
+elseif panel_model_nb isa LinearMixedModel && same_lmm_design_nb(panel_model_nb,
+       LinearMixedModel(@formula(outcome ~ 1 + time_since_baseline + treatment +
+           time_since_baseline & treatment + x_between + x_within + (1 + time_since_baseline | subj)), panel_nb)) &&
        1.8 <= coef(panel_model_nb)[2] <= 2.25 &&
        0.85 <= coef(panel_model_nb)[5] <= 1.15 &&
        1.2 <= coef(panel_model_nb)[6] <= 1.75 &&
@@ -441,7 +463,7 @@ elseif panel_model_nb isa MixedModel &&
         ただし条件付き残差のlag-1相関は""" * string(panel_lag1_rounded) *
         "残ります。ランダム時間傾きは個人別軌跡、lag相関は軌跡後の短期依存なので、別々に診断します。")
 elseif panel_model_nb isa MixedModel
-    md"🤔 LMMはできています。固定効果のtime×treatment・between・withinと、`(1 + time_since_baseline | subj)`の両方を確認してください。"
+    md"🤔 Gaussian LMMの固定効果と`(1 + time_since_baseline | subj)`に加え、元の行順・観測値・参加者の対応、重み・残差SD、停止コードを確認してください。"
 else
     md"🤔 `fit(MixedModel, @formula(...), panel_nb)`の結果をそのまま入れましょう。"
 end
@@ -496,7 +518,11 @@ if measurement_effects === missing
 elseif measurement_effects isa NamedTuple &&
        hasproperty(measurement_effects, :correlations) &&
        hasproperty(measurement_effects, :slopes) &&
-       length(measurement_effects.correlations) == 3 &&
+       finite_vector_nb5(measurement_effects.correlations, 3) &&
+       measurement_effects.slopes isa NamedTuple &&
+       hasproperty(measurement_effects.slopes, :outcome) && hasproperty(measurement_effects.slopes, :predictor) &&
+       finite_number_nb5(measurement_effects.slopes.outcome) &&
+       finite_number_nb5(measurement_effects.slopes.predictor) &&
        0.66 <= measurement_effects.correlations[1] <= 0.73 &&
        0.51 <= measurement_effects.correlations[2] <= 0.60 &&
        0.30 <= measurement_effects.correlations[3] <= 0.38 &&
@@ -514,11 +540,19 @@ end
 
 # ╔═╡ 5eed1a14-0000-11f1-9a01-000000000014
 md"""
-## 課題6: 卒業制作 — 自分のデザインの検定力（「デザインの検定力設計」）
+## 課題6: 卒業制作の準備 — 基準デザインの計算（「デザインの検定力設計」）
 
 参加者×項目の交差ランダム傾きを持つ検定力シミュレーションを、種固定・200回版で用意しました。
 
 まずは講義と同じ **24人×12項目×2条件・効果20ms** の結果を `design_result` に入れましょう。検定力だけでなく、MCSE、Wilson区間、singular率を一緒に読みます。
+
+この関数は、両条件を全参加者×全項目で測るGaussian LMMの計算例です。欠測・除外は生成せず、ランダム効果の相関を0とし、`|係数 / SE| > 1.96` で判定します。研究に必要な生成過程や検定規則とは別に照合してください。
+
+**解析失敗と特異適合を別々に記録します。** `trials`は1反復1行のDataFrameです。反復番号、停止コード、係数、SE、目的関数値、特異適合、判定結果、例外の型と内容を残します。解析状態は`ok`・`nonconverged`・`invalid_estimate`・`exception`の4種類です。割り込みとメモリ不足は中止します。
+
+この例ではNLoptの`SUCCESS`・`STOPVAL_REACHED`・`FTOL_REACHED`・`XTOL_REACHED`を収束扱いとし、係数・SE・目的関数が有限でSEが正なら解析可能と数えます。回数／時間上限、丸め誤差による停止、未知の停止コードは解析可能に含めません。これは本課題の判定規則で、最適解や推論の妥当性を保証するものではありません。[停止コードの定義](https://nlopt.readthedocs.io/en/latest/NLopt_Reference/#return-values)と[MixedModelsの最適化設定](https://juliastats.org/MixedModels.jl/v5.5/optimization/)も確認してください。
+
+`power`は解析可能な試行だけの検出率、`detection_rate_all`は失敗を非検出として全試行を分母にした割合です。それぞれにMCSEとWilson区間を付けます。`singular_rate`の分母は解析可能な試行数で、特異適合を自動除外しません。解析可能な試行が0なら、その検出率・区間・singular率は`missing`です。
 """
 
 # ╔═╡ 5eed1a15-0000-11f1-9a01-000000000015
@@ -534,39 +568,105 @@ begin
                measurement_sd .* randn(rng, length(cc))
     end
 
+    function power_fit_status_nb(return_code, estimate, se, objective)
+        return_code in (:SUCCESS, :STOPVAL_REACHED, :FTOL_REACHED, :XTOL_REACHED) ||
+            return :nonconverged
+        all(x -> x isa Real && isfinite(x), (estimate, se, objective)) && se > 0 ||
+            return :invalid_estimate
+        isfinite(estimate / se) || return :invalid_estimate
+        return :ok
+    end
+
+    function fit_power_trial_nb(df; maxfeval = -1)
+        return_code = :NOT_AVAILABLE
+        estimate = se = objective = singular = rejected = missing
+        status = :exception
+        error_type = error_message = ""
+        try
+            # 各反復を同じ初期値から適合し、直前の成功・失敗に依存させない。
+            m = LinearMixedModel(
+                @formula(y ~ 1 + condition_centered +
+                             zerocorr(1 + condition_centered | subj) +
+                             zerocorr(1 + condition_centered | item)), df)
+            m.optsum.maxfeval = maxfeval
+            fit!(m; progress = false, REML = false,
+                 backend = :nlopt, optimizer = :LN_NEWUOA)
+            return_code = m.optsum.returnvalue
+            objective = m.optsum.fmin
+            estimate, se = coef(m)[2], stderror(m)[2]
+            singular = MixedModels.issingular(m)
+            status = power_fit_status_nb(return_code, estimate, se, objective)
+            rejected = status == :ok ? abs(estimate / se) > 1.96 : missing
+        catch err
+            (err isa InterruptException || err isa OutOfMemoryError) && rethrow()
+            error_type = string(typeof(err))
+            error_message = sprint(showerror, err)
+        end
+        return (; status, return_code, estimate, se, objective, singular, rejected,
+                error_type, error_message)
+    end
+
+    function power_binomial_nb(hits, n)
+        hits isa Integer && n isa Integer && 0 <= hits <= n ||
+            throw(ArgumentError("検出数と分母は0 <= hits <= nを満たす整数にします"))
+        n == 0 && return (power = missing, mcse = missing, lower = missing, upper = missing)
+        power = hits / n
+        mcse = sqrt(power * (1 - power) / n)
+        z = 1.959963984540054
+        denominator = 1 + z^2 / n
+        center = (power + z^2 / (2n)) / denominator
+        half = z * sqrt(power * (1 - power) / n + z^2 / (4n^2)) / denominator
+        return (; power, mcse, lower = hits == 0 ? 0.0 : max(0.0, center - half),
+                upper = hits == n ? 1.0 : min(1.0, center + half))
+    end
+
+    function summarize_power_trials_nb(trials)
+        attempted = nrow(trials)
+        attempted > 0 || throw(ArgumentError("反復記録が空です"))
+        usable = filter(:status => ==(:ok), trials)
+        analyzed = nrow(usable)
+        hits = count(==(true), usable.rejected)
+        conditional = power_binomial_nb(hits, analyzed)
+        all_trials = power_binomial_nb(hits, attempted)
+        singular_rate = analyzed == 0 ? missing : count(==(true), usable.singular) / analyzed
+        return (; conditional..., attempted, analyzed, hits,
+                failure_rate = (attempted - analyzed) / attempted, singular_rate,
+                detection_rate_all = all_trials.power, mcse_all = all_trials.mcse,
+                lower_all = all_trials.lower, upper_all = all_trials.upper, trials)
+    end
+
     function power_lmm_nb(n_subj, n_item, effect; nsim = 200, seed = 3601,
                           subj_slope_sd = 25, item_slope_sd = 15,
-                          reliability = 0.8)
+                          reliability = 0.8, maxfeval = -1)
+        for (name, value, minimum) in ((:n_subj, n_subj, 2), (:n_item, n_item, 2),
+                                       (:nsim, nsim, 1))
+            value isa Integer && !(value isa Bool) && value >= minimum ||
+                throw(ArgumentError("$name は $minimum 以上の整数にします"))
+        end
+        all(x -> x isa Real && !(x isa Bool) && isfinite(x),
+            (effect, subj_slope_sd, item_slope_sd, reliability)) &&
+            subj_slope_sd >= 0 && item_slope_sd >= 0 && 0 < reliability <= 1 ||
+            throw(ArgumentError("効果・SDは有限値、SDは非負、信頼性は0より大きく1以下にします"))
+        maxfeval isa Integer && !(maxfeval isa Bool) && (maxfeval == -1 || maxfeval > 0) ||
+            throw(ArgumentError("maxfeval は -1（上限なし）か正の整数にします"))
         rng = Xoshiro(seed)
         subj = repeat(1:n_subj, inner = 2n_item)
         item = repeat(repeat(1:n_item, inner = 2), outer = n_subj)
         cc = repeat([-0.5, 0.5], outer = n_subj * n_item)
-        first_y = simulate_power_y(rng, subj, item, cc, n_subj, n_item, effect;
-            subj_slope_sd, item_slope_sd, reliability)
-        df = DataFrame(subj = string.("S", subj), item = string.("I", item),
-                       condition_centered = cc, y = first_y)
-        m = fit(MixedModel,
-            @formula(y ~ 1 + condition_centered +
-                         zerocorr(1 + condition_centered | subj) +
-                         zerocorr(1 + condition_centered | item)),
-            df; progress = false)
-        hits = singular = 0
+        records = NamedTuple[]
         for simulation in 1:nsim
-            y = simulation == 1 ? first_y :
-                simulate_power_y(rng, subj, item, cc, n_subj, n_item, effect;
-                    subj_slope_sd, item_slope_sd, reliability)
-            refit!(m, y; progress = false)
-            hits += abs(coef(m)[2] / stderror(m)[2]) > 1.96
-            singular += MixedModels.issingular(m)
+            y = simulate_power_y(rng, subj, item, cc, n_subj, n_item, effect;
+                subj_slope_sd, item_slope_sd, reliability)
+            df = DataFrame(subj = string.("S", subj), item = string.("I", item),
+                           condition_centered = cc, y = y)
+            trial = fit_power_trial_nb(df; maxfeval)
+            push!(records, (; simulation, trial...))
         end
-        power = hits / nsim
-        mcse = sqrt(power * (1 - power) / nsim)
-        z = 1.959963984540054
-        denominator = 1 + z^2 / nsim
-        center = (power + z^2 / (2nsim)) / denominator
-        half = z * sqrt(power * (1 - power) / nsim + z^2 / (4nsim^2)) / denominator
-        return (; power, mcse, lower = center - half, upper = center + half,
-                singular_rate = singular / nsim)
+        settings = (; n_subj, n_item, effect, nsim, seed, subj_slope_sd, item_slope_sd,
+                    reliability, maxfeval, rng = :Xoshiro, backend = :nlopt, optimizer = :LN_NEWUOA,
+                    REML = false, threshold = 1.96, julia_version = string(VERSION),
+                    mixedmodels_version = string(pkgversion(MixedModels)))
+        return (; summarize_power_trials_nb(DataFrame(records))..., settings)
     end
 end
 
@@ -577,22 +677,81 @@ design_result = missing # TODO: power_lmm_nb(24, 12, 20)
 if design_result === missing
     md"⏳ `power_lmm_nb(24, 12, 20)` を呼びます(200回なので少し待ちます)。"
 elseif design_result isa NamedTuple &&
+       all(k -> hasproperty(design_result, k) &&
+                getproperty(design_result, k) isa Real &&
+                !(getproperty(design_result, k) isa Bool) &&
+                isfinite(getproperty(design_result, k)),
+           (:power, :mcse, :lower, :upper, :singular_rate,
+            :attempted, :analyzed, :hits, :failure_rate, :detection_rate_all)) &&
+       all(k -> getproperty(design_result, k) isa Integer, (:attempted, :analyzed, :hits)) &&
+       design_result.attempted == design_result.analyzed == 200 &&
+       0 <= design_result.hits <= 200 && design_result.failure_rate == 0 &&
+       isapprox(design_result.power, design_result.hits / 200; atol = 1e-10) &&
+       isapprox(design_result.detection_rate_all, design_result.power; atol = 1e-10) &&
        0.62 <= design_result.power <= 0.80 &&
        0.025 <= design_result.mcse <= 0.040 &&
-       design_result.lower < design_result.power < design_result.upper &&
+       isapprox(design_result.mcse,
+                sqrt(design_result.power * (1 - design_result.power) / 200);
+                atol = 1e-10) &&
+       0 <= design_result.lower < design_result.power < design_result.upper <= 1 &&
        0.05 <= design_result.singular_rate <= 0.30
-    md"""✅ **正解!** 検定力 $(round(100 * design_result.power, digits = 1))%、MCSE $(round(100 * design_result.mcse, digits = 1))ポイント、Wilson区間 $(round.(100 .* [design_result.lower, design_result.upper], digits = 1))%、singular $(round(100 * design_result.singular_rate, digits = 1))%です。
+    Markdown.parse("""✅ **計算例の確認ができました。** 全$(design_result.attempted)試行中$(design_result.analyzed)試行を解析し、$(design_result.hits)試行で検出しました。失敗率は$(design_result.failure_rate)、検出率 $(round(100 * design_result.power, digits = 1))%、MCSE $(round(100 * design_result.mcse, digits = 1))ポイント、Wilson区間 $(round.(100 .* [design_result.lower, design_result.upper], digits = 1))%、singular $(round(100 * design_result.singular_rate, digits = 1))%です。この基準例では分母が同じなので、全試行の検出率も一致します。
 
-    一つの点推定だけで80%合格とは判定しません。参加者・項目・効果・傾き分散・信頼性を動かし、第I種過誤と解析失敗も含めて比較するのが卒業制作です。"""
+    この判定が確認するのは、基準条件の値域・200反復のMCSE・集計数の整合です。研究上の仮定や設計判断は自動採点していません。卒業制作は、下の6観点と提出物で別に確認します。検定力が80%未満でも、設計の限界を根拠付きで説明できれば学習上は達成です。""")
 elseif design_result isa NamedTuple
-    md"🤔 値が想定範囲外です。引数は(24, 12, 20)、既定seedは3601ですか?"
+    md"🤔 関数の戻り値を丸めず、そのまま渡してください。引数は(24, 12, 20)、反復数200、seed3601、maxfeval=-1です。この計算例では全200試行が解析可能であることも確認します。失敗があれば`trials`の停止コードと例外を調べ、行を削除したり回数を足したりして合わせません。別のデザインの結果は、この基準条件用の判定とは分けて保存してください。"
 else
     md"🤔 `power_lmm_nb(24, 12, 20)`が返すNamedTupleをそのまま入れましょう。"
 end
 
 # ╔═╡ 5eed1a18-0000-11f1-9a01-000000000018
 md"""
-## 自由課題(卒業制作のつづき)
+## 卒業制作: 研究計画書の採点基準
+
+ここからは任意の研究計画課題です。計算を増やす前に、研究質問・成功の定義・比較条件・必要な数値精度を決めてください。計画書と結果表を人が読み、次の各観点を **2: 根拠と結果から説明できる／1: 記載はあるが根拠または照合が不足／0: 未記載か矛盾がある** で確認します。評価者は点数だけでなく、根拠となるセル・表・ファイルと修正箇所を記録します。
+
+| 観点 | 2と判断できる提出内容 | 見直しが必要な例 |
+|---|---|---|
+| 1. 研究質問と推定対象 | 条件差の意味と単位、対象母集団、参加者・項目の抽出／割付、一般化する軸を説明する | 観測行数だけをNとし、参加者数・項目数や依存を区別しない |
+| 2. 生成過程と解析 | 効果・全分散成分・信頼性の根拠と範囲、欠測・除外の扱い、完全な解析式と判定規則を示す。生成式との違いと、仮定を置いていない部分も書く | 教材の20msや信頼性0.8を根拠なく転用する |
+| 3. 帰無条件と感度分析 | 基準、効果0、参加者を増やす案、項目を増やす案、根拠のある悲観条件を同じ解析・判定手順で比較する。費用や一般化軸も考慮して判断する | 第I種過誤を確認せず、検定力が最大の案だけを残す |
+| 4. 数値精度 | 各条件の反復数、検出数、分母、MCSEと区間を示す。判断に必要な精度から反復数を決め、区間が判断境界をまたぐ場合の扱いを説明する | MCSEを研究結果のSEと混同する、200反復の点推定だけで80%を合格基準にする |
+| 5. 解析失敗と特異適合 | 反復ID・例外・収束状態・係数／SEの有効性・特異適合を記録し、失敗率とsingular率を分ける。全試行と解析可能な試行の分母を明記する | 失敗した試行を削除する、警告を調べず失敗率0とする、singular率を収束失敗率と呼ぶ |
+| 6. 再現と結論 | 設定、RNG／seed、Julia・package版、Project／Manifest、コード、全条件の結果表と失敗記録を保存する。実行手順と、採用・保留の理由、結論が変わる条件を示す | 有利な結果だけを提出する、環境や実行手順がなく再計算できない |
+
+**6観点すべてが2なら、この任意課題を達成とします。合計点で不足を相殺しません。** 未実行・未検証の箇所はそのまま記載して次の作業にします。研究の実施承認や、現実の検定力の保証とは別の判定です。読み物として学ぶ場合は未実行の計画書までで構いませんが、実装課題を達成したとは数えません。
+
+### 提出するもの
+
+新しいMarkdownセルに、次の見出しで計画と結論を書きます。表やコードは該当セル・ファイル名を添えて参照してください。
+
+- 研究質問・推定対象・一般化する範囲:
+- 生成と解析の仮定、その根拠・不明点:
+- 比較条件と結果表（反復数・検出数・分母・MCSE・区間・失敗・singularを含む）:
+- 採用または保留する案と理由、追加で確かめる条件:
+- 再実行の手順と成果物の保存先:
+- 6観点の自己評価・根拠の場所・未達箇所の修正予定:
+
+検出数が同じでも、全試行と解析可能な試行では分母が違います。例外・未収束・無効なSE・特異適合をどう数えるかは実行前に決め、都合のよい分母へ変更しません。`design_result.trials`で失敗した行も確認し、`combine(groupby(design_result.trials, :status), nrow => :n)`で状態別の件数を集計できます。`settings`には入力条件・RNGのseed・版・最適化設定を保存します。欠測や別の検定規則へ拡張した場合は、同じ記録規則で検証し直してください。
+
+警告の文章を自動分類するのではなく、停止コードと推定値から上記の状態を決めています。警告表示自体は抑止しません。コードに対応しない警告も確認し、未解決なら結果を採用した理由を説明してください。Notebookは自動でファイルを書きません。
+
+### 7条件を比較して保存する
+
+リポジトリ一式を取得している場合は、ルートディレクトリのターミナルで次を実行できます。Notebook単体のダウンロードには、このスクリプトとvalidation環境は含まれません。
+
+```sh
+julia --startup-file=no --project=validation scripts/setup-validation-env.jl
+julia --startup-file=no --project=validation scripts/nb5-design-comparison.jl nb5-run-01
+```
+
+比較するのは基準、効果0、参加者2倍、項目2倍、傾きSD増大、信頼性0.5、効果10msの7条件です。帰無条件は300反復、ほかは各200反復です。生成式・解析式・失敗の扱いはこのNotebookの計算セルを読み込んで使います。これらは教材の条件で、研究の根拠に合わせて選んだ値ではありません。欠測・除外・不均衡な割付は含みません。
+
+未作成の`nb5-run-01`に`settings.csv`・`summary.csv`・`trials.csv`、コード、Project／Manifestを保存します。3表は`scenario`、反復は`scenario`と`simulation`で対応します。CSVを読み戻して元の値と照合し、全試行から再集計した値も確認します。既存の出力先は上書きしません。最後の`NB5_DESIGN_COMPARISON_PASS`と保存先のREADMEを確認してください。途中で停止してREADMEがない場合は、未完了の記録として扱います。
+
+参加者2倍と項目2倍では観測数は等しくなりますが、募集・項目作成の費用や一般化する軸は異なります。点推定の大小だけで優劣を決めず、MCSEと区間を併記してください。帰無条件の区間が0.05を含むことも、第I種過誤が制御される証明ではありません。判断に精度が足りないときは、反復数を決め直して別の出力先へ保存します。
+
+## 自由課題（関心に応じて選択）
 
 1. 課題1で誤採点のままのαと再得点後のαを比べ、負の項目共分散が合計得点へ与える影響を確認する
 2. 課題2で異trait×異methodの6相関も平均し、収束・同method・異methodの順序を比べる
@@ -606,9 +765,9 @@ md"""
 
 ---
 
-これで「はじめてのJulia」の番号つき37本+ノートブック5冊は完走です。おつかれさまでした!
+これでNB5の課題は終わりです。計算例の確認、研究計画書の達成、未検証の点を分けて振り返ってください。すべての自由課題を終える必要はありません。
 
-ここから先は、R・Stan連携の任意トラック(RCallでlavaanを呼ぶ、CmdStanへmodelを渡す、など)と補講がいつでも待っています。そして何より——**あなたの研究データが、次の教材です。**
+この先にはR・Stan連携の任意トラックと補講があります。研究へ適用するときは、まず合成データで手順を確かめてください。
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001

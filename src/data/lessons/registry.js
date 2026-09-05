@@ -16,3 +16,22 @@ export function addLessonPositions(entries) {
       }))
   );
 }
+
+// 問題番号は ex の添字のまま保ち、進捗と選択肢の並びを変えない。
+export function buildLessonItems(lesson) {
+  const exercises = lesson.ex.map((e, i) => {
+    const pages = e.afterPage === undefined ? [] : lesson.pages.filter((p) => p.t === e.afterPage);
+    if (e.afterPage !== undefined && pages.length !== 1) {
+      throw new Error(`${lesson.id}: afterPage must match exactly one page: ${e.afterPage}`);
+    }
+    return { kind: "ex", e, i, reviewPage: pages[0] };
+  });
+  return [
+    ...lesson.pages.flatMap((p) => [
+      { kind: "page", p },
+      ...exercises.filter((item) => item.reviewPage === p),
+    ]),
+    ...exercises.filter((item) => !item.reviewPage),
+    { kind: "done" },
+  ];
+}

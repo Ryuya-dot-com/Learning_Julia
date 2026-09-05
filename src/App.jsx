@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { C, JP, GLOBAL_CSS } from "./theme.js";
 import { LessonView, Home, CheatSheet, Sidebar } from "./views.jsx";
 import { LESSONS, loadLesson } from "./data/lessons/index.js";
@@ -76,6 +76,20 @@ function LessonRoute({ meta, progress, onSolve, onHome, onOpen, onCheat }) {
 
 export default function JuliaLearningApp() {
   const [view, setView] = useState({ name: "home" });
+  const mainRef = useRef(null);
+  const previousView = useRef("home");
+  const viewKey = view.name === "lesson" ? view.id : view.name;
+
+  useEffect(() => {
+    const title = view.name === "lesson" ? LESSONS.find((l) => l.id === view.id)?.title :
+      view.name === "cheat" ? "Julia チートシート" : null;
+    document.title = title ? `${title} — はじめてのJulia` : "はじめてのJulia — 研究室のためのプログラミング入門";
+    if (previousView.current !== viewKey) {
+      (mainRef.current.querySelector("h1") || mainRef.current).focus();
+      window.scrollTo({ top: 0 });
+    }
+    previousView.current = viewKey;
+  }, [viewKey]);
   // done: クリア済み問題 / first: 初見(誤答なし)でクリアした問題。修了と測定を分ける2層設計(仕様5節)
   const [progress, setProgress] = useState({ done: {}, first: {} });
 
@@ -125,6 +139,7 @@ export default function JuliaLearningApp() {
   return (
     <div className="min-h-screen" style={{ background: C.paper, fontFamily: JP, color: C.ink }}>
       <style>{GLOBAL_CSS}</style>
+      <a href="#main-content" className="skip-link">本文へ移動</a>
       <div
         className="h-1 w-full"
         style={{
@@ -145,7 +160,9 @@ export default function JuliaLearningApp() {
           onCheat={() => setView({ name: "cheat" })}
           onHome={() => setView({ name: "home" })}
         />
-        <div className="w-full min-w-0 max-w-2xl">{body}</div>
+        <main id="main-content" ref={mainRef} tabIndex={-1} aria-label="本文" className="w-full min-w-0 max-w-2xl">
+          {body}
+        </main>
       </div>
     </div>
   );

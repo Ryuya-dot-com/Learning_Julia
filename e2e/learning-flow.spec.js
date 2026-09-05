@@ -26,6 +26,141 @@ test.afterEach(async ({ page }) => {
   expect(failuresByPage.get(page), "ブラウザ実行時エラーや失敗した通信がない").toEqual([]);
 });
 
+// focus()で飛ばさず、実際のTab順から操作できることを確認する。
+async function tabTo(page, target, backwards = false) {
+  for (let i = 0; i < 80; i += 1) {
+    if (await target.evaluate((element) => element === document.activeElement)) return;
+    await page.keyboard.press(backwards ? "Shift+Tab" : "Tab");
+  }
+  await expect(target).toBeFocused();
+}
+
+test("キーボードで目次を飛ばし、教材・まとめ・ホームを移動できる", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("./");
+  await page.keyboard.press("Tab");
+  const skip = page.getByRole("link", { name: "本文へ移動" });
+  await expect(skip).toBeFocused();
+  await expect(skip).toBeInViewport();
+  await page.keyboard.press("Enter");
+  const main = page.getByRole("main", { name: "本文" });
+  await expect(main).toBeFocused();
+  const notebookNames = await main.getByRole("link", { name: /演習ノート/ })
+    .evaluateAll((links) => links.map((link) => link.getAttribute("aria-label")));
+  expect(notebookNames).toHaveLength(6);
+  expect(new Set(notebookNames).size).toBe(6);
+  await tabTo(page, main.getByRole("button", { name: "レッスン1をはじめる" }));
+  await page.keyboard.press("Enter");
+  await expect(main.getByRole("heading", { name: "Juliaへようこそ" })).toBeFocused();
+  await expect(main.getByRole("heading", { level: 1 })).toHaveText("Juliaってなに?");
+  await expect(page).toHaveTitle("Juliaってなに? — はじめてのJulia");
+  for (let i = 0; i < 6; i += 1) {
+    await tabTo(page, main.getByRole("button", { name: /^(次へ →|まとめへ)$/ }));
+    await page.keyboard.press("Enter");
+    await expect(main.getByRole("heading", { level: 2 })).toBeFocused();
+  }
+  await expect(main.getByRole("heading", { name: "おつかれさまでした" })).toBeFocused();
+  await tabTo(page, main.getByRole("button", { name: "練習問題 1 にもどる" }));
+  await page.keyboard.press("Enter");
+  await expect(main.getByRole("heading", { name: "練習問題 1 / 3" })).toBeFocused();
+  await tabTo(page, main.getByRole("button", { name: "← レッスン一覧" }), true);
+  await page.keyboard.press("Enter");
+  await expect(main.getByRole("heading", { name: "はじめてのJulia", exact: true })).toBeFocused();
+  await tabTo(page, main.getByRole("button", { name: "チートシート", exact: true }), true);
+  await page.keyboard.press("Enter");
+  await expect(main.getByRole("heading", { name: "Julia チートシート" })).toBeFocused();
+  await expect(page).toHaveTitle("Julia チートシート — はじめてのJulia");
+  await tabTo(page, main.getByRole("button", { name: "← もどる" }), true);
+  await page.keyboard.press("Enter");
+  await expect(main.getByRole("heading", { name: "はじめてのJulia", exact: true })).toBeFocused();
+});
+
+test("3形式の問題をキーボードで解き、ヒント・正解後にも操作位置を保つ", async ({ page }) => {
+  await page.goto("./");
+  await page.getByRole("button", { name: /探索の可視化/ }).click();
+  for (let i = 0; i < 4; i += 1) await page.getByRole("button", { name: "次へ →" }).click();
+  const status = page.getByRole("status");
+  await tabTo(page, page.getByRole("button", { name: /折れ線グラフ/ }));
+  await page.keyboard.press("Enter");
+  await expect(status).toContainText("もう一度");
+  await tabTo(page, page.getByRole("button", { name: "ヒントを見る" }));
+  await page.keyboard.press("Enter");
+  await expect(status).toBeFocused();
+  await expect(status).toContainText("ヒント:");
+  await tabTo(page, page.getByRole("button", { name: /ヒストグラム/ }), true);
+  await page.keyboard.press("Enter");
+  await expect(status).toBeFocused();
+  await expect(page.getByText("クリア済み ✓")).toBeVisible();
+
+  await tabTo(page, page.getByRole("button", { name: "次へ →" }));
+  await page.keyboard.press("Enter");
+  const answer = page.getByRole("textbox", { name: "関数名" });
+  await expect(answer).toHaveAccessibleDescription(/条件ごとに反応時間/);
+  await tabTo(page, answer);
+  await page.keyboard.type("wrong");
+  await page.keyboard.press("Enter");
+  await expect(answer).toHaveAttribute("aria-invalid", "true");
+  await expect(answer).toBeFocused();
+  await page.keyboard.press("ControlOrMeta+A");
+  await page.keyboard.type("boxplot");
+  await page.keyboard.press("Enter");
+  await expect(answer).toBeDisabled();
+  await expect(status).toBeFocused();
+  await tabTo(page, page.getByRole("button", { name: "次へ →" }));
+  await page.keyboard.press("Enter");
+
+  for (let i = 1; i <= 3; i += 1) {
+    const mark = page.getByRole("button", { name: `記述${i}を「${i === 3 ? "まちがい" : "正しい"}」にする` });
+    await expect(mark).toHaveAccessibleDescription(/箱ひげ図|列名|軸ラベル/);
+    await tabTo(page, mark);
+    await page.keyboard.press("Space");
+    await expect(mark).toHaveAttribute("aria-pressed", "true");
+  }
+  await tabTo(page, page.getByRole("button", { name: "答え合わせ" }));
+  await page.keyboard.press("Enter");
+  await expect(status).toContainText("全問正解");
+  await expect(status).toBeFocused();
+  // クリア済み問題への再訪時は、通知ではなく見出しから読める。
+  await tabTo(page, page.getByRole("button", { name: "← 前へ" }));
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { name: "練習問題 2 / 3" })).toBeFocused();
+});
+
+for (const [width, fontPercent] of [[320, 100], [640, 200], [320, 200]]) {
+  test(`本文・解答欄・早見表が収まり、コードをキーで横スクロールできる (${width}px・文字${fontPercent}%)`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("./");
+    await page.evaluate((percent) => { document.documentElement.style.fontSize = `${percent}%`; }, fontPercent);
+    const fits = async () => expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await fits();
+    await page.getByRole("button", { name: /探索の可視化/ }).click();
+    await page.getByRole("button", { name: "次へ →" }).click();
+    await fits();
+    const code = page.getByRole("region", { name: "Juliaコード" });
+    await tabTo(page, code);
+    await expect(code).toBeFocused();
+    await expect(code).toHaveCSS("outline-color", "rgb(255, 255, 255)");
+    await expect(code).toHaveCSS("outline-style", "solid");
+    await expect(code).toHaveCSS("outline-offset", "-3px");
+    expect(await code.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
+    await page.keyboard.press("ArrowRight");
+    await expect.poll(() => code.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
+    for (let i = 0; i < 4; i += 1) await page.getByRole("button", { name: "次へ →" }).click();
+    await fits();
+    const answer = page.getByRole("textbox", { name: "関数名" });
+    const bounds = await answer.boundingBox();
+    expect(bounds.width).toBeGreaterThan(60);
+    await answer.fill("boxplot");
+    await page.getByRole("button", { name: "答え合わせ" }).click();
+    await expect(page.getByText("クリア済み ✓")).toBeVisible();
+    await page.getByRole("button", { name: "次へ →" }).click();
+    await fits();
+    await page.getByRole("button", { name: "← レッスン一覧" }).click();
+    await page.getByRole("button", { name: "チートシート", exact: true }).click();
+    await fits();
+  });
+}
+
 test("ホームから教材を遅延読込し、解答と進捗反映まで操作できる", async ({ page }) => {
   const lessonChunks = [];
   page.on("response", (response) => {
@@ -71,6 +206,85 @@ test("意図的なMethodErrorは教材として表示し、実行時エラーに
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 
+for (const width of [900, 390]) {
+  test(`回帰診断の途中問題・復習・未解答への復帰を操作できる (${width}px)`, async ({ page }) => {
+    test.setTimeout(60_000);
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("./");
+    await page.getByRole("button", { name: "回帰診断とVIF" }).click();
+    for (let i = 0; i < 6; i += 1) await page.getByRole("button", { name: "次へ →" }).click();
+    await expect(page.getByText("練習問題 1 / 6")).toBeVisible();
+
+    const wrong = page.getByRole("button", { name: /VIFが高いと決めつけて説明変数を削除/ });
+    await wrong.click();
+    const review = page.locator("details");
+    const summary = review.locator("summary");
+    await expect(review).not.toHaveAttribute("open", "");
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(review).toHaveAttribute("open", "");
+    await expect(review.locator("pre").filter({ hasText: "hc3_vcov" })).toBeVisible();
+    await expect(review.locator("pre").filter({ hasText: "0.534" })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.keyboard.press("Enter");
+    await expect(review).not.toHaveAttribute("open", "");
+    await expect(wrong).toContainText("✕");
+    await page.getByRole("button", { name: /分散モデルとHC3など分散不均一に頑健なSE/ }).click();
+    await expect(page.getByText("クリア済み ✓")).toBeVisible();
+
+    for (let i = 0; i < 3; i += 1) await page.getByRole("button", { name: "次へ →" }).click();
+    await expect(page.getByText("練習問題 2 / 6")).toBeVisible();
+    const answer = page.getByRole("textbox", { name: "R²を取り出す式" });
+    await answer.fill("r2(a");
+    await summary.click();
+    await expect(review.locator("pre").filter({ hasText: "aux_x1" })).toBeVisible();
+    await summary.click();
+    await expect(answer).toHaveValue("r2(a");
+    await answer.fill("r2(aux)");
+    await answer.press("Enter");
+    await expect(answer).toBeDisabled();
+
+    for (let i = 0; i < 2; i += 1) await page.getByRole("button", { name: "次へ →" }).click();
+    await expect(page.getByText("練習問題 3 / 6")).toBeVisible();
+    const firstMark = page.getByRole("button", { name: "記述1を「まちがい」にする" });
+    await firstMark.click();
+    await page.getByRole("button", { name: "記述2を「正しい」にする" }).click();
+    await summary.click();
+    await summary.click();
+    await expect(firstMark).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("button", { name: "記述2を「正しい」にする" })).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("button", { name: "記述3を「まちがい」にする" }).click();
+    await page.getByRole("button", { name: "答え合わせ" }).click();
+    await expect(page.getByText("クリア済み ✓")).toBeVisible();
+
+    async function goToSummary() {
+      const next = page.getByRole("button", { name: /^(次へ →|まとめへ)$/ });
+      for (let i = 0; i < 30 && await next.count(); i += 1) await next.click();
+      await expect(next).toHaveCount(0);
+    }
+    await goToSummary();
+    await expect(page.getByText("未クリアの練習問題が 3 問あります。", { exact: false })).toBeVisible();
+    for (const [number, question, correct] of [
+      [4, "リッジ回帰の係数が一意に求まりました", "罰則に応じた係数は得られたが"],
+      [5, "最後に独立したテスト標本で予測誤差を報告します", "各foldの訓練部分で平均・SDを求めて"],
+      [6, "その変数だけでOLSを当て直しました", "変数選択を含む探索結果とし"],
+    ]) {
+      await page.getByRole("button", { name: `練習問題 ${number} にもどる` }).click();
+      await expect(page.getByText(`練習問題 ${number} / 6`)).toBeVisible();
+      await expect(page.getByText(question, { exact: false })).toBeVisible();
+      await page.getByRole("button", { name: new RegExp(correct) }).click();
+      await goToSummary();
+    }
+    await expect(page.getByText("練習問題 6 問、すべてクリアしました。", { exact: false })).toContainText("うち 5 問は一発クリア");
+    await page.getByRole("button", { name: "レッスン一覧にもどる" }).click();
+    await expect(page.getByText(/6 \/ \d+ 問/)).toBeVisible();
+    await page.getByRole("button", { name: "回帰診断とVIF" }).click();
+    for (let i = 0; i < 6; i += 1) await page.getByRole("button", { name: "次へ →" }).click();
+    await expect(page.getByText("クリア済み ✓")).toBeVisible();
+    await expect(page.getByRole("button", { name: /分散モデルとHC3など分散不均一に頑健なSE/ })).toBeDisabled();
+  });
+}
+
 test("ロードマップとNotebook配布リンクがPagesのbase pathで到達できる", async ({ page }) => {
   await page.goto("./");
 
@@ -90,14 +304,45 @@ test("ロードマップとNotebook配布リンクがPagesのbase pathで到達�
   const notebookHref = await notebook.getAttribute("href");
   const notebookResponse = await page.request.get(new URL(notebookHref, page.url()).href);
   expect(notebookResponse.ok()).toBe(true);
-  expect(await notebookResponse.text()).toContain("### A Pluto.jl notebook ###");
+  const notebookText = await notebookResponse.text();
+  expect(notebookText).toContain("### A Pluto.jl notebook ###");
+  expect(notebookText).toContain("保存前後の値の一致");
+
+  for (const [index, file, expectedTexts] of [
+    [1, "nb2-stats.jl", ["finite_number_nb2", "same_plot_nb2", "このデータでは棒は4本になります"]],
+    [2, "nb3-sim.jl", ["確認した刺激リストとの一致", "不正な値を描いた図は合格にしません"]],
+    [3, "nb4-model.jl", ["欠測を「全員陰性」として数えることはしません", "valid_histogram_nb4"]],
+  ]) {
+    const link = page.getByRole("link", { name: "演習ノート ↓" }).nth(index);
+    await expect(link).toHaveAttribute("href", `/Learning_Julia/notebooks/${file}`);
+    const response = await page.request.get(new URL(await link.getAttribute("href"), page.url()).href);
+    expect(response.ok()).toBe(true);
+    const source = await response.text();
+    for (const expectedText of expectedTexts) expect(source).toContain(expectedText);
+  }
+
+  const graduationNotebook = page.getByRole("link", { name: "演習ノート ↓" }).nth(4);
+  await expect(graduationNotebook).toHaveAttribute("href", "/Learning_Julia/notebooks/nb5-advanced.jl");
+  const graduationHref = await graduationNotebook.getAttribute("href");
+  const graduationResponse = await page.request.get(new URL(graduationHref, page.url()).href);
+  expect(graduationResponse.ok()).toBe(true);
+  const graduationText = await graduationResponse.text();
+  expect(graduationText).toContain("## 卒業制作: 研究計画書の採点基準");
+  expect(graduationText).toContain("解析失敗と特異適合を別々に記録します");
+  expect(graduationText).toContain("detection_rate_all");
+  expect(graduationText).toContain("scripts/nb5-design-comparison.jl nb5-run-01");
+  expect(graduationText).toContain("Notebook単体のダウンロードには");
+  expect(graduationText).toContain("全8項目の通過率・修正済み相関を確認しました");
+  expect(graduationText).toContain("範囲外の値や欠測は丸めて採点しません");
 
   const bridgeNotebook = page.getByRole("link", { name: "演習ノート ↓" }).nth(5);
   await expect(bridgeNotebook).toHaveAttribute("href", "/Learning_Julia/notebooks/nb6-r.jl");
   const bridgeHref = await bridgeNotebook.getAttribute("href");
   const bridgeResponse = await page.request.get(new URL(bridgeHref, page.url()).href);
   expect(bridgeResponse.ok()).toBe(true);
-  expect(await bridgeResponse.text()).toContain("R・Stan連携の演習ノート");
+  const bridgeText = await bridgeResponse.text();
+  expect(bridgeText).toContain("R・Stan連携の演習ノート");
+  expect(bridgeText).toContain("64文字にするだけでは一致しません");
 
   await page.getByRole("link", { name: "この先の学習ロードマップを見る" }).click();
   await expect(page).toHaveURL(/\/Learning_Julia\/roadmap\.html$/);

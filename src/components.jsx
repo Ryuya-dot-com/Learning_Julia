@@ -38,16 +38,19 @@ function CodeBlock({ code, output, error, lang }) {
   const lines = code.split("\n");
   return (
     <div className="my-4 overflow-hidden rounded-xl" style={{ border: "1px solid " + C.line }}>
-      <div className="flex items-center gap-1.5 px-4 pt-3" style={{ background: C.night }}>
+      <div className="flex flex-wrap items-center gap-1.5 px-4 pt-3" style={{ background: C.night }}>
         <span className="h-2 w-2 rounded-full" style={{ background: C.red }} />
         <span className="h-2 w-2 rounded-full" style={{ background: C.green }} />
         <span className="h-2 w-2 rounded-full" style={{ background: C.purple }} />
-        <span className="ml-2 text-xs font-semibold tracking-wide" style={{ color: "#8F86A3" }}>
+        <span className="ml-2 whitespace-nowrap text-xs font-semibold tracking-wide" style={{ color: "#8F86A3" }}>
           {lang || "Julia"}
         </span>
       </div>
       <pre
-        className="overflow-x-auto px-4 pb-4 pt-2 text-sm leading-7"
+        tabIndex={0}
+        role="region"
+        aria-label={`${lang || "Julia"}コード`}
+        className="code-source overflow-x-auto px-4 pb-4 pt-2 text-sm leading-7"
         style={{ background: C.night, fontFamily: MONO }}
       >
         {lines.map((ln, i) => (
@@ -71,6 +74,9 @@ function CodeBlock({ code, output, error, lang }) {
             ▶ 実行結果
           </div>
           <pre
+            tabIndex={0}
+            role="region"
+            aria-label="実行結果"
             className="overflow-x-auto whitespace-pre-wrap text-sm leading-6"
             style={{ fontFamily: MONO, color: error ? C.red : C.ink }}
           >
@@ -138,22 +144,26 @@ function ResetButton({ onReset }) {
 
 const PRAISE = ["正解です!", "すばらしい!", "その調子です!", "バッチリです!"];
 
-function Feedback({ status, why, hint, showHint, onHint }) {
+function Feedback({ status, why, hint, showHint, onHint, children }) {
   // 常設のライブリージョンで正誤を読み上げ環境へ伝える(監査A4)。
   // 正解時は操作していた要素がdisabledになりフォーカスが落ちるため、ここへ移す(監査A5)。
   // ただし「正解した瞬間」の遷移のみ。クリア済み問題は status="correct" で初期マウントされるため、
   // マウント時にも発火させるとページ送りのたびにフォーカスを奪ってしまう(検証で検出)
+  // ヒントを開いたときも、消えるボタンから通知欄へ移す。○×問題はchildrenで同じ処理を使う。
   const boxRef = useRef(null);
   const prevStatus = useRef(status);
+  const prevHint = useRef(showHint);
   useEffect(() => {
-    if (status === "correct" && prevStatus.current !== "correct" && boxRef.current) {
+    if ((status === "correct" && prevStatus.current !== "correct") || (showHint && !prevHint.current)) {
       boxRef.current.focus();
     }
     prevStatus.current = status;
-  }, [status]);
+    prevHint.current = showHint;
+  }, [status, showHint]);
 
   return (
-    <div role="status" aria-live="polite" ref={boxRef} tabIndex={-1} className="focus:outline-none">
+    <div role="status" aria-live="polite" ref={boxRef} tabIndex={-1}>
+      {children ?? <>
       {status === "correct" && (
         <div className="pop mt-4 rounded-xl p-4" style={{ background: C.greenSoft, border: "1px solid #BFE3B4" }}>
           <div className="mb-1.5 flex items-center gap-2 text-sm font-bold" style={{ color: C.greenText }}>
@@ -190,6 +200,7 @@ function Feedback({ status, why, hint, showHint, onHint }) {
           )}
         </div>
       )}
+      </>}
     </div>
   );
 }

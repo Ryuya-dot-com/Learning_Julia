@@ -9,6 +9,42 @@ begin
     using DataFrames, Random, Statistics, Distributions, GLM, HypothesisTests
     using CategoricalArrays, StatsModels, StatsPlots, StatsBase
     using LinearAlgebra
+    finite_number_nb4(x) = x isa Real && !(x isa Bool) && isfinite(x)
+    finite_vector_nb4(x, n) = x isa AbstractVector && length(x) == n &&
+        all(finite_number_nb4, x)
+
+    function valid_histogram_nb4(p, data)
+        p isa Plots.Plot && length(p.subplots) == 1 && length(p.series_list) == 2 || return false
+        bins = p.series_list[1][:bins]
+        valid_bins = (bins isa Integer && !(bins isa Bool) && 1 <= bins <= 10_000) ||
+            (bins isa Symbol && bins in (:auto, :sturges, :sqrt, :rice, :scott, :fd)) ||
+            (bins isa AbstractVector && 2 <= length(bins) <= 10_001 &&
+             all(finite_number_nb4, bins) && all(diff(bins) .> 0) &&
+             first(bins) <= minimum(data) && last(bins) > maximum(data))
+        valid_bins || return false
+        previous = Plots.isplotnull() ? p : Plots.current()
+        reference = try
+            histogram(data; bins)
+        finally
+            Plots.current(previous)
+        end
+        # ponytail: Plots 1.xの描画系列を照合。元の乱数列そのものは図から復元しない。
+        return all(isequal(a[k], b[k]) for (a, b) in zip(p.series_list, reference.series_list)
+                   for k in (:seriestype, :x, :y, :primary)) &&
+               all(isequal(p[1][axis][k], reference[1][axis][k]) for axis in (:xaxis, :yaxis)
+                   for k in (:scale, :flip, :discrete_values, :continuous_values))
+    end
+
+    function valid_logistic_nb4(m, data)
+        m isa StatsModels.TableRegressionModel{<:GeneralizedLinearModel} &&
+        Distributions.Distribution(m.model) <: Binomial && GLM.Link(m.model) isa LogitLink &&
+        coefnames(m) == ["(Intercept)", "study"] &&
+        modelmatrix(m) == hcat(ones(nrow(data)), data.study) &&
+        response(m) == data.correct && finite_vector_nb4(coef(m), 2) &&
+        0.9 <= coef(m)[2] <= 1.3 &&
+        # GLM 1.9の応答構造で、課題では使わないoffset・非単位の重みを除く。
+        isempty(m.model.rr.offset) && all(==(1), m.model.rr.wts)
+    end
 end
 
 # ╔═╡ da7aca02-0000-11f1-9a01-000000000002
@@ -30,6 +66,8 @@ md"""
 ## 課題1: 標本相関の分布を目で見る（「相関係数の標本変動」）
 
 「相関係数の標本変動」の `cor_once` と、明示RNGで1000回まわす `cor_sims` を下に用意しました。`cor_sims(20)` の1000個の相関係数を、「探索の可視化」で扱ったヒストグラムにしましょう。
+
+横軸を相関係数、縦軸を度数にし、棒は標準設定のまま使います。`bins = 30`は目安で、別の正の整数や自動設定、全観測を含む境界列でも構いません（判定は最大1万区間）。区間ごとの度数を元データと照合します。色・タイトル・凡例・軸ラベルは自由です。
 """
 
 # ╔═╡ da7aca04-0000-11f1-9a01-000000000004
@@ -51,10 +89,10 @@ h1 = missing # TODO: cor_sims(20) をヒストグラムに(bins = 30 くらい)
 # ╔═╡ da7aca06-0000-11f1-9a01-000000000006
 if h1 === missing
     md"⏳ `histogram(cor_sims(20), bins = 30, legend = false)` の形です。"
-elseif h1 isa Plots.Plot
-    md"✅ **正解!** 真の相関 0.3 を中心に、-0.4 台から 0.8 台まで広がる山が見えます。マイナス側にも裾があること——それが「n=20 の r は符号ごと揺れる」の正体です。"
+elseif valid_histogram_nb4(h1, cor_sims(20))
+    md"✅ **正解!** 区間と度数が`cor_sims(20)`に対応しています。真の相関が0.3でも、n=20の標本相関はマイナス側まで揺れる様子を確認しましょう。"
 else
-    md"🤔 `histogram(...)` の結果をそのまま `h1` に入れましょう。"
+    md"🤔 `histogram(cor_sims(20), bins = 30, legend = false)`を確認しましょう。相関係数を横軸、度数を縦軸にし、nや反復数を変えていないかも確認してください。"
 end
 
 # ╔═╡ da7aca07-0000-11f1-9a01-000000000007
@@ -70,7 +108,7 @@ spreads = missing # TODO: [std(cor_sims(n)) for n in [10, 50, 200]]
 # ╔═╡ da7aca09-0000-11f1-9a01-000000000009
 if spreads === missing
     md"⏳ `[std(cor_sims(n)) for n in [10, 50, 200]]` です。"
-elseif spreads isa AbstractVector && length(spreads) == 3 &&
+elseif finite_vector_nb4(spreads, 3) &&
        0.22 <= spreads[1] <= 0.40 && 0.09 <= spreads[2] <= 0.17 &&
        0.045 <= spreads[3] <= 0.085 && issorted(spreads, rev = true)
     md"""✅ **正解!** ばらつきは $(round(spreads[1], digits = 2)) → $(round(spreads[2], digits = 2)) → $(round(spreads[3], digits = 2)) と締まっていきます。
@@ -111,6 +149,7 @@ if scale_rs === missing
 elseif scale_rs isa NamedTuple &&
        hasproperty(scale_rs, :point_biserial) && hasproperty(scale_rs, :phi) &&
        hasproperty(scale_rs, :spearman) &&
+       all(k -> finite_number_nb4(getproperty(scale_rs, k)), (:point_biserial, :phi, :spearman)) &&
        isapprox(scale_rs.point_biserial, 0.282; atol = 0.002) &&
        isapprox(scale_rs.phi, 0.492; atol = 0.002) &&
        isapprox(scale_rs.spearman, 1.0; atol = 1e-12)
@@ -158,6 +197,7 @@ elseif cross_summary isa NamedTuple &&
        hasproperty(cross_summary, :p) && hasproperty(cross_summary, :phi) &&
        hasproperty(cross_summary, :risk_difference) &&
        hasproperty(cross_summary, :odds_ratio) &&
+       all(k -> finite_number_nb4(getproperty(cross_summary, k)), (:p, :phi, :risk_difference, :odds_ratio)) &&
        isapprox(cross_summary.p, 0.0106564; atol = 1e-6) &&
        isapprox(cross_summary.phi, 0.361158; atol = 1e-6) &&
        isapprox(cross_summary.risk_difference, 0.36; atol = 1e-12) &&
@@ -200,6 +240,7 @@ elseif simpson_summary isa NamedTuple &&
        hasproperty(simpson_summary, :marginal_or) &&
        hasproperty(simpson_summary, :easy_or) &&
        hasproperty(simpson_summary, :difficult_or) &&
+       all(k -> finite_number_nb4(getproperty(simpson_summary, k)), (:marginal_or, :easy_or, :difficult_or)) &&
        isapprox(simpson_summary.marginal_or, 0.748349; atol = 1e-6) &&
        isapprox(simpson_summary.easy_or, 2.076923; atol = 1e-6) &&
        isapprox(simpson_summary.difficult_or, 1.229193; atol = 1e-6)
@@ -238,6 +279,7 @@ if tf_relation === missing
     md"⏳ `(t = tf_test.t, F = (coef(tf_model)[2] / stderror(tf_model)[2])^2)` の形です。"
 elseif tf_relation isa NamedTuple && hasproperty(tf_relation, :t) &&
        hasproperty(tf_relation, :F) &&
+       finite_number_nb4(tf_relation.t) && finite_number_nb4(tf_relation.F) &&
        isapprox(tf_relation.t, 2.402; atol = 0.002) &&
        isapprox(tf_relation.F, 5.770; atol = 0.003) &&
        isapprox(tf_relation.t^2, tf_relation.F; atol = 1e-10)
@@ -256,7 +298,7 @@ md"""
 
 control・training・combinedの3群とpretest共変量を持つデータを作りました。`DummyCoding` の `base` を `"training"`、`levels` を3群の順序に指定して、ANCOVAモデル `training_model` を作りましょう。
 
-参照水準をcontrolからtrainingへ替えると係数の意味は変わりますが、予測値は変わらないことも判定セルで確認します。
+参照水準をcontrolからtrainingへ替えると係数の意味は変わりますが、予測値は変わらないことも判定セルで確認します。同じ観測同士を比べるため、この課題では`ancova_df`の行順と観測値を変えずに使ってください。
 """
 
 # ╔═╡ da7aca15-0000-11f1-9a01-000000000015
@@ -289,8 +331,11 @@ training_model = missing # TODO: lm(...; contrasts = Dict(:group => DummyCoding(
 # ╔═╡ da7aca17-0000-11f1-9a01-000000000017
 if training_model === missing
     md"⏳ `lm(@formula(posttest ~ pre_c + group), ancova_df; contrasts = Dict(:group => DummyCoding(base = \"training\", levels = [\"control\", \"training\", \"combined\"])))` の形です。"
-elseif training_model isa RegressionModel &&
+elseif training_model isa StatsModels.TableRegressionModel{<:LinearModel} &&
        coefnames(training_model) == ["(Intercept)", "pre_c", "group: control", "group: combined"] &&
+       modelmatrix(training_model) == hcat(ones(nrow(ancova_df)), ancova_df.pre_c,
+           ancova_df.group .== "control", ancova_df.group .== "combined") &&
+       response(training_model) == ancova_df.posttest && finite_vector_nb4(coef(training_model), 4) &&
        isapprox(coef(training_model)[3], -9.456; atol = 0.002) &&
        isapprox(coef(training_model)[4], 4.629; atol = 0.002) &&
        maximum(abs.(predict(control_model) .- predict(training_model))) < 1e-10
@@ -298,7 +343,7 @@ elseif training_model isa RegressionModel &&
 
     control基準モデルとの予測差は浮動小数点誤差だけでした。参照水準は係数が直接答える比較を変えますが、同じモデル空間の予測面は変えません。"""
 elseif training_model isa RegressionModel
-    md"🤔 モデルはできています。`coefnames(training_model)` を見て、trainingがbaseになっているか、levelsの順序が合っているか確認しましょう。"
+    md"🤔 `lm(...)`で作ったモデルですか? trainingをbaseにし、levelsの順序と、`ancova_df`の行順・観測値も確認しましょう。"
 else
     md"🤔 `lm(...)` の結果をそのまま `training_model` に入れましょう。"
 end
@@ -328,7 +373,7 @@ vif_value = missing # TODO: 1 / (1 - r2(vif_aux))
 # ╔═╡ da7aca30-0000-11f1-9a01-000000000030
 if vif_value === missing
     md"⏳ `1 / (1 - r2(vif_aux))` です。"
-elseif vif_value isa Real && isapprox(vif_value, 23.2; atol = 0.1)
+elseif finite_number_nb4(vif_value) && isapprox(vif_value, 23.2; atol = 0.1)
     md"""✅ **正解!** x1のVIFは約$(round(vif_value, digits = 1))です。
 
     これはx1固有の変化が少なく、x1の個別係数の分散が直交時の約23倍になるという診断です。モデル全体が誤り、x1を必ず削除、因果バイアスがある、という意味ではありません。"""
@@ -371,7 +416,9 @@ if diagnostic_signals === missing
 elseif diagnostic_signals isa NamedTuple &&
        hasproperty(diagnostic_signals, :normality_p) &&
        hasproperty(diagnostic_signals, :quadratic_r2_gain) &&
-       diagnostic_signals.normality_p < 1e-12 &&
+       finite_number_nb4(diagnostic_signals.normality_p) &&
+       finite_number_nb4(diagnostic_signals.quadratic_r2_gain) &&
+       0 <= diagnostic_signals.normality_p < 1e-12 &&
        isapprox(diagnostic_signals.quadratic_r2_gain, 0.000185; atol = 1e-6)
     md"""✅ **正解!** 正規性p値は約$(round(diagnostic_signals.normality_p; sigdigits = 3))ですが、二次項によるR²増分は$(round(diagnostic_signals.quadratic_r2_gain; digits = 6))だけです。
 
@@ -413,6 +460,7 @@ elseif condition_summary isa NamedTuple &&
        hasproperty(condition_summary, :raw) &&
        hasproperty(condition_summary, :centered) &&
        hasproperty(condition_summary, :standardized) &&
+       all(k -> finite_number_nb4(getproperty(condition_summary, k)), (:raw, :centered, :standardized)) &&
        isapprox(condition_summary.raw, 3.446827639575834e12; rtol = 1e-10) &&
        isapprox(condition_summary.centered, 3.4468241926162726; rtol = 1e-10) &&
        isapprox(condition_summary.standardized, 1.0025094142341706; rtol = 1e-10)
@@ -459,9 +507,10 @@ elseif ridge_summary isa NamedTuple &&
        hasproperty(ridge_summary, :matrix_rank) &&
        hasproperty(ridge_summary, :prediction_gap) &&
        hasproperty(ridge_summary, :ridge_beta) &&
-       ridge_summary.matrix_rank == 3 &&
-       ridge_summary.prediction_gap < 2e-14 &&
-       ridge_summary.ridge_beta isa AbstractVector &&
+       ridge_summary.matrix_rank isa Integer && !(ridge_summary.matrix_rank isa Bool) &&
+       ridge_summary.matrix_rank == 3 && finite_number_nb4(ridge_summary.prediction_gap) &&
+       0 <= ridge_summary.prediction_gap < 2e-14 &&
+       finite_vector_nb4(ridge_summary.ridge_beta, 4) &&
        isapprox(ridge_summary.ridge_beta,
                 [2.000833, 2.251992, -1.642080, 0.609912]; atol = 5e-7)
     md"""✅ **正解!** 4列でもrankは3、係数を大きく動かした2解の予測差は約$(round(ridge_summary.prediction_gap; sigdigits = 3))です。
@@ -498,6 +547,7 @@ if penalty_updates === missing
 elseif penalty_updates isa NamedTuple &&
        hasproperty(penalty_updates, :lasso) &&
        hasproperty(penalty_updates, :elastic_net) &&
+       finite_vector_nb4(penalty_updates.lasso, 5) && finite_vector_nb4(penalty_updates.elastic_net, 5) &&
        isapprox(penalty_updates.lasso,
                 [-0.4, 0.0, 0.0, 0.0, 0.5]; atol = 1e-12) &&
        isapprox(penalty_updates.elastic_net,
@@ -517,6 +567,8 @@ md"""
 ## 課題7: 二項ロジットGLMから予測確率へ戻る（「ロジスティック回帰」）
 
 「ロジスティック回帰」と同じ仕組み(切片 −0.4・傾き 1.1)で作ったBernoulli個票 `df_l` を用意しました。`glm` で固定効果だけのロジスティックGLMを当てはめ、`m7` に入れましょう。ランダム効果を含むGLMMではありません。判定セルでは、logit係数だけでなくstudy = −1, 0, 1での予測確率へ戻します。
+
+この課題では、用意した表を同じ行順で使い、offsetや非単位の重みは指定しません。モデルの種類・列・観測値を確認してから予測します。
 """
 
 # ╔═╡ da7aca19-0000-11f1-9a01-000000000019
@@ -533,8 +585,7 @@ m7 = missing # TODO: glm に モデル式・df_l・Binomial()・LogitLink() を�
 # ╔═╡ da7aca21-0000-11f1-9a01-000000000021
 if m7 === missing
     md"⏳ `glm(@formula(correct ~ study), df_l, Binomial(), LogitLink())` です。"
-elseif m7 isa RegressionModel && length(coef(m7)) == 2 &&
-       0.9 <= coef(m7)[2] <= 1.3
+elseif valid_logistic_nb4(m7, df_l)
     let
         probability = predict(m7, DataFrame(study = [-1.0, 0.0, 1.0]))
         md"""✅ **正解!** 傾きは $(round(coef(m7)[2], digits = 3))(真値1.1)、オッズ比は $(round(exp(coef(m7)[2]), digits = 3))です。
@@ -542,7 +593,7 @@ elseif m7 isa RegressionModel && length(coef(m7)) == 2 &&
         study = −1, 0, 1での予測確率は $(round.(probability, digits = 3))。一定なのはオッズ比で、確率差は出発点によって変わります。"""
     end
 elseif m7 isa RegressionModel
-    md"🤔 モデルはできていますが、係数が想定と合いません。式は `correct ~ study`、データは `df_l` ですか?"
+    md"🤔 式は `correct ~ study`、データは同じ行順の `df_l`、分布は `Binomial()`、リンクは `LogitLink()` ですか? offsetや非単位の重みも外してください。"
 else
     md"🤔 `glm(...)` の結果をそのまま `m7` に入れましょう。"
 end
@@ -552,6 +603,8 @@ md"""
 ## 課題7A: 確率から意思決定へ進む前にコストを明示する
 
 独立な1000人の意思決定標本を作り、`m7`の予測確率を得ました。偽陰性コストを5、偽陽性コストを1とします。確率が較正され二択だけなら、理論閾値は `C_FP / (C_FP + C_FN)`です。
+
+課題7のモデルが未回答・不正な間は、予測確率と損失を`missing`にします。欠測を「全員陰性」として数えることはしません。モデルを作る式自体のエラーは、そのセルに表示されます。
 
 NamedTuple `decision_summary` に理論閾値、その閾値での1人あたり損失、慣習的な0.5閾値での損失を入れましょう。
 """
@@ -567,11 +620,13 @@ begin
             correct = rand(rng, 1000) .< probability,
         )
     end
-    decision_probability = m7 === missing ?
-        fill(NaN, nrow(decision_df)) : predict(m7, decision_df)
+    decision_probability = valid_logistic_nb4(m7, df_l) ? predict(m7, decision_df) : missing
     false_negative_cost = 5.0
     false_positive_cost = 1.0
     function decision_cost(threshold)
+        finite_number_nb4(threshold) && 0 <= threshold <= 1 ||
+            throw(ArgumentError("thresholdは0以上1以下の有限な実数です"))
+        decision_probability === missing && return missing
         positive = decision_probability .>= threshold
         false_negative = count(.!positive .& decision_df.correct)
         false_positive = count(positive .& .!decision_df.correct)
@@ -587,13 +642,18 @@ decision_summary = missing # TODO: (theoretical_threshold = ..., theoretical_cos
 # ╔═╡ da7aca58-0000-11f1-9a01-000000000058
 if decision_summary === missing
     md"⏳ 理論閾値は `false_positive_cost / (false_positive_cost + false_negative_cost)`。理論閾値と `decision_cost(0.5)` の損失を比較します。"
+elseif decision_probability === missing
+    m7 === missing ? md"⏳ 先に課題7のモデルを作りましょう。" :
+        md"🤔 課題7のモデルを確認してから、予測確率と損失を計算してください。"
 elseif decision_summary isa NamedTuple &&
        hasproperty(decision_summary, :theoretical_threshold) &&
        hasproperty(decision_summary, :theoretical_cost) &&
        hasproperty(decision_summary, :half_cost) &&
+       all(k -> finite_number_nb4(getproperty(decision_summary, k)),
+           (:theoretical_threshold, :theoretical_cost, :half_cost)) &&
        isapprox(decision_summary.theoretical_threshold, 1 / 6; atol = 1e-12) &&
-       isapprox(decision_summary.theoretical_cost, 0.488; atol = 1e-12) &&
-       isapprox(decision_summary.half_cost, 1.098; atol = 1e-12)
+       isapprox(decision_summary.theoretical_cost, decision_cost(1 / 6); atol = 1e-12) &&
+       isapprox(decision_summary.half_cost, decision_cost(0.5); atol = 1e-12)
     md"""✅ **正解!** コスト比からの理論閾値は$(round(decision_summary.theoretical_threshold; digits = 3))、損失は$(round(decision_summary.theoretical_cost; digits = 3))です。0.5閾値の損失$(round(decision_summary.half_cost; digits = 3))より小さくなりました。
 
     ただし、この結果だけで実運用閾値は決まりません。確率較正、コスト比、介入の利益と害、資源制約、母集団移動を外部データで確認します。閾値をこの標本で調整したなら、別の未使用標本で全手順を再評価します。"""

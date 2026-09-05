@@ -11,6 +11,9 @@ on:
       - 'public/notebooks/**'
       - 'public/data/**'
       - 'scripts/nb-exec-check.jl'
+      - 'scripts/nb5-grading-test.jl'
+      - 'scripts/nb5-design-comparison.jl'
+      - 'scripts/notebook-input-test.jl'
       - 'scripts/run-notebook-smoke.jl'
       - 'scripts/p2-likelihood-contracts.jl'
       - 'scripts/p2-selection-count-notebook-exec.jl'
@@ -41,6 +44,10 @@ jobs:
           cache-name: julia-pluto-${{ hashFiles('validation/Project.toml', 'validation/p2-likelihood/Project.toml') }}
       - name: Instantiate validation environment
         run: julia --project=validation scripts/setup-validation-env.jl
+      - name: Check NB5 grading and simulation records without private answers
+        run: julia --startup-file=no --project=validation scripts/nb5-grading-test.jl
+      - name: Check public notebook answer boundaries without external engines
+        run: julia --startup-file=no --project=validation scripts/notebook-input-test.jl
       - name: Instantiate P2 likelihood feasibility environment
         run: julia --startup-file=no --project=validation/p2-likelihood scripts/setup-validation-env.jl
       - name: Execute public notebooks in initial state

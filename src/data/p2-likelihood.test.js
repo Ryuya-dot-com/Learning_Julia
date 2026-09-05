@@ -646,7 +646,7 @@ describe("P2 尤度feasibilityの研究境界", () => {
 
   it("CI・research roadmap・依存cost記録を同期する", () => {
     const runner = read("scripts/run-numeric-checks.jl");
-    const deploy = read(".github/workflows/deploy.yml");
+    const research = read(".github/workflows/p2-research.yml");
     const roadmap = read("public/roadmap.html");
     expect(runner).toContain('"scripts/p2-likelihood-check.jl"');
     expect(runner).toContain('"scripts/p2-likelihood-stress-check.jl"');
@@ -661,10 +661,10 @@ describe("P2 尤度feasibilityの研究境界", () => {
     expect(runner).toContain('"scripts/p2-selection-count-local-server-check.jl"');
     expect(runner).toContain('"scripts/p2-learner-usability-protocol-check.jl"');
     expect(runner).toContain('"validation", "p2-likelihood"');
-    expect(deploy).toContain("Run 32 numerical regression checks");
-    expect(deploy).toContain("npm run test:p2-api");
-    expect(deploy).toContain("Install SciPy independent reference environment");
-    expect(deploy).toContain("Instantiate P2 likelihood feasibility environment");
+    expect(research).toContain("scripts/run-numeric-checks.jl --p2");
+    expect(research).toContain("npm run test:p2-api");
+    expect(research).toContain("Install SciPy independent reference environment");
+    expect(research).toContain("Instantiate P2 likelihood feasibility environment");
     expect(roadmap).toContain('data-strategy-status="research"');
     expect(roadmap).toContain("P2_LIKELIHOOD_CHECK_PASS");
     expect(roadmap).toContain("P2_LIKELIHOOD_STRESS_CHECK_PASS");

@@ -7,6 +7,7 @@ using InteractiveUtils
 # ╔═╡ 85cbdc56-8c9c-11f1-abb5-69c4daefa418
 begin
     using CSV, DataFrames, Statistics
+    finite_number_nb1(x) = x isa Real && !(x isa Bool) && isfinite(x)
 end
 
 # ╔═╡ 85cad2ac-8c9c-11f1-b10f-09471d933726
@@ -40,7 +41,8 @@ sec = missing # TODO: df.rt を 1000 で割って秒に(ドット記法)
 # ╔═╡ 85cbdcbc-8c9c-11f1-9faa-79923ae87e85
 if sec === missing
     md"⏳ 上のセルの `missing` を、ドット記法の式に書きかえましょう。"
-elseif length(sec) == 12 && isapprox(sec[1], 0.5125)
+elseif sec isa AbstractVector && length(sec) == nrow(df) &&
+       all(finite_number_nb1, sec) && isapprox(collect(sec), df.rt ./ 1000)
     md"✅ **正解!** 12試行ぜんぶが一気に変換されました。"
 else
     md"🤔 おしい。1000で割って、12個の値になっていますか? 「ドット記法(ブロードキャスト)」を見返しましょう。"
@@ -59,7 +61,10 @@ slow = missing # TODO: df[条件, :] の形で（「CSV.jl & DataFrames.jl 入�
 # ╔═╡ 85cbdcd8-8c9c-11f1-a1cc-bb3216fa38dc
 if slow === missing
     md"⏳ 「rt列が600をこえる」を条件にします。書き方は「CSV.jl & DataFrames.jl 入門」を見返しましょう。"
-elseif slow isa DataFrame && nrow(slow) == 2 && minimum(slow.rt) > 600
+elseif slow isa AbstractDataFrame && nrow(slow) == 2 &&
+       issetequal(propertynames(slow), propertynames(df)) &&
+       all(finite_number_nb1, slow.rt) &&
+       issetequal(eachrow(select(slow, propertynames(df))), eachrow(df[df.rt .> 600, :]))
     md"✅ **正解!** 遅い試行は2つだけでした。"
 else
     md"🤔 行数か中身が合いません。条件は「rt が 600 をこえる」です。"
@@ -78,7 +83,8 @@ names5 = missing # TODO: ["s" * string(i) for i in ...] の形で
 # ╔═╡ 85cbdcf6-8c9c-11f1-a6ad-61ec0604c0fb
 if names5 === missing
     md"⏳ 「内包表記」の最後のページと同じ形です。"
-elseif names5 == ["s1", "s2", "s3", "s4", "s5"]
+elseif names5 isa AbstractVector &&
+       isequal(names5, ["s1", "s2", "s3", "s4", "s5"])
     md"✅ **正解!** 30人分でも数字を変えるだけですね。"
 else
     md"🤔 中身が違うようです。`1:5` になっていますか?"
@@ -97,9 +103,13 @@ m = missing # TODO: combine(groupby(df, ...), ...) の骨組みを埋める
 # ╔═╡ 85cbdd1c-8c9c-11f1-b13c-95793d40329c
 if m === missing
     md"⏳ 「まとめて、要約する」の2段構えです。「グループ集計と結合」の最初のコード例が手本です。"
-elseif m isa DataFrame && nrow(m) == 2 && hasproperty(m, :rt_mean) && isapprox(sort(m.rt_mean)[1], 507.93333333; atol = 0.01)
+elseif m isa AbstractDataFrame && nrow(m) == 2 &&
+       issetequal(propertynames(m), [:cond, :rt_mean]) &&
+       all(x -> x isa AbstractString, m.cond) && all(finite_number_nb1, m.rt_mean) &&
+       issetequal(m.cond, unique(df.cond)) &&
+       all(row -> isapprox(row.rt_mean, mean(df.rt[df.cond .== row.cond]); atol = 0.01), eachrow(m))
     md"✅ **正解!** 不一致条件のほうが約83ミリ秒遅い——ストループ効果です。"
-elseif m isa DataFrame && !hasproperty(m, :rt_mean)
+elseif m isa AbstractDataFrame && !hasproperty(m, :rt_mean)
     md"🤔 表はできていますが、平均の列名が `rt_mean` になっていません。`:rt => mean => :rt_mean` の最後の部分が列名の指定です。"
 else
     md"🤔 形は合っていますか? 2行×2列(cond, rt_mean)になるはずです。"
@@ -125,7 +135,7 @@ age_mean = missing # TODO: mean と skipmissing で info.age の平均を
 # ╔═╡ 85cbdd4e-8c9c-11f1-ac3e-2b312db1de1e
 if age_mean === missing
     md"⏳ 欠損が1人ぶんあります。そのまま mean するとどうなるのでしたっけ?"
-elseif age_mean == 22.0
+elseif finite_number_nb1(age_mean) && age_mean == 22.0
     md"✅ **正解!** skipmissing で欠損を飛ばした平均は22歳です。"
 else
     md"🤔 `mean(skipmissing(◯◯))` の形を見返しましょう。"
@@ -162,11 +172,16 @@ batch_data = missing # TODO: DataFrame(CSV.File(batch_files; source=:source_file
 # ╔═╡ 85cbdd88-8c9c-11f1-e6d7-8f9012345678
 if batch_files === missing || batch_data === missing
     md"⏳ まずCSV pathを名前順に列挙し、そのVectorを`CSV.File`へ渡します。"
-elseif batch_data isa DataFrame &&
+elseif batch_files isa AbstractVector && length(batch_files) == 2 &&
+       all(x -> x isa AbstractString, batch_files) &&
        basename.(batch_files) == ["trials_01.csv", "trials_02.csv"] &&
+       all(isfile, batch_files) &&
+       batch_data isa AbstractDataFrame &&
        nrow(batch_data) == 12 &&
-       :source_file in propertynames(batch_data) &&
-       length(unique(batch_data.source_file)) == 2
+       issetequal(propertynames(batch_data), [propertynames(df); :source_file]) &&
+       all(x -> x isa AbstractString, batch_data.source_file) &&
+       batch_data.source_file == repeat(batch_files; inner = 6) &&
+       isequal(select(batch_data, propertynames(df)), df)
     md"✅ **正解!** 2つの入力から12行を読み、各行の入力元も残せました。"
 else
     md"🤔 CSVは2個、結合後は12行です。`README.txt`を除外し、`source=:source_file`を指定できていますか?"
@@ -176,7 +191,7 @@ end
 md"""
 ## 課題7: 結果CSVを書き出して読み戻す（「複数CSVと分析成果物の入出力」）
 
-`batch_data`を一時的なoutput directoryの`combined.csv`へ書き出し、返されたpathを`batch_output`へ入れましょう。判定セルは別の`CSV.read`で12行と`source_file`列を確認します。
+`batch_data`を一時的なoutput directoryの`combined.csv`へ書き出し、返されたpathを`batch_output`へ入れましょう。判定セルは別の`CSV.read`で12行と`source_file`列、保存前後の値の一致を確認します。
 """
 
 # ╔═╡ 85cbdd9c-8c9c-11f1-a8f9-0123456789bc
@@ -185,12 +200,20 @@ batch_output = missing # TODO: CSV.write(joinpath(batch_fixture.output, "combine
 # ╔═╡ 85cbdda6-8c9c-11f1-b90a-123456789bcd
 if batch_output === missing
     md"⏳ `CSV.write(出力path, 表)`の返り値を`batch_output`へ入れます。"
-elseif batch_output isa AbstractString && isfile(batch_output)
-    restored_batch = CSV.read(batch_output, DataFrame)
-    if nrow(restored_batch) == 12 && :source_file in propertynames(restored_batch)
-        md"✅ **正解!** 12行と入力元列を、別の読込でround trip確認できました。"
-    else
-        md"🤔 fileはありますが、12行または`source_file`列が復元されていません。"
+elseif batch_output isa AbstractString
+    let restored_batch = try
+            isfile(batch_output) ? CSV.read(batch_output, DataFrame; strict = true) : nothing
+        catch err
+            err isa Union{CSV.Error, ArgumentError, SystemError, Base.IOError, EOFError} || rethrow()
+            nothing
+        end
+        if restored_batch isa AbstractDataFrame && batch_data isa AbstractDataFrame &&
+           nrow(restored_batch) == 12 && :source_file in propertynames(restored_batch) &&
+           isequal(restored_batch, batch_data)
+            md"✅ **正解!** 12行と入力元列に加え、保存前後の値の一致を別の読込で確認できました。"
+        else
+            md"🤔 CSVを読み戻せるか、12行と`source_file`列があるか、値が`batch_data`と一致するかを確認してください。"
+        end
     end
 else
     md"🤔 `batch_fixture.output`の中へ`combined.csv`を書き出してください。"

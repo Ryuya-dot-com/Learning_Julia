@@ -30,7 +30,7 @@ export const LESSON_CATALOG = [
   { path: "5-model/l24-association-scales.js", id: "scale-aware-association", title: "尺度に応じた関連指標", tag: "連続・2値・順序データとクロス集計を読み分ける", exCount: 3 },
   { path: "5-model/l24-regression.js", id: "linear-model-unification", title: "t検定・ANOVA・回帰を一つのモデルで見る", tag: "検定名ではなく、係数と誤差構造で統一する", exCount: 3 },
   { path: "5-model/l25-confounding.js", id: "multiple-regression-ancova", title: "重回帰・ANCOVA・モデル比較", tag: "投入する変数・参照水準・コントラストを決める", exCount: 3 },
-  { path: "5-model/l26-diagnostics.js", id: "regression-diagnostics", title: "回帰診断とVIF", tag: "仮定を合否判定せず、壊れ方と結論への影響を調べる", exCount: 3 },
+  { path: "5-model/l26-diagnostics.js", id: "regression-diagnostics", title: "回帰診断とVIF", tag: "仮定を合否判定せず、壊れ方と結論への影響を調べる", exCount: 6 },
   { path: "5-model/l26-logistic.js", id: "logistic-regression", title: "ロジスティック回帰", tag: "二項ロジットGLMを確率へ戻し、判断規則と分けて読む", exCount: 3 },
   { path: "5-model/l27-categorical-outcomes.js", id: "categorical-outcomes", title: "順序・多項ロジスティック回帰", tag: "発展概説：順序を使う累積ロジットと、名義尺度のsoftmaxを分けて選ぶ", exCount: 5 },
   { path: "6-advanced/l26-ctt.js", id: "classical-test-theory", title: "古典的テスト理論と項目分析", tag: "概念必須・実装任意：得点の質を分解する", exCount: 3 },

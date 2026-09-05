@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { LESSONS } from "./lessons/eager.js";
 import { LESSONS as LESSON_CATALOG, loadLesson } from "./lessons/index.js";
 import { SECTIONS } from "./sections.js";
+import { buildLessonItems } from "./lessons/registry.js";
 
 // 演習形式の許容値(仕様4.6)
 const ALLOWED_K = ["choice", "fill", "tf"];
@@ -99,6 +100,17 @@ describe("レッスンデータ", () => {
       expect(page, `${id} の意図的エラー例が見つからない`).toBeTruthy();
       expect(page.a?.join(" ").length, `${id} のエラー解説がない`).toBeGreaterThan(40);
     }
+  });
+
+  it("探索の可視化は実測のビン数・度数と試行単位を説明する", () => {
+    const lesson = LESSONS.find((item) => item.id === "exploratory-visualization");
+    const text = lesson.pages.flatMap((page) => page.a ?? []).join(" ");
+    expect(text).toContain("区間数の目安");
+    expect(text).toContain("4区間になり、度数は順に2、4、4、2");
+    expect(text).not.toContain("6本の棒に分ける");
+    expect(text).not.toContain("山が2つに割れます");
+    expect(text).toContain("人の割合ではありません");
+    expect(text).toContain("有意差や因果関係があるとは判断しません");
   });
 
   it("id が重複していない", () => {
@@ -203,7 +215,7 @@ describe("データの整形・保存・再利用回の学習契約", () => {
     expect(text).toContain('formula = \\"rt ~ condition\\"');
   });
 
-  it("保守script・validation環境・CIが17本の検証に保存往復を含む", () => {
+  it("保守script・validation環境・本編の公開検査が保存往復を含む", () => {
     const checker = readFileSync(join(ROOT, "scripts", "data-persistence-check.jl"), "utf8");
     const runner = readFileSync(join(ROOT, "scripts", "run-numeric-checks.jl"), "utf8");
     const project = readFileSync(join(ROOT, "validation", "Project.toml"), "utf8");
@@ -216,7 +228,7 @@ describe("データの整形・保存・再利用回の学習契約", () => {
     expect(checker).toContain("sha256");
     expect(checker).toContain("eltype(arrow_data.condition) <: CategoricalValue");
     expect(runner).toContain('"scripts/data-persistence-check.jl"');
-    expect(deploy).toContain("Run 32 numerical regression checks");
+    expect(deploy).toContain("scripts/run-numeric-checks.jl --public");
   });
 
   it("ロードマップがRData・RDSを訂正し、Stanを任意bridgeにする", () => {
@@ -290,7 +302,7 @@ describe("再現可能な研究プロジェクト補講の学習契約", () => {
       expect(checker, `${concept} がworkflow検証にない`).toContain(concept);
     }
     expect(runner).toContain('"scripts/reproducible-workflow-check.jl"');
-    expect(deploy).toContain("Run 32 numerical regression checks");
+    expect(deploy).toContain("scripts/run-numeric-checks.jl --public");
   });
 
   it("ロードマップと保存回から公開補講へ到達できる", () => {
@@ -419,7 +431,7 @@ describe("Gitで研究履歴と公開境界を管理する補講の学習契約"
       expect(checker, `${concept} がGit境界検証にない`).toContain(concept);
     }
     expect(runner).toContain('"scripts/version-control-boundary-check.jl"');
-    expect(deploy).toContain("Run 32 numerical regression checks");
+    expect(deploy).toContain("scripts/run-numeric-checks.jl --public");
   });
 
   it("ロードマップとdownload版へ到達できる", () => {
@@ -844,8 +856,60 @@ describe("重回帰・ANCOVA・モデル比較回の学習契約", () => {
   });
 });
 
+describe("説明と練習問題の読順", () => {
+  it("全教材で説明の順序と問題の添字を保ち、脱落・重複なくまとめへ進む", () => {
+    for (const lesson of LESSONS) {
+      const items = buildLessonItems(lesson);
+      expect(items.filter((item) => item.kind === "page").map((item) => item.p)).toEqual(lesson.pages);
+      const exercises = items.filter((item) => item.kind === "ex");
+      expect(exercises.map((item) => item.i).sort((a, b) => a - b)).toEqual(lesson.ex.map((_, i) => i));
+      for (const item of exercises) expect(item.e).toBe(lesson.ex[item.i]);
+      expect(items.at(-1)).toEqual({ kind: "done" });
+      expect(items).toHaveLength(lesson.pages.length + lesson.ex.length + 1);
+      if (lesson.ex.every((e) => e.afterPage === undefined)) {
+        expect(items.slice(0, lesson.pages.length).every((item) => item.kind === "page")).toBe(true);
+        expect(exercises.map((item) => item.i)).toEqual(lesson.ex.map((_, i) => i));
+      }
+    }
+  });
+
+  it("同じ説明に複数問を配置でき、指定のない問題は章末へ置く", () => {
+    const lesson = { id: "example", pages: [{ t: "前半" }, { t: "後半" }], ex: [
+      { afterPage: "前半" }, { afterPage: "前半" }, {},
+    ] };
+    const items = buildLessonItems(lesson);
+    expect(items.map((item) => item.kind)).toEqual(["page", "ex", "ex", "page", "ex", "done"]);
+    expect(items[1].reviewPage).toBe(lesson.pages[0]);
+    expect(items[2].reviewPage).toBe(lesson.pages[0]);
+    expect(items[4].reviewPage).toBeUndefined();
+  });
+
+  it("存在しない、または重複した見出しへの参照は停止する", () => {
+    for (const pages of [[{ t: "別の説明" }], [{ t: "説明" }, { t: "説明" }]]) {
+      expect(() => buildLessonItems({ id: "bad-link", pages, ex: [{ afterPage: "説明" }] }))
+        .toThrow("bad-link: afterPage must match exactly one page: 説明");
+    }
+  });
+});
+
 describe("回帰診断とVIF回の学習契約", () => {
   const id = "regression-diagnostics";
+
+  it("6問を関連する説明の直後に置き、後半の識別・評価・選択後推論も確認する", () => {
+    const lesson = LESSONS.find((item) => item.id === id);
+    const items = buildLessonItems(lesson);
+    expect(lesson.ex).toHaveLength(6);
+    expect(items.filter((item) => item.kind === "ex").map((item) => item.i)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(items[6].kind).toBe("ex");
+    for (const [i, item] of items.entries()) {
+      if (item.kind !== "ex") continue;
+      expect(items[i - 1].p).toBe(item.reviewPage);
+      expect(item.e.afterPage).toBe(item.reviewPage.t);
+    }
+    expect(lesson.ex[3].q).toContain("x3 = x1 + x2");
+    expect(lesson.ex[4].q).toContain("独立したテスト標本");
+    expect(lesson.ex[5].q).toContain("p値が最小");
+  });
 
   it("L30としてANCOVAの直後、ロジスティック回帰の直前に並ぶ", () => {
     const numberedIds = LESSONS.filter((lesson) => lesson.num != null).map((lesson) => lesson.id);
@@ -1231,7 +1295,7 @@ describe("発展ブロックの学習深度契約", () => {
     expect(roadmap).toContain("simulation任意");
     expect(notebook).toContain("任意実装ラボ");
     expect(notebook).toContain("ノートを実行しなくてもSTEP 5の学習は完了");
-    expect(notebook).toContain("番号つき37本+ノートブック5冊");
+    expect(notebook).toContain("計算例の確認、研究計画書の達成、未検証の点を分けて");
   });
 });
 
@@ -1638,6 +1702,22 @@ describe("デザインの検定力設計回の学習契約", () => {
     expect(notebook).toContain("design_result");
     expect(notebook).toContain("singular_rate");
     expect(notebook).not.toContain("Random.seed!");
+  });
+
+  it("NB5の計算例と研究計画書を分け、6観点で根拠と未達箇所を確認する", () => {
+    const notebook = readFileSync(join(ROOT, "public", "notebooks", "nb5-advanced.jl"), "utf8");
+    const rubric = notebook.split("## 卒業制作: 研究計画書の採点基準")[1].split("## 自由課題")[0];
+    expect([...rubric.matchAll(/^\| [1-6]\. /gm)]).toHaveLength(6);
+    expect(rubric).toContain("合計点で不足を相殺しません");
+    expect(rubric).toContain("反復ID・例外・収束状態");
+    expect(rubric).toContain("未実行・未検証");
+    expect(notebook).toContain("解析失敗と特異適合を別々に記録します");
+    expect(notebook).toContain("detection_rate_all");
+    expect(notebook).toContain("return_code");
+    expect(notebook).not.toContain("解析失敗率はまだ測っていません");
+    expect(notebook).toContain("研究上の仮定や設計判断は自動採点していません");
+    expect(notebook).not.toContain("ノートブック5冊は完走");
+    expect(JSON.stringify(LESSONS.find((item) => item.id === id))).toContain("末尾の6観点");
   });
 });
 

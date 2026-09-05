@@ -10,6 +10,7 @@ export default {
       b: [
         "研究室の正式な解析scriptがRにあり、一部のsimulationやJulia packageだけを使いたい場合は、RからJuliaを呼ぶ方が自然です。R利用者にJuliaのdriver scriptまで管理させず、Rの経路を入口として保てます。",
         "JuliaCallはR processへJuliaを組み込みます。JuliaからRを呼ぶRCallと向きが逆です。一つの処理で両方向の呼び出しを重ねる構成は避け、どちらが全体を進めるdriverか一つに決めます。",
+        "この章のJuliaCall例は定期CIの実行対象ではありません。配布templateで検証しているRscript経由の連携とは別です。手元で試す際は、R・Julia・JuliaCallの版と、小さな引数・返り値の変換を確認してください。",
       ],
     },
     {

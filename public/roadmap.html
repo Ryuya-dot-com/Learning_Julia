@@ -463,6 +463,7 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
           <span class="lnum">L30</span>
           <h3>回帰診断とVIF</h3>
           <p>正規性・非線形性・分散不均一・依存性を分離し、VIF・条件数・QR対正規方程式・完全ランク落ちを診断します。リッジ、Lasso、Elastic Netを情報漏洩を防ぐ交差検証へ接続し、選択安定性と選択後推論を予測性能から分けます。</p>
+          <p>初回は診断と解釈の判断を中心に読み、実装の詳細は必要に応じて確認します。説明の途中に6問を置き、問題の下から関連する説明を読み直せます。</p>
           <div class="chips"><code>rank / SVD</code><code>ridge</code><code>Lasso</code><code>Elastic Net</code><code>post-selection</code><code>nested CV</code></div>
         </article>
         <article class="lesson">
@@ -518,6 +519,7 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
           <span class="lnum">L37</span>
           <h3>デザインの検定力設計</h3>
           <p>参加者×項目のランダム傾き、測定信頼性、欠測を生成し、第I種過誤・検定力・MCSE・Wilson区間・singular率を同じ解析パイプラインで監査する卒業制作です。</p>
+          <p>NB5は基準条件の計算例と、6観点で読む任意の研究計画書を分けています。付属関数は反復ごとの停止コード・推定値・特異適合・例外を記録し、解析可能な試行と全試行の検出率を別々の分母・MCSE・区間で返します。</p>
           <div class="chips"><code>設計原理必須</code><code>simulation任意</code><code>refit!</code><code>MCSE</code><code>感度分析</code></div>
         </article>
       </div>
@@ -553,12 +555,13 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
         <article class="lesson">
           <span class="lnum">橋4 / Julia → Stan</span>
           <h3>StanSampleでStanを呼ぶ(公開中)</h3>
-          <p>StanSample 7.10.3／CmdStan 2.39.0の実行例として、公式archiveのSHA-256照合、model compile、4 chainのsampling、stansummary・diagnoseを一続きで確認します。Beta(6, 2)の解析解と事後予測平均でも検算し、生のdraws CSV、入力JSON、実行log、R̂・ESS・divergence、全成果物hashを保存します。macOS arm64とLinux arm64では新規導入全体、Linux x86_64ではCmdStan buildとR／Stan実行を確認済みです。x86_64でのJulia依存取得は定期CI、Windowsは別環境での確認が残っています。</p>
+          <p>StanSample 7.10.3／CmdStan 2.39.0の実行例として、公式archiveのSHA-256照合、model compile、4 chainのsampling、stansummary・diagnoseを一続きで確認します。Beta(6, 2)の解析解と事後予測平均でも検算し、生のdraws CSV、入力JSON、実行log、R̂・ESS・divergence、全成果物hashを保存します。macOS arm64とLinux arm64での新規導入に加え、2026-09-05にLinux／WindowsのCIでJulia依存の準備、CmdStanの新規build、R／Stan成果物の生成・再利用を確認済みです。両環境で変更時・毎週の実行検査を続けます。</p>
           <div class="chips"><code>StanSample</code><code>CmdStan 2.39</code><code>解析解</code><code>事後予測</code><code>新規導入確認済み</code></div>
         </article>
       </div>
       <div class="plan-gate">
         <h3>公開後の引き継ぎ確認</h3>
+        <p>配布templateのR連携は<code>Rscript --vanilla</code>によるfile受け渡しです。RCall・JuliaCallの埋め込み実行は定期CIの対象ではありません。NB6の定期検査も未回答状態の実行であり、各連携例の実行や解答後の採点まで確認したことにはなりません。</p>
         <p>配布templateのREADMEに、第三者が通常分析、R連携、Stan連携を説明なしで実行し、成果物と<code>created／reused</code>、sampling成功と診断を区別できるか確認する手順を収録しました。自動検証と開発環境でのclean runは完了していますが、第三者による確認は未実施です。最初の1人の結果は導線修正にだけ使い、理解率や教育効果の根拠にはしません。</p>
         <div class="chips"><code>HANDOFF_CHECK_READY</code><code>ACTUAL_HANDOFFS_0</code><code>NO_TELEMETRY</code><code>aggregate only</code></div>
       </div>
@@ -679,7 +682,9 @@ println(round(<span class="num">100</span> * result.mcse, digits = <span class="
           <h3>P0〜P1を定着させる</h3>
           <p><strong>目的:</strong> 新機能より先に、入力、成果物、分布推定、観測過程を一人で往復できる学習経路を安定させます。</p>
           <p><strong>観測するもの:</strong> 誤答が曖昧でないか、Notebookへ知識を移せるか、リンク・download・clean runが壊れていないかを、課題rubricと自動検証で追います。行動追跡のための外部telemetryは導入しません。</p>
-          <p><strong>完了条件:</strong> Julia数値回帰、Pluto、Vitest、build、Playwrightが揃って通り、既知のscope boundaryとpackage versionが教材から辿れます。個別検証に加え、複数CSVからfit・予測診断・forward観測設計・監査済み出力までを一時directory内で通す横断検証を維持します。</p>
+          <p><strong>技術面の確認:</strong> Julia数値回帰、Pluto、Vitest、build、Playwrightが揃って通り、既知のscope boundaryとpackage versionが教材から辿れます。個別検証に加え、複数CSVからfit・予測診断・forward観測設計・監査済み出力までを一時directory内で通す横断検証を維持します。</p>
+          <p><strong>学習面の残課題:</strong> 長い章の到達目標と問題を照合し、途中の理解確認と復習の導線を見直します。既存Notebookや卒業制作を、例と異なるdataに対して自力で使えるかは別途確かめます。自動検査の成功や第三者1人の引き継ぎ完了を、本編全体の学習成果とは扱いません。</p>
+          <p><strong>公開処理の範囲:</strong> 本編の数値検証20本と、Web・静的P2 previewの検査を公開条件にします。P2研究の数値検証12本と未公開のlocal API検査は、別の変更時・定期CIで維持します。</p>
           <div class="chips"><code>P0_P1_PIPELINE_CHECK_PASS</code><code>learner path</code><code>no telemetry</code><code>regression gate</code></div>
         </article>
         <article class="lesson" data-strategy-horizon="next" data-strategy-status="research">
