@@ -8,12 +8,14 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/p2-participant-preview-build-check.mjs",
+    "build": "vite build && node scripts/p2-participant-preview-build-check.mjs && node scripts/dropbox-ignore.mjs",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:e2e": "vite build --outDir .e2e-dist && playwright test",
+    "test:e2e": "vite build --outDir .e2e-dist && node scripts/dropbox-ignore.mjs && playwright test && node scripts/dropbox-ignore.mjs",
     "test:p2-ui": "playwright test --config=playwright.p2.config.js",
+    "posttest:p2-ui": "node scripts/dropbox-ignore.mjs",
     "test:p2-api": "playwright test --config=playwright.p2.local.config.js",
+    "posttest:p2-api": "node scripts/dropbox-ignore.mjs",
     "postinstall": "node scripts/dropbox-ignore.mjs"
   },
   "dependencies": {

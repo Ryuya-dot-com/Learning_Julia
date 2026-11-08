@@ -76,7 +76,7 @@ describe("CIの検証境界", () => {
     expect(dependabot).toContain("package-ecosystem: npm");
   });
 
-  it("数値runnerが公開済み＋research中の32検証スクリプトを漏れなく列挙する", () => {
+  it("数値runnerが公開済み＋research中の34検証スクリプトを漏れなく列挙する", () => {
     const actual = readdirSync(join(ROOT, "scripts"))
       .filter((name) => name.endsWith("-check.jl") && name !== "nb-exec-check.jl")
       .map((name) => `scripts/${name}`)
@@ -85,12 +85,12 @@ describe("CIの検証境界", () => {
       .map((match) => match[1])
       .sort();
     expect(listed).toEqual(actual);
-    expect(listed).toHaveLength(32);
+    expect(listed).toHaveLength(34);
     expect(numericRunner).toContain('startswith(basename(relative_path), "p2-")');
     expect(numericRunner).toContain('joinpath(ROOT, "validation", "p2-likelihood")');
     const publicChecks = listed.filter((path) => !path.startsWith("scripts/p2-"));
     const researchChecks = listed.filter((path) => path.startsWith("scripts/p2-"));
-    expect(publicChecks).toHaveLength(20);
+    expect(publicChecks).toHaveLength(22);
     expect(researchChecks).toHaveLength(12);
     const validationReadme = read("validation/README.md");
     expect(validationReadme).toContain(`全${listed.length}本`);
@@ -115,7 +115,7 @@ describe("CIの検証境界", () => {
     expect(research).toContain("Instantiate P2 likelihood feasibility environment");
   });
 
-  it("Pluto smokeは公開Notebook 6本と隔離P2研究Notebookを変更時・定期実行する", () => {
+  it("Pluto smokeは公開Notebook 8本と隔離P2研究Notebookを変更時・定期実行する", () => {
     expect(pluto).toContain("schedule:");
     expect(pluto).toContain("public/notebooks/**");
     expect(pluto).toContain("scripts/run-notebook-smoke.jl");
@@ -126,7 +126,7 @@ describe("CIの検証境界", () => {
     expect(pluto).toContain("julia --startup-file=no --project=validation scripts/nb5-grading-test.jl");
     const listed = [...notebookRunner.matchAll(/"(public\/notebooks\/nb[^"\n]+\.jl)"/g)]
       .map((match) => match[1]);
-    expect(listed).toHaveLength(6);
+    expect(listed).toHaveLength(8);
     expect(read("validation/README.md")).toContain(`NB1–NB${listed.length}`);
     expect(read("validation/README.md")).toContain("定期CIでは実行していません");
     expect(pluto).toContain("validation/p2-likelihood/Project.toml");
@@ -175,5 +175,24 @@ describe("CIの検証境界", () => {
       expect(repositoryReadme).toContain(`\`${field}\``);
     }
     expect(repositoryReadme).not.toContain("ファイルを置くだけ");
+  });
+
+  it("Dropbox同期除外スクリプトがビルド成果物とローカル検証出力を網羅する", () => {
+    const dropboxIgnore = read("scripts/dropbox-ignore.mjs");
+    for (const target of [
+      "node_modules",
+      "dist",
+      ".e2e-dist",
+      "playwright-report",
+      "test-results",
+      "examples/reproducible-study/.cmdstan",
+      "examples/reproducible-study/output",
+      "examples/reproducible-study/data/derived",
+      "examples/reproducible-study/metadata/runs",
+    ]) {
+      expect(dropboxIgnore, `${target} が dropbox-ignore.mjs にない`).toContain(`"${target}"`);
+    }
+    expect(packageJson).toContain('"postinstall": "node scripts/dropbox-ignore.mjs"');
+    expect(packageJson).toContain("&& node scripts/dropbox-ignore.mjs");
   });
 });

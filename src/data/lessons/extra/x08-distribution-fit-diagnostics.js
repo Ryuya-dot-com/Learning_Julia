@@ -33,7 +33,7 @@ function audit_positive(x)
     y
 end`,
       a: [
-        "0を小さな正数へ機械的に置換しません。真の0、丸め、検出限界、入力ミスでは必要なmodelが違うからです。観測境界そのものをmodel化する方法は次のP1で扱います。",
+        "0を小さな正数へ機械的に置換しません。真の0、丸め、検出限界、入力ミスでは必要なモデルが違うからです。観測境界そのものをモデル化する方法は補講「観測境界・依存・混合分布」で扱います。",
       ],
     },
     {
@@ -214,8 +214,13 @@ println((
       t: "QQとPITは、ずれが起きる場所を連続的に見る",
       b: [
         "QQ診断では、並べた観測値とfit済み分布の同じ累積確率における理論分位点を比べます。中央は合うが右端だけ上へ逸れるなら、右裾を過小予測している可能性があります。相関係数1つへ縮約せず、どの範囲がずれたかを見ます。",
-        "連続分布のPITは`cdf(d, x)`で各観測を0〜1へ写します。modelとparameterが固定され正しければ一様性が基準ですが、同じdataでparameterを推定した場合は厳密な一様性検定として扱いません。図とreplicate診断を補助する位置診断です。離散分布にはrandomized PITなど別の扱いが必要です。",
+        "連続分布のPIT(確率積分変換: Probability Integral Transform)は `cdf(d, x)` で各観測を0〜1へ写します。モデルとパラメータが固定され正しければ一様分布が基準ですが、同じデータでパラメータを推定した場合は厳密な一様性検定として扱いません。図とreplicate診断を補助する位置診断です。離散分布には乱択化PIT(randomized PIT)など別の扱いが必要です。",
       ],
+      fig: {
+        src: "figures/predictive-qq-overdispersion.svg",
+        alt: "左パネルは同じ平均538msでも対角線に乗るLogNormalと大きく外れるExponentialのQQプロット比較、右パネルは過分散カウントデータにおけるPoissonの0率と右裾の同時不一致",
+        cap: "左：平均が一致していてもQQプロットで裾と中央値の破綻が見える。右：過分散カウントではPoissonが0の多さと右裾を同時に外す",
+      },
       code: `using Distributions
 
 d = fit_mle(LogNormal, rt)
@@ -244,11 +249,12 @@ true`,
     {
       t: "推定表・予測診断表・run情報を分けて保存する",
       b: [
-        "P0-Bの入出力契約へ戻り、parameter推定表、予測診断表、観測要約表を別CSVへ書き出します。各表にrun ID、model名、sample size、replicate数、RNG seedを持たせれば、図の点がどの計算から来たか追跡できます。",
+        "補講「複数CSVと分析成果物の入出力」で学んだ入出力契約へ戻り、パラメータ推定表、予測診断表、観測要約表を別CSVへ書き出します。各表にrun ID、モデル名、標本サイズ、replicate数、RNG seedを持たせれば、図の点がどの計算から来たか追跡できます。",
         "raw dataを上書きせず、書出し後に列名・型・行数・checksumを読み戻して検査します。乱数data全体を常に保存する必要はありませんが、診断表、seed、環境、生成関数、Rは再生成できる形で残します。bit単位の保持が必要ならreplicate data自体を成果物にします。",
       ],
       code: `using CSV, DataFrames
 
+observed = summarize(rt)
 diagnostic_output = DataFrame(
     statistic = ["sd", "q50", "q95", "maximum"],
     observed = [observed.sd, observed.q50, observed.q95, observed.maximum],
@@ -263,14 +269,15 @@ CSV.write("output/distribution_diagnostics.csv", diagnostic_output)`,
       t: "完了条件は、推定成功ではなく反例を説明できること",
       b: [
         "完了時には、入力集合と除外、候補分布とparameterization、推定法、点推定と不確かさ、replicateの設計、事前に選んだ診断量、不一致の方向、結論への影響を説明できるようにします。",
-        "自動検証では、特定の乱数列ではなく、support、有限性、sample size、replicate数、理論量、診断区間の順序を固定します。さらに、平均が合うExponentialと、平均が合うPoissonの誤modelがSD・0・分位点・最大値で停止する反例を含めます。",
-        "続く番号なし補講「観測境界・依存・混合分布」では、0や測定限界を除外せずtruncated／censored modelへ戻すこと、依存をMvNormalへ入れること、異質性をMixtureModelの生成で表すことへ進みます。混合分布の自動推定が同じpackageにあるとは主張しません。",
+        "自分の分析コードをテストするときも、特定の乱数列そのものではなく、support、有限性、標本サイズ、replicate数、理論量、診断区間の順序を確かめます。さらに、平均だけ合うExponentialやPoissonの誤モデルがSD・0の割合・分位点・最大値で棄却される反例を手元で確かめておくと判断がぶれません。",
+        "続く補講「観測境界・依存・混合分布」では、0や測定限界を除外せずtruncated／censoredモデルへ戻すこと、依存をMvNormalへ入れること、異質性をMixtureModelの生成で表すことへ進みます(`Distributions.jl` 単独には混合分布の自動推定機能はないため、生成と読解に絞って扱います)。",
       ],
     },
   ],
   ex: [
     {
       k: "fill",
+      afterPage: "fitは方法をdispatchし、fit_mleはMLEを明示する",
       q: "分布型Dをdata xへ最尤推定で当てはめる関数名を入力してください。",
       code: `d = 〔?〕(D, x)`,
       accept: ["fit_mle"],
@@ -281,11 +288,12 @@ CSV.write("output/distribution_diagnostics.csv", diagnostic_output)`,
     },
     {
       k: "choice",
+      afterPage: "分布オブジェクトは点推定であり、parameter区間ではない",
       q: "`fit_mle(LogNormal, x)`が返す分布オブジェクトについて正しい説明はどれですか？",
       opts: [
         "parameterの点推定であり、標準誤差や区間は別に評価する",
-        "parameterの95%信頼区間を自動で含む",
-        "modelが正しいことまで証明する",
+        "parameterの95%信頼区間とブートストラップ分布を内部に自動で保持している",
+        "対数尤度が有限に求まった時点で、その分布族が真の生成過程であることまで証明する",
       ],
       ans: 0,
       why: "fit済み分布は点推定です。parameter不確かさとmodel不一致は別の手続きで調べます。",
@@ -293,6 +301,7 @@ CSV.write("output/distribution_diagnostics.csv", diagnostic_output)`,
     },
     {
       k: "fill",
+      afterPage: "同じ標本サイズのreplicate dataを複数列として作る",
       q: "明示RNG rng、fit済み分布dから、観測と同じn個をR回生成します。関数名を入力してください。",
       code: `replicate_data = 〔?〕(rng, d, n, R)`,
       accept: ["rand"],
@@ -303,6 +312,7 @@ CSV.write("output/distribution_diagnostics.csv", diagnostic_output)`,
     },
     {
       k: "tf",
+      afterPage: "平均が同じExponentialでも、SDと中央値を外す",
       q: "予測診断について、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -325,11 +335,12 @@ CSV.write("output/distribution_diagnostics.csv", diagnostic_output)`,
     },
     {
       k: "choice",
+      afterPage: "countではPoissonを0・分散・最大値で点検する",
       q: "平均だけ合うPoisson modelの不一致を見つける診断として最も適切なのはどれですか？",
       opts: [
         "同じnのreplicateごとに0の割合・分散・上位分位点・最大値を比較する",
-        "観測平均をもう一度表示するだけにする",
-        "最初に生成された乱数1個と観測1個を一致させる",
+        "fit済みPoissonの平均λと標本平均が一致することだけをもう一度確認して終了する",
+        "最初に生成された乱数1個と観測1個目の数値がたまたま一致するまでseedを探し直す",
       ],
       ans: 0,
       why: "Poissonはfitで平均を再現しても、過分散dataの0と裾を再現できないことがあります。",
@@ -337,6 +348,7 @@ CSV.write("output/distribution_diagnostics.csv", diagnostic_output)`,
     },
     {
       k: "fill",
+      afterPage: "推定表・予測診断表・run情報を分けて保存する",
       q: "replicateのq95列から中央95%予測区間を求めます。空欄に入る関数名を入力してください。",
       code: `bounds = 〔?〕(diagnostics.q95, [0.025, 0.975])`,
       accept: ["quantile"],

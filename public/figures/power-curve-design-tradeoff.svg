@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 312" width="760" height="312" role="img" aria-label="交差ランダム傾き下での参加者数・項目数・試行反復の検出力曲線とシナリオ感度">
+  <title>交差ランダム傾き下での参加者数・項目数・試行反復の検出力曲線とシナリオ感度</title>
+  <rect width="760" height="312" rx="10" fill="#FFFFFF"/>
+  <line x1="64.0" y1="236.0" x2="360.0" y2="236.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="240.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.40</text>
+  <line x1="64.0" y1="172.1" x2="360.0" y2="172.1" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="176.1" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.60</text>
+  <line x1="64.0" y1="108.3" x2="360.0" y2="108.3" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="112.3" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.80</text>
+  <line x1="64.0" y1="44.4" x2="360.0" y2="44.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="48.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1.00</text>
+  <line x1="110.0" y1="252.0" x2="110.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="110.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">576</text>
+  <line x1="191.1" y1="252.0" x2="191.1" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="191.1" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1152</text>
+  <line x1="272.3" y1="252.0" x2="272.3" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="272.3" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1728</text>
+  <line x1="353.5" y1="252.0" x2="353.5" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="353.5" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2304</text>
+  <rect x="64.0" y="38.0" width="296.0" height="214.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="212.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">同じ総行数でも増やす軸で検出力は違う</text>
+  <text x="212.0" y="292.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">総観測行数 (N_subj × N_item × 2条件 × 反復)</text>
+  <text x="20.0" y="145.0" text-anchor="middle" transform="rotate(-90 20.0 145.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">検出力 (1 − β)</text>
+  <line x1="64.0" y1="108.3" x2="360.0" y2="108.3" stroke="#8A8296" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <text x="70.0" y="103.3" fill="#6E6879" font-size="9.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">目標 0.80</text>
+  <polyline fill="none" stroke="#2B7A1E" stroke-width="2.6" points="69.4,215.4 74.2,204.1 79.0,193.6 83.8,184.0 88.6,175.2 93.4,167.1 98.3,159.6 103.1,152.7 107.9,146.3 112.7,140.5 117.5,135.1 122.3,130.1 127.2,125.4 132.0,121.1 136.8,117.2 141.6,113.5 146.4,110.1 151.2,106.9 156.0,103.9 160.9,101.2 165.7,98.6 170.5,96.2 175.3,93.9 180.1,91.8 184.9,89.8 189.8,88.0 194.6,86.2 199.4,84.6 204.2,83.1 209.0,81.6 213.8,80.3 218.7,79.0 223.5,77.7 228.3,76.6 233.1,75.5 237.9,74.5 242.7,73.5 247.6,72.6 252.4,71.7 257.2,70.8 262.0,70.0 266.8,69.3 271.6,68.6 276.5,67.9 281.3,67.2 286.1,66.6 290.9,66.0 295.7,65.4 300.5,64.9 305.4,64.4 310.2,63.9 315.0,63.4 319.8,62.9 324.6,62.5 329.4,62.1 334.3,61.6 339.1,61.3 343.9,60.9 348.7,60.5 353.5,60.2"/>
+  <polyline fill="none" stroke="#4682B4" stroke-width="2.3" points="69.4,207.4 74.2,196.9 79.0,187.4 83.8,178.7 88.6,170.9 93.4,163.8 98.3,157.3 103.1,151.4 107.9,145.9 112.7,141.0 117.5,136.4 122.3,132.2 127.2,128.3 132.0,124.8 136.8,121.5 141.6,118.4 146.4,115.5 151.2,112.9 156.0,110.4 160.9,108.1 165.7,106.0 170.5,103.9 175.3,102.1 180.1,100.3 184.9,98.6 189.8,97.0 194.6,95.5 199.4,94.1 204.2,92.8 209.0,91.6 213.8,90.4 218.7,89.3 223.5,88.2 228.3,87.2 233.1,86.2 237.9,85.3 242.7,84.4 247.6,83.6 252.4,82.8 257.2,82.0 262.0,81.3 266.8,80.6 271.6,79.9 276.5,79.3 281.3,78.7 286.1,78.1 290.9,77.5 295.7,77.0 300.5,76.5 305.4,76.0 310.2,75.5 315.0,75.0 319.8,74.6 324.6,74.1 329.4,73.7 334.3,73.3 339.1,72.9 343.9,72.6 348.7,72.2 353.5,71.8"/>
+  <polyline fill="none" stroke="#CB3C33" stroke-width="2.2" stroke-dasharray="5 3" points="112.7,142.3 117.5,139.9 122.3,137.7 127.2,135.7 132.0,133.8 136.8,132.1 141.6,130.6 146.4,129.1 151.2,127.8 156.0,126.5 160.9,125.4 165.7,124.3 170.5,123.3 175.3,122.3 180.1,121.4 184.9,120.6 189.8,119.8 194.6,119.0 199.4,118.3 204.2,117.7 209.0,117.0 213.8,116.4 218.7,115.8 223.5,115.3 228.3,114.7 233.1,114.2 237.9,113.8 242.7,113.3 247.6,112.9 252.4,112.4 257.2,112.0 262.0,111.7 266.8,111.3 271.6,110.9 276.5,110.6 281.3,110.2 286.1,109.9 290.9,109.6 295.7,109.3 300.5,109.0 305.4,108.8 310.2,108.5 315.0,108.2 319.8,108.0 324.6,107.7 329.4,107.5 334.3,107.3 339.1,107.1 343.9,106.8 348.7,106.6 353.5,106.4"/>
+  <circle cx="110.0" cy="137.0" r="4.0" fill="#2A2733" stroke="#FFFFFF" stroke-width="1.2"/>
+  <circle cx="191.1" cy="85.9" r="4.0" fill="#2B7A1E" stroke="#FFFFFF" stroke-width="1.2"/>
+  <circle cx="191.1" cy="101.9" r="4.0" fill="#4682B4" stroke="#FFFFFF" stroke-width="1.2"/>
+  <text x="160.0" y="57.0" fill="#2B7A1E" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">緑：参加者を増やす (48×12 → 0.87)</text>
+  <text x="160.0" y="73.0" fill="#4682B4" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">青：項目を増やす (24×24 → 0.82)</text>
+  <text x="160.0" y="224.0" fill="#CB3C33" font-size="9.4" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">赤破線：同一項目の試行数だけ増やしても</text>
+  <text x="160.0" y="238.0" fill="#CB3C33" font-size="9.4" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">ランダム傾き分散が残り頭打ちになる</text>
+  <line x1="456.0" y1="234.2" x2="732.0" y2="234.2" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="448.0" y="238.2" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">小効果 10ms</text>
+  <line x1="456.0" y1="204.4" x2="732.0" y2="204.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="448.0" y="208.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">傾きSD増大</text>
+  <line x1="456.0" y1="174.7" x2="732.0" y2="174.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="448.0" y="178.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">20%欠測</text>
+  <line x1="456.0" y1="145.0" x2="732.0" y2="145.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="448.0" y="149.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">低信頼性0.5</text>
+  <line x1="456.0" y1="115.3" x2="732.0" y2="115.3" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="448.0" y="119.3" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">基準 24×12</text>
+  <line x1="456.0" y1="85.6" x2="732.0" y2="85.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="448.0" y="89.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">項目倍 24×24</text>
+  <line x1="456.0" y1="55.8" x2="732.0" y2="55.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="448.0" y="59.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">参加者倍 48×12</text>
+  <line x1="511.2" y1="252.0" x2="511.2" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="511.2" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.2</text>
+  <line x1="594.0" y1="252.0" x2="594.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="594.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.5</text>
+  <line x1="676.8" y1="252.0" x2="676.8" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="676.8" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.8</text>
+  <line x1="732.0" y1="252.0" x2="732.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="732.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1</text>
+  <rect x="456.0" y="38.0" width="276.0" height="214.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="594.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">仮定を動かした感度分析 (L37実測)</text>
+  <text x="594.0" y="292.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">推定検出力 ± 1.96 MCSE (nsim=200)</text>
+  <line x1="676.8" y1="38.0" x2="676.8" y2="252.0" stroke="#8A8296" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="683.3" y1="55.8" x2="709.0" y2="55.8" stroke="#2B7A1E" stroke-width="2.2"/>
+  <circle cx="696.1" cy="55.8" r="3.8" fill="#2B7A1E"/>
+  <text x="714.0" y="59.8" fill="#2B7A1E" font-size="9.6" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.87</text>
+  <line x1="667.6" y1="85.6" x2="697.0" y2="85.6" stroke="#4682B4" stroke-width="2.2"/>
+  <circle cx="682.3" cy="85.6" r="3.8" fill="#4682B4"/>
+  <text x="702.0" y="89.6" fill="#4682B4" font-size="9.6" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.82</text>
+  <line x1="634.6" y1="115.3" x2="669.3" y2="115.3" stroke="#2A2733" stroke-width="2.2"/>
+  <circle cx="652.0" cy="115.3" r="3.8" fill="#2A2733"/>
+  <text x="674.3" y="119.3" fill="#2A2733" font-size="9.6" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.71</text>
+  <line x1="620.0" y1="145.0" x2="656.3" y2="145.0" stroke="#6D3E86" stroke-width="2.2"/>
+  <circle cx="638.2" cy="145.0" r="3.8" fill="#6D3E86"/>
+  <text x="661.3" y="149.0" fill="#6D3E86" font-size="9.6" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.66</text>
+  <line x1="612.8" y1="174.7" x2="649.7" y2="174.7" stroke="#8A5D0B" stroke-width="2.2"/>
+  <circle cx="631.3" cy="174.7" r="3.8" fill="#8A5D0B"/>
+  <text x="654.7" y="178.7" fill="#8A5D0B" font-size="9.6" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.64</text>
+  <line x1="533.0" y1="204.4" x2="569.4" y2="204.4" stroke="#CB3C33" stroke-width="2.2"/>
+  <circle cx="551.2" cy="204.4" r="3.8" fill="#CB3C33"/>
+  <text x="574.4" y="208.4" fill="#CB3C33" font-size="9.6" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.34</text>
+  <line x1="513.5" y1="234.2" x2="547.5" y2="234.2" stroke="#CB3C33" stroke-width="2.2"/>
+  <circle cx="530.5" cy="234.2" r="3.8" fill="#CB3C33"/>
+  <text x="552.5" y="238.2" fill="#CB3C33" font-size="9.6" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.27</text>
+</svg>

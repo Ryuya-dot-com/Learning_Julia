@@ -9,7 +9,7 @@ export default {
       t: "分析の心臓部へ",
       b: [
         "このレッスンでは、条件ごとの平均(グループ集計)と、別の表との合体(結合)ができるようになります。",
-        "その前に、新しい記号をひとつだけ。`@chain` のように `@` で始まる命令はマクロと呼ばれ、「コードを書きかえてから実行する特別な命令」です。しくみの理解は続編にまかせて、いまは「@付きは書き方をそのまま覚えればOK」で大丈夫です。",
+        "その前に、新しい記号をひとつだけ。`@chain` のように `@` で始まる命令はマクロと呼ばれ、「コードを書きかえてから実行する特別な命令」です。詳しいしくみまで追う必要はないので、いまは「@付きは便利な定型文として書き方を覚えればOK」で大丈夫です。",
       ],
     },
     {
@@ -28,6 +28,11 @@ println(combine(gd, :rt => mean => :rt_mean))`,
    1 │ cong     507.933
    2 │ incong   590.583
 `,
+      fig: {
+        src: "figures/groupby-combine-leftjoin.svg",
+        alt: "groupby と combine による条件別要約（Split-Apply-Combine）および leftjoin による参加者属性表の結合図",
+        cap: "左：groupby(df, :cond) で条件ごとに分け、combine で平均を1行ずつに要約する。右：leftjoin(df, info, on = :id) で試行データの各行に参加者属性をつなぐ。",
+      },
       a: [
         "一致条件は約508ミリ秒、不一致条件は約591ミリ秒——ストループ効果らしい差が見えました。12試行の表が、条件ごとの要約2行になっています。",
       ],
@@ -35,7 +40,7 @@ println(combine(gd, :rt => mean => :rt_mean))`,
     {
       t: "leftjoin: 参加者情報をつなぐ",
       b: [
-        "試行データとは別に、参加者の属性表(participants.csv: id・年齢・グループ)があるとします。`leftjoin` で id を手がかりに合体できます。",
+        "試行データとは別に、参加者の属性表 `participants.csv`(id・年齢・グループ。このサイトの `data/participants.csv` から入手でき、「演習ノート」でも自動で読みこまれます)があるとします。`leftjoin` で id を手がかりに合体できます。",
       ],
       code: `info = CSV.read("participants.csv", DataFrame)
 joined = leftjoin(df, info, on = :id)

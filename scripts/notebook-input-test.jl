@@ -36,6 +36,8 @@ const NB3 = notebook_scope("nb3-sim.jl")
 const NB4 = notebook_scope("nb4-model.jl")
 const NB5 = notebook_scope("nb5-advanced.jl")
 const NB6 = notebook_scope("nb6-r.jl")
+const NB7 = notebook_scope("nb7-intermediate.jl")
+const NB8 = notebook_scope("nb8-advanced-comp.jl")
 @assert length(NB5.judges) == 9
 pop!(NB5.judges, :design_result) # 課題6は既存のnb5-grading-test.jlで実適合とともに検査する。
 NB3.judges[:make_trials] = NB3.cells["beefca05-0000-11f1-9a01-000000000005"]
@@ -64,21 +66,43 @@ for id in ("6b1d0104-0000-11f1-9a01-000000000004",
            "6b1d0115-0000-11f1-9a01-000000000015")
     Base.include_string(NB6.scope, NB6.cells[id], NB6.path)
 end
-for nb in (NB1, NB2, NB3, NB4, NB5, NB6), name in keys(nb.judges)
+for id in ("7b1d0104-0000-11f1-9a01-000000000004",
+           "7b1d0108-0000-11f1-9a01-000000000008",
+           "7b1d0112-0000-11f1-9a01-000000000012",
+           "7b1d0116-0000-11f1-9a01-000000000016",
+           "7b1d011b-0000-11f1-9a01-00000000001b",
+           "7b1d011f-0000-11f1-9a01-00000000001f",
+           "7b1d0123-0000-11f1-9a01-000000000023",
+           "7b1d0127-0000-11f1-9a01-000000000027")
+    Base.include_string(NB7.scope, NB7.cells[id], NB7.path)
+end
+for id in ("8b1d0104-0000-11f1-9a01-000000000004",
+           "8b1d0108-0000-11f1-9a01-000000000008",
+           "8b1d0112-0000-11f1-9a01-000000000012",
+           "8b1d0116-0000-11f1-9a01-000000000016",
+           "8b1d011b-0000-11f1-9a01-00000000001b",
+           "8b1d011f-0000-11f1-9a01-00000000001f",
+           "8b1d0123-0000-11f1-9a01-000000000023",
+           "8b1d0127-0000-11f1-9a01-000000000027")
+    Base.include_string(NB8.scope, NB8.cells[id], NB8.path)
+end
+for nb in (NB1, NB2, NB3, NB4, NB5, NB6, NB7, NB8), name in keys(nb.judges)
     setvalue(nb, name, name === :make_trials ? p -> missing : missing)
 end
 setvalue(NB1, :batch_data, missing)
 Base.include_string(NB3.scope, NB3.cells["beefca07-0000-11f1-9a01-000000000007"], NB3.path)
 Base.include_string(NB4.scope, NB4.cells["da7aca56-0000-11f1-9a01-000000000056"], NB4.path)
 
-@testset "NB1–NB6: 未回答と異なる型の誤答（NB5課題6は別検査）" begin
+@testset "NB1–NB8: 未回答と異なる型の誤答（NB5課題6は別検査）" begin
     @test length(NB1.judges) == 7
     @test length(NB2.judges) == 12
     @test length(NB3.judges) == 5
     @test length(NB4.judges) == 14
     @test length(NB5.judges) == 8
     @test length(NB6.judges) == 5
-    for nb in (NB1, NB2, NB3, NB4, NB5, NB6), name in keys(nb.judges)
+    @test length(NB7.judges) == 8
+    @test length(NB8.judges) == 8
+    for nb in (NB1, NB2, NB3, NB4, NB5, NB6, NB7, NB8), name in keys(nb.judges)
         @test occursin("⏳", judge(nb, name, name === :make_trials ? p -> missing : missing))
         for value in (nothing, true, 0, NaN, Inf, "誤答", (;), [missing], ["誤答"])
             # 上流が未回答なら待機する課題もある。エラーや✅にならないことを確認。
@@ -692,4 +716,356 @@ end
     @test occursin("✅", judge(NB5, :m1, models.unit_weights))
 end
 
-println("NOTEBOOK_INPUT_TEST_PASS notebooks=6 judges=51 external_engines=0 private_answers=0")
+@testset "NB7: 中級編8課題の正常系と境界・誤答を確認する" begin
+    valid_views = (total = 19960.0, bytes = 0)
+    @test occursin("✅", judge(NB7, :views_summary, valid_views))
+    @test occursin("🤔", judge(NB7, :views_summary, (total = 19960.0, bytes = 166400)))
+    @test occursin("🤔", judge(NB7, :views_summary, (total = 100.0, bytes = 0)))
+    @test occursin("🤔", judge(NB7, :views_summary, (total = 19960.0, bytes = true)))
+
+    s_diffs = NB7.scope.serial_diffs_nb7
+    valid_par = (diffs = copy(s_diffs), match_serial = true, mean_diff = mean(s_diffs))
+    @test occursin("✅", judge(NB7, :parallel_mc, valid_par))
+    # match_serial = true と偽っても diffs が異なれば不合格にする
+    @test occursin("🤔", judge(NB7, :parallel_mc, (diffs = reverse(s_diffs), match_serial = true, mean_diff = mean(s_diffs))))
+    @test occursin("🤔", judge(NB7, :parallel_mc, (diffs = s_diffs[1:10], match_serial = true, mean_diff = mean(s_diffs))))
+
+    th_nb7 = sum(NB7.scope.obs_rt_nb7) / count(!, NB7.scope.cens_rt_nb7)
+    ll_max_nb7 = NB7.scope.censored_loglik_eta_nb7(log(th_nb7), NB7.scope.obs_rt_nb7, NB7.scope.cens_rt_nb7)
+    dev_nb7(th) = 2.0 * (ll_max_nb7 - NB7.scope.censored_loglik_eta_nb7(log(th), NB7.scope.obs_rt_nb7, NB7.scope.cens_rt_nb7))
+    lo_nb7 = NB7.scope.bisect_nb7(th -> dev_nb7(th) - NB7.scope.CHISQ1_95_NB7, 100.0, th_nb7)
+    hi_nb7 = NB7.scope.bisect_nb7(th -> dev_nb7(th) - NB7.scope.CHISQ1_95_NB7, th_nb7, 3000.0)
+    valid_mle = (theta_hat = th_nb7, prof_low = lo_nb7, prof_high = hi_nb7)
+    @test occursin("✅", judge(NB7, :censored_mle, valid_mle))
+    # 対称なWald区間や逆転区間は不合格にする
+    @test occursin("🤔", judge(NB7, :censored_mle, (theta_hat = th_nb7, prof_low = th_nb7 - 200.0, prof_high = th_nb7 + 200.0)))
+    @test occursin("🤔", judge(NB7, :censored_mle, (theta_hat = mean(NB7.scope.obs_rt_nb7), prof_low = lo_nb7, prof_high = hi_nb7)))
+
+    all_ref = NB7.scope.all_stream_ref_nb7
+    gap_ref = abs(mean(median.(NB7.scope.raw_chunks_nb7)) - median(all_ref))
+    valid_chunk = (n = length(all_ref), mean = mean(all_ref), var = var(all_ref), chunk_median_gap = gap_ref)
+    @test occursin("✅", judge(NB7, :chunk_summary, valid_chunk))
+    @test occursin("🤔", judge(NB7, :chunk_summary, merge(valid_chunk, (chunk_median_gap = 0.0,))))
+    @test occursin("🤔", judge(NB7, :chunk_summary, merge(valid_chunk, (n = true,))))
+
+    rc_nb7 = NB7.scope.raw_cut_nb7
+    cuts_nb7 = [rc_nb7[1], rc_nb7[1] + exp(rc_nb7[2]), rc_nb7[1] + exp(rc_nb7[2]) + exp(rc_nb7[3])]
+    lse_nb7 = 1001.0 + log(exp(-1.0) + 1.0 + exp(-2.0))
+    probs_nb7 = exp.(NB7.scope.extreme_logits_nb7 .- lse_nb7)
+    rps_fn(p, y) = sum((sum(p[1:k]) - (y <= k ? 1.0 : 0.0))^2 for k in 1:(length(p) - 1)) / (length(p) - 1)
+    valid_cat = (
+        cutpoints = cuts_nb7,
+        probs = probs_nb7,
+        rps_near = rps_fn(NB7.scope.forecast_near_nb7, NB7.scope.true_ord_nb7),
+        rps_far = rps_fn(NB7.scope.forecast_far_nb7, NB7.scope.true_ord_nb7),
+    )
+    @test occursin("✅", judge(NB7, :categorical_check, valid_cat))
+    # 素朴な exp の NaN や raw ベクトルそのまま、Bool 配列は不合格にする
+    @test occursin("🤔", judge(NB7, :categorical_check, merge(valid_cat, (probs = [NaN, NaN, NaN],))))
+    @test occursin("🤔", judge(NB7, :categorical_check, merge(valid_cat, (cutpoints = copy(rc_nb7),))))
+    @test occursin("🤔", judge(NB7, :categorical_check, merge(valid_cat, (cutpoints = [false, true, true],))))
+
+    valid_chisq = Core.eval(NB7.scope, quote
+        let e40 = 40.0 .* probs_gof_nb7,
+            epct = 100.0 .* probs_gof_nb7,
+            c40 = sum((obs_n40_nb7 .- e40).^2 ./ e40),
+            cpct = sum((obs_pct_nb7 .- epct).^2 ./ epct),
+            tab_ac = dropdims(sum(N3_nb7; dims = 2); dims = 2),
+            exp_ac = (sum(tab_ac; dims = 2) * sum(tab_ac; dims = 1)) ./ sum(tab_ac),
+            nij = sum(N3_nb7; dims = 3),
+            njk = sum(N3_nb7; dims = 1),
+            nj = sum(N3_nb7; dims = (1, 3)),
+            e_cond = [nij[i, j, 1] * njk[1, j, k] / nj[1, j, 1] for i in 1:2, j in 1:2, k in 1:2]
+            (
+                chi2_n40 = c40,
+                chi2_pct = cpct,
+                w_n40 = sqrt(c40 / 40.0),
+                g2_marginal = g2_dev_nb7(tab_ac, exp_ac),
+                g2_cond = g2_dev_nb7(N3_nb7, e_cond),
+            )
+        end
+    end)
+    @test occursin("✅", judge(NB7, :chisq_loglinear_check, valid_chisq))
+    # パーセント誤入力のχ²混同・条件付き独立G²を周辺G²のまま返す誤答・Boolは不合格にする
+    @test occursin("🤔", judge(NB7, :chisq_loglinear_check, merge(valid_chisq, (chi2_n40 = valid_chisq.chi2_pct,))))
+    @test occursin("🤔", judge(NB7, :chisq_loglinear_check, merge(valid_chisq, (g2_cond = valid_chisq.g2_marginal,))))
+    @test occursin("🤔", judge(NB7, :chisq_loglinear_check, merge(valid_chisq, (w_n40 = true,))))
+
+    valid_las = Core.eval(NB7.scope, quote
+        let n = size(X_las_tr_nb7, 1),
+            p = size(X_las_tr_nb7, 2),
+            ym = mean(y_las_tr_nb7),
+            xm = vec(mean(X_las_tr_nb7; dims = 1)),
+            xs = vec(std(X_las_tr_nb7; dims = 1, corrected = false)),
+            Z = (X_las_tr_nb7 .- xm') ./ xs',
+            b = zeros(Float64, p),
+            r = y_las_tr_nb7 .- ym
+            for _ in 1:400
+                md = 0.0
+                @views for j in 1:p
+                    zj, ob = Z[:, j], b[j]
+                    nb = soft_thresh_nb7(dot(zj, r) / n + ob, 0.32)
+                    if nb != ob
+                        r .-= (nb - ob) .* zj
+                        b[j] = nb
+                        md = max(md, abs(nb - ob))
+                    end
+                end
+                md < 1e-9 && break
+            end
+            beta = b ./ xs
+            ic = ym - dot(xm, beta)
+            l_rmse = sqrt(mean((y_las_te_nb7 .- (ic .+ X_las_te_nb7 * beta)).^2))
+            sel_lk = partialsortperm([abs(cor(@view(X_noise_nb7[:, j]), y_noise_nb7)) for j in 1:300], 1:8; rev = true)
+            pl, ph = similar(y_noise_nb7), similar(y_noise_nb7)
+            for k in 1:5
+                va = ((k - 1) * 12 + 1):(k * 12)
+                tr = setdiff(1:60, va)
+                pl[va] = hcat(ones(12), X_noise_nb7[va, sel_lk]) * (hcat(ones(48), X_noise_nb7[tr, sel_lk]) \ y_noise_nb7[tr])
+                sel_tr = partialsortperm([abs(cor(@view(X_noise_nb7[tr, j]), @view(y_noise_nb7[tr]))) for j in 1:300], 1:8; rev = true)
+                ph[va] = hcat(ones(12), X_noise_nb7[va, sel_tr]) * (hcat(ones(48), X_noise_nb7[tr, sel_tr]) \ y_noise_nb7[tr])
+            end
+            sst = sum((y_noise_nb7 .- mean(y_noise_nb7)).^2)
+            (
+                lasso_rmse = l_rmse,
+                nnz_lasso = count(!iszero, b),
+                leaked_r2 = 1.0 - sum((y_noise_nb7 .- pl).^2) / sst,
+                honest_r2 = 1.0 - sum((y_noise_nb7 .- ph).^2) / sst,
+            )
+        end
+    end)
+    @test occursin("✅", judge(NB7, :lasso_cv_check, valid_las))
+    # OLS非スパース解(nnz=30)やリークしたR²をhonest_r2へ入れた誤答、Boolは不合格にする
+    @test occursin("🤔", judge(NB7, :lasso_cv_check, merge(valid_las, (nnz_lasso = 30,))))
+    @test occursin("🤔", judge(NB7, :lasso_cv_check, merge(valid_las, (honest_r2 = valid_las.leaked_r2,))))
+    @test occursin("🤔", judge(NB7, :lasso_cv_check, merge(valid_las, (nnz_lasso = true,))))
+
+    valid_vis = Core.eval(NB7.scope, quote
+        let gm = 0.5 * (mean(pre_vis_nb7) + mean(post_vis_nb7)),
+            sm = 0.5 .* (pre_vis_nb7 .+ post_vis_nb7),
+            ws_se = std(pre_vis_nb7 .- sm .+ gm) / sqrt(24.0) * sqrt(2.0),
+            ph = logistic_vis_nb7(eta_vis_nb7),
+            nlo = ph - 1.96 * ph * (1.0 - ph) * se_eta_vis_nb7,
+            llo = logistic_vis_nb7(eta_vis_nb7 - 1.96 * se_eta_vis_nb7),
+            vmin = minimum(res_div_nb7),
+            vmax = maximum(res_div_nb7)
+            (
+                ws_morey_se = ws_se,
+                naive_prob_lo = nlo,
+                link_prob_lo = llo,
+                auto_zero_pos = (0.0 - vmin) / (vmax - vmin),
+            )
+        end
+    end)
+    @test occursin("✅", judge(NB7, :vis_scale_summary, valid_vis))
+    # Morey補正忘れ(÷√2)・リンク尺度下端に負値を入れた誤答・Boolは不合格にする
+    @test occursin("🤔", judge(NB7, :vis_scale_summary, merge(valid_vis, (ws_morey_se = valid_vis.ws_morey_se / sqrt(2.0),))))
+    @test occursin("🤔", judge(NB7, :vis_scale_summary, merge(valid_vis, (link_prob_lo = valid_vis.naive_prob_lo,))))
+    @test occursin("🤔", judge(NB7, :vis_scale_summary, merge(valid_vis, (auto_zero_pos = true,))))
+end
+
+@testset "NB8: 上級編8課題の正常系と境界・誤答を確認する" begin
+    u_rk4 = let u = 0.2, t = 0.0, dt = 0.5
+        for _ in 1:10
+            k1 = NB8.scope.f_learn_nb8(u, t)
+            k2 = NB8.scope.f_learn_nb8(u + 0.5 * dt * k1, t + 0.5 * dt)
+            k3 = NB8.scope.f_learn_nb8(u + 0.5 * dt * k2, t + 0.5 * dt)
+            k4 = NB8.scope.f_learn_nb8(u + dt * k3, t + dt)
+            u += (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+            t += dt
+        end
+        u
+    end
+    ex_v = NB8.scope.exact_val_nb8
+    eu_v = NB8.scope.euler_val_nb8
+    valid_rk4 = (rk4_val = u_rk4, euler_err = abs(eu_v - ex_v), rk4_err = abs(u_rk4 - ex_v))
+    @test occursin("✅", judge(NB8, :rk4_check, valid_rk4))
+    @test occursin("🤔", judge(NB8, :rk4_check, merge(valid_rk4, (rk4_val = eu_v,))))
+
+    rf = NB8.scope.ref_ddm_nb8(5201, 0.9)
+    rc = NB8.scope.ref_ddm_nb8(5201, 1.6)
+    valid_ddm = (fast_acc = rf.acc, cautious_acc = rc.acc, fast_rt_ms = rf.rt_ms, cautious_rt_ms = rc.rt_ms)
+    @test occursin("✅", judge(NB8, :ddm_tradeoff, valid_ddm))
+    # dt * randn の誤スケーリングによる正答率1.0張り付きを検出する
+    @test occursin("sqrt(dt)", judge(NB8, :ddm_tradeoff, (fast_acc = 1.0, cautious_acc = 1.0, fast_rt_ms = 780.0, cautious_rt_ms = 1170.0)))
+
+    valid_kf = Core.eval(NB8.scope, quote
+        let xp = 0.0, Pp = 10.0, q2 = 0.35^2, r2 = 1.10^2, ll = 0.0
+            xf = similar(y_obs_nb8)
+            for t in eachindex(y_obs_nb8)
+                x_pred = 0.95 * xp
+                P_pred = 0.95^2 * Pp + q2
+                innov = y_obs_nb8[t] - x_pred
+                F = P_pred + r2
+                K = P_pred / F
+                xp = x_pred + K * innov
+                Pp = (1.0 - K) * P_pred
+                ll += -0.5 * (log(2.0 * pi * F) + innov^2 / F)
+                xf[t] = xp
+            end
+            (obs_rmse = sqrt(mean((y_obs_nb8 .- x_true_nb8) .^ 2)),
+             filt_rmse = sqrt(mean((xf .- x_true_nb8) .^ 2)),
+             loglik = ll)
+        end
+    end)
+    @test occursin("✅", judge(NB8, :kalman_summary, valid_kf))
+    @test occursin("🤔", judge(NB8, :kalman_summary, merge(valid_kf, (loglik = 0.0,))))
+
+    valid_hmc = Core.eval(NB8.scope, quote
+        let rng = Xoshiro(5401), ndraws = 1200, rho = 0.92, eps = 0.18, L = 12
+            draws = Matrix{Float64}(undef, ndraws, 2)
+            q1, q2 = -1.5, 1.5
+            cur = corr_norm_nb8(q1, q2, rho)
+            acc, div = 0, 0
+            for i in 1:ndraws
+                r1, r2 = randn(rng), randn(rng)
+                H0 = -cur.logp + 0.5 * (r1^2 + r2^2)
+                pq1, pq2 = q1, q2
+                pr1, pr2 = r1 + 0.5 * eps * cur.g1, r2 + 0.5 * eps * cur.g2
+                st = cur
+                for s in 1:L
+                    pq1 += eps * pr1
+                    pq2 += eps * pr2
+                    st = corr_norm_nb8(pq1, pq2, rho)
+                    if s < L
+                        pr1 += eps * st.g1
+                        pr2 += eps * st.g2
+                    end
+                end
+                pr1 += 0.5 * eps * st.g1
+                pr2 += 0.5 * eps * st.g2
+                dH = (-st.logp + 0.5 * (pr1^2 + pr2^2)) - H0
+                if !isfinite(dH) || dH > 100.0
+                    div += 1
+                elseif log(rand(rng)) < -dH
+                    q1, q2, cur = pq1, pq2, st
+                    acc += 1
+                end
+                draws[i, 1], draws[i, 2] = q1, q2
+            end
+            (hmc_acc = acc / ndraws, rwmh_ess = rwmh_res_nb8.ess,
+             hmc_ess = ess_1d_nb8(@view draws[301:1200, 1]), divergent = div)
+        end
+    end)
+    @test occursin("✅", judge(NB8, :hmc_comparison, valid_hmc))
+    @test occursin("🤔", judge(NB8, :hmc_comparison, merge(valid_hmc, (divergent = 5,))))
+
+    valid_clmm = Core.eval(NB8.scope, quote
+        let F = eigen(SymTridiagonal(zeros(15), sqrt.(1:14))),
+            nd = F.values,
+            wt = (F.vectors[1, :]).^2,
+            sll = zeros(48, 15)
+            for i in eachindex(subj_nb8, x_ord_nb8, y_ord_nb8)
+                s, xi, yi = subj_nb8[i], x_ord_nb8[i], y_ord_nb8[i]
+                for m in 1:15
+                    eta = beta_clmm_nb8 * xi + sigma_clmm_nb8 * nd[m]
+                    up = yi == 4 ? 1.0 : logistic_nb8(c_clmm_nb8[yi] - eta)
+                    lo = yi == 1 ? 0.0 : logistic_nb8(c_clmm_nb8[yi - 1] - eta)
+                    sll[s, m] += log(max(up - lo, 1e-15))
+                end
+            end
+            (
+                gh_var = sum(wt .* (nd .^ 2)),
+                clmm_ll = sum(logsumexp_nb8(log.(wt) .+ @view sll[s, :]) for s in 1:48),
+                iia_train = 1.0 / 3.0,
+                mixed_train = sum(wt[a] * wt[b] / (1.0 + 2.0 * exp(6.0 * (nd[b] - nd[a]))) for a in 1:15, b in 1:15),
+            )
+        end
+    end)
+    @test occursin("✅", judge(NB8, :clmm_choice_summary, valid_clmm))
+    # プール順序ロジット尤度 (-601.29) や IIA のままの混合ロジットシェア (1/3) は不合格にする
+    @test occursin("🤔", judge(NB8, :clmm_choice_summary, merge(valid_clmm, (clmm_ll = -601.29,))))
+    @test occursin("🤔", judge(NB8, :clmm_choice_summary, merge(valid_clmm, (mixed_train = 1.0 / 3.0,))))
+    @test occursin("🤔", judge(NB8, :clmm_choice_summary, merge(valid_clmm, (gh_var = true,))))
+
+    valid_mca = Core.eval(NB8.scope, quote
+        let eig_fn(M) = begin
+                P = M ./ sum(M)
+                r, c = vec(sum(P; dims = 2)), vec(sum(P; dims = 1))
+                S = Diagonal(1.0 ./ sqrt.(r)) * (P .- r * c') * Diagonal(1.0 ./ sqrt.(c))
+                svd(S).S .^ 2
+            end,
+            ca_chi2 = sum(ca_tab_nb8) * sum(eig_fn(ca_tab_nb8)[1:3]),
+            ez = eig_fn(Z_mca_nb8)[1:10],
+            eb = eig_fn(Z_mca_nb8' * Z_mca_nb8)[1:10],
+            benz = [lam > 0.2 ? ((5.0 / 4.0) * (lam - 0.2))^2 : 0.0 for lam in ez]
+            (
+                ca_chi2 = ca_chi2,
+                burt_eig_gap = maximum(abs.(eb .- ez .^ 2)),
+                raw_2d = sum(ez[1:2]) / sum(ez),
+                benz_2d = sum(benz[1:2]) / sum(benz),
+            )
+        end
+    end)
+    @test occursin("✅", judge(NB8, :ca_mca_summary, valid_mca))
+    # 総度数 n を掛け忘れた慣性そのままや、Benzécri補正なし、Bool は不合格にする
+    @test occursin("🤔", judge(NB8, :ca_mca_summary, merge(valid_mca, (ca_chi2 = valid_mca.ca_chi2 / 400.0,))))
+    @test occursin("🤔", judge(NB8, :ca_mca_summary, merge(valid_mca, (benz_2d = valid_mca.raw_2d,))))
+    @test occursin("🤔", judge(NB8, :ca_mca_summary, merge(valid_mca, (burt_eig_gap = true,))))
+
+    valid_ude = Core.eval(NB8.scope, quote
+        let n = length(x_mix_nb8),
+            pk = [0.5, 0.5],
+            mu = [-0.5, 3.0],
+            s2 = fill(var(x_mix_nb8) / 2, 2),
+            resp = zeros(n, 2),
+            ll_p = -Inf
+            for _ in 1:120
+                ll = 0.0
+                for i in 1:n
+                    l1 = log(pk[1]) - 0.5 * (log(2 * pi * s2[1]) + (x_mix_nb8[i] - mu[1])^2 / s2[1])
+                    l2 = log(pk[2]) - 0.5 * (log(2 * pi * s2[2]) + (x_mix_nb8[i] - mu[2])^2 / s2[2])
+                    m = max(l1, l2)
+                    lse = m + log(exp(l1 - m) + exp(l2 - m))
+                    ll += lse
+                    resp[i, 1] = exp(l1 - lse)
+                    resp[i, 2] = exp(l2 - lse)
+                end
+                abs(ll - ll_p) < 1e-9 && break
+                ll_p = ll
+                for k in 1:2
+                    nk = sum(@view resp[:, k])
+                    pk[k] = nk / n
+                    mu[k] = dot(@view(resp[:, k]), x_mix_nb8) / nk
+                    s2[k] = max(sum(resp[i, k] * (x_mix_nb8[i] - mu[k])^2 for i in 1:n) / nk, 1e-2)
+                end
+            end
+            u_ude = sim_rk4_nb8((u, t) -> 0.9 * cos(0.8 * t) - 0.30 * u + nn_g_nb8(u, th_ude_nb8), 1.3, ts_ude_nb8)
+            (
+                em_share1 = pk[argmin(mu)],
+                bb_extrap_rmse = sqrt(mean((u_bb_nb8[62:end] .- u_exact_ude_nb8[62:end]).^2)),
+                ude_extrap_rmse = sqrt(mean((u_ude[62:end] .- u_exact_ude_nb8[62:end]).^2)),
+                g_rmse = sqrt(mean((nn_g_nb8.(u_grid_nb8, Ref(th_ude_nb8)) .- (-0.45 .* (u_grid_nb8 .^ 3))).^2)),
+            )
+        end
+    end)
+    @test occursin("✅", judge(NB8, :ude_em_summary, valid_ude))
+    # k-means誤比率(0.585)や外挿区間の取り違え、Boolは不合格にする
+    @test occursin("🤔", judge(NB8, :ude_em_summary, merge(valid_ude, (em_share1 = 0.585,))))
+    @test occursin("🤔", judge(NB8, :ude_em_summary, merge(valid_ude, (ude_extrap_rmse = valid_ude.bb_extrap_rmse,))))
+    @test occursin("🤔", judge(NB8, :ude_em_summary, merge(valid_ude, (g_rmse = true,))))
+
+    valid_diag = Core.eval(NB8.scope, quote
+        let ece_fn(yb, pr) = let ord = sortperm(pr)
+                sum(let idx = ord[((b - 1) * 120 + 1):(b * 120)]
+                    0.1 * abs(mean(pr[idx]) - mean(yb[idx]))
+                end for b in 1:10)
+            end,
+            ea = rk4_2d_nb8((0.12, 0.08), 0.05, 400),
+            eb = rk4_2d_nb8((0.08, 0.12), 0.05, 400)
+            (
+                auc_gap = abs(exact_auc_nb8(y_cal_nb8, p_cal_nb8) - exact_auc_nb8(y_cal_nb8, p_over_nb8)),
+                ece_cal = ece_fn(y_cal_nb8, p_cal_nb8),
+                ece_over = ece_fn(y_cal_nb8, p_over_nb8),
+                sep_dist = hypot(ea[1] - eb[1], ea[2] - eb[2]),
+            )
+        end
+    end)
+    @test occursin("✅", judge(NB8, :diag_phase_summary, valid_diag))
+    # AUC不変性違反・過信ECEの取り違え・Boolは不合格にする
+    @test occursin("🤔", judge(NB8, :diag_phase_summary, merge(valid_diag, (auc_gap = 0.05,))))
+    @test occursin("🤔", judge(NB8, :diag_phase_summary, merge(valid_diag, (ece_over = valid_diag.ece_cal,))))
+    @test occursin("🤔", judge(NB8, :diag_phase_summary, merge(valid_diag, (sep_dist = true,))))
+end
+
+println("NOTEBOOK_INPUT_TEST_PASS notebooks=8 judges=67 external_engines=0 private_answers=0")

@@ -7,7 +7,9 @@ import { fileURLToPath } from "node:url";
 import { LESSONS } from "./lessons/eager.js";
 import { LESSONS as LESSON_CATALOG, loadLesson } from "./lessons/index.js";
 import { SECTIONS } from "./sections.js";
+import { CHEATS, CHEAT_GROUPS } from "./cheats.js";
 import { buildLessonItems } from "./lessons/registry.js";
+import { parseHashRoute, formatHashRoute } from "../route.js";
 
 // 演習形式の許容値(仕様4.6)
 const ALLOWED_K = ["choice", "fill", "tf"];
@@ -468,6 +470,25 @@ describe("浮動小数点と数値安定性の学習契約", () => {
     }
     expect(text).toContain("-921.034");
     expect(text).toContain("(raw = true, rounded = false, shown = 0.05)");
+    expect(text).toContain("先取り案内");
+  });
+
+  it("全教材本文・演習にレビュー応答由来のメタ表現が残っていない", () => {
+    for (const lesson of LESSONS) {
+      const serialized = JSON.stringify(lesson);
+      expect(serialized, `${lesson.id} に『ご指摘』が残っている`).not.toContain("ご指摘");
+      expect(serialized, `${lesson.id} に内部スプリントIDが残っている`).not.toMatch(/P0-[ABC]|次のP1|P1の観測境界/);
+      expect(serialized, `${lesson.id} に内部用語が残っている`).not.toMatch(
+        /検証スクリプト|番号なし補講|縦横変換と一括読み込み|確率分布編|scripts\/run-numeric-checks\.jl/
+      );
+      expect(serialized, `${lesson.id} に固定レッスン番号参照が残っている`).not.toMatch(/(?:L26|L29|L31)(?:の|で|と)/);
+    }
+    const notebookDir = join(ROOT, "public", "notebooks");
+    for (const name of readdirSync(notebookDir).filter((file) => file.endsWith(".jl"))) {
+      const content = readFileSync(join(notebookDir, name), "utf8");
+      expect(content, `${name} に ponytail コメントが残っている`).not.toContain("# ponytail:");
+      expect(content, `${name} に旧レッスン名が残っている`).not.toContain("縦横変換と一括読み込み");
+    }
   });
 
   it("確率分布回が裾確率・桁落ち・log空間の安定計算へ接続する", () => {
@@ -1772,7 +1793,7 @@ describe("演習", () => {
   it("テキスト中のバッククォートが対で閉じている(T コンポーネントの描画が壊れないこと)", () => {
     const texts = [];
     for (const l of LESSONS) {
-      for (const p of l.pages) texts.push(...(p.b || []), ...(p.a || []), p.t);
+      for (const p of l.pages) texts.push(...(p.b || []), ...(p.a || []), p.t, p.fig?.cap);
       for (const ex of l.ex) {
         texts.push(ex.q, ex.why, ex.hint, ...(ex.opts || []));
         for (const it of ex.items || []) texts.push(it.s, it.why);
@@ -1782,5 +1803,137 @@ describe("演習", () => {
       const count = (String(t).match(/`/g) || []).length;
       expect(count % 2, `バッククォートが奇数個: ${String(t).slice(0, 40)}…`).toBe(0);
     }
+  });
+});
+
+describe("埋め込み図版・チートシート・URLハッシュ遷移", () => {
+  it("page.fig を持つ全ページに対応するSVGファイルとalt属性が存在する", () => {
+    const figPages = LESSONS.flatMap((l) =>
+      l.pages
+        .map((p, idx) => (p.fig ? { lessonId: l.id, pageNum: idx + 1, fig: p.fig } : null))
+        .filter(Boolean)
+    );
+    expect(figPages.length).toBeGreaterThanOrEqual(8);
+    for (const { lessonId, pageNum, fig } of figPages) {
+      expect(typeof fig.src, `${lessonId} P${pageNum} src`).toBe("string");
+      expect(fig.src).toMatch(/^figures\/[a-z0-9-]+\.svg$/);
+      expect(typeof fig.alt, `${lessonId} P${pageNum} alt`).toBe("string");
+      expect(fig.alt.trim().length).toBeGreaterThan(10);
+      const svgPath = join(ROOT, "public", fig.src);
+      expect(existsSync(svgPath), `${svgPath} が存在しない`).toBe(true);
+      const svgContent = readFileSync(svgPath, "utf8");
+      expect(svgContent).toContain("<svg");
+      expect(svgContent).toContain("</svg>");
+    }
+  });
+
+  it("チートシートが全カテゴリを網羅し、空行や重複タイトルがない", () => {
+    expect(CHEAT_GROUPS[0]).toBe("すべて");
+    const allowedGroups = new Set(CHEAT_GROUPS.slice(1));
+    expect(CHEATS.length).toBeGreaterThanOrEqual(18);
+    const titles = CHEATS.map((c) => c.title);
+    expect(new Set(titles).size).toBe(titles.length);
+    for (const group of allowedGroups) {
+      expect(CHEATS.some((c) => c.group === group), `${group} に属するカードがない`).toBe(true);
+    }
+    for (const card of CHEATS) {
+      expect(allowedGroups.has(card.group), `${card.title} の group が未定義`).toBe(true);
+      expect(card.rows.length).toBeGreaterThan(0);
+      for (const [code, desc] of card.rows) {
+        expect(code.trim().length).toBeGreaterThan(0);
+        expect(desc.trim().length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("URLハッシュを安全に解釈・生成し、#main-content スキップリンクを無視する", () => {
+    expect(parseHashRoute("", LESSON_CATALOG)).toEqual({ name: "home" });
+    expect(parseHashRoute("#", LESSON_CATALOG)).toEqual({ name: "home" });
+    expect(parseHashRoute("#main-content", LESSON_CATALOG)).toBeNull();
+    expect(parseHashRoute("#cheat", LESSON_CATALOG)).toEqual({ name: "cheat" });
+    expect(parseHashRoute("#lesson/exploratory-visualization", LESSON_CATALOG)).toEqual({
+      name: "lesson",
+      id: "exploratory-visualization",
+      step: 1,
+    });
+    expect(parseHashRoute("#lesson/exploratory-visualization/3", LESSON_CATALOG)).toEqual({
+      name: "lesson",
+      id: "exploratory-visualization",
+      step: 3,
+    });
+    expect(parseHashRoute("#lesson/exploratory-visualization/0", LESSON_CATALOG)).toEqual({
+      name: "lesson",
+      id: "exploratory-visualization",
+      step: 1,
+    });
+    expect(parseHashRoute("#lesson/does-not-exist/2", LESSON_CATALOG)).toEqual({ name: "home" });
+
+    expect(formatHashRoute({ name: "home" })).toBe("");
+    expect(formatHashRoute({ name: "cheat" })).toBe("#cheat");
+    expect(formatHashRoute({ name: "lesson", id: "exploratory-visualization", step: 1 })).toBe(
+      "#lesson/exploratory-visualization"
+    );
+    expect(formatHashRoute({ name: "lesson", id: "exploratory-visualization", step: 4 })).toBe(
+      "#lesson/exploratory-visualization/4"
+    );
+  });
+});
+
+describe("可視化・段階的演習配置・選択肢長バイアス防止の品質契約", () => {
+  it("全70レッスンすべてが実在する概念SVG図版（76か所以上のpage.fig・75枚以上のSVG）を持つ", () => {
+    const illustratedLessons = new Set();
+    let figPlacements = 0;
+    for (const lesson of LESSONS) {
+      for (const page of lesson.pages) {
+        if (!page.fig) continue;
+        figPlacements++;
+        illustratedLessons.add(lesson.id);
+        expect(page.fig.src).toMatch(/^figures\/[a-z0-9-]+\.svg$/);
+        expect(existsSync(join(ROOT, "public", page.fig.src)), `${page.fig.src} が public/ に存在しない`).toBe(true);
+        expect(page.fig.alt.trim().length, `${lesson.id} の alt が短すぎる`).toBeGreaterThanOrEqual(10);
+        expect(page.fig.cap.trim().length, `${lesson.id} の cap が短すぎる`).toBeGreaterThanOrEqual(10);
+      }
+      expect(illustratedLessons.has(lesson.id), `${lesson.id} に page.fig が1つもない`).toBe(true);
+    }
+    const svgFiles = readdirSync(join(ROOT, "public", "figures")).filter((f) => f.endsWith(".svg"));
+    expect(svgFiles.length).toBeGreaterThanOrEqual(75);
+    expect(figPlacements).toBeGreaterThanOrEqual(76);
+    expect(illustratedLessons.size).toBe(LESSONS.length);
+  });
+
+  it("7ページ以上の全26中長尺レッスンがafterPageで段階的に演習を挟み、全69レッスンで出題順が単調増加する", () => {
+    const mediumAndLongLessons = LESSONS.filter((lesson) => lesson.pages.length >= 7);
+    expect(mediumAndLongLessons.length).toBeGreaterThanOrEqual(26);
+    for (const lesson of mediumAndLongLessons) {
+      expect(
+        lesson.ex.every((e) => typeof e.afterPage === "string" && e.afterPage.length > 0),
+        `${lesson.id} (${lesson.pages.length}p) に afterPage 未設定の演習がある`
+      ).toBe(true);
+    }
+    for (const lesson of LESSONS) {
+      const items = buildLessonItems(lesson);
+      const exOrder = items.filter((item) => item.kind === "ex").map((item) => item.i);
+      expect(exOrder, `${lesson.id} の演習順が定義順から入れ替わっている`).toEqual(
+        lesson.ex.map((_, i) => i)
+      );
+    }
+  });
+
+  it("選択式問題で正解選択肢が唯一最長になる割合を30%以下に抑える", () => {
+    let totalChoice = 0;
+    let uniqueLongestCorrect = 0;
+    for (const lesson of LESSONS) {
+      for (const ex of lesson.ex) {
+        if (ex.k !== "choice") continue;
+        totalChoice++;
+        const lengths = ex.opts.map((opt) => opt.length);
+        const maxLen = Math.max(...lengths);
+        const isUniqueLongest =
+          lengths[ex.ans] === maxLen && lengths.filter((len) => len === maxLen).length === 1;
+        if (isUniqueLongest) uniqueLongestCorrect++;
+      }
+    }
+    expect(totalChoice).toBeGreaterThanOrEqual(145);
+    expect(uniqueLongestCorrect / totalChoice).toBeLessThanOrEqual(0.3);
   });
 });

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296" width="760" height="296" role="img" aria-label="再現可能な研究プロジェクトのディレクトリ構造（raw不変・schema契約・run metadata・clean run）">
+  <title>再現可能な研究プロジェクトのディレクトリ構造（raw不変・schema契約・run metadata・clean run）</title>
+  <rect width="760" height="296" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="22" width="712" height="252" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="380" y="46" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">MyStudy/：原記録（raw）を上書きせず、@__DIR__ 基準で一本の入口から再現する</text>
+  <rect x="42" y="74" width="192" height="114" rx="8" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.8"/>
+  <text x="138" y="102" text-anchor="middle" fill="#4682B4" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">data/raw/ (不変)</text>
+  <text x="138" y="130" text-anchor="middle" fill="#2A2733" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">trials.csv (読取専用)</text>
+  <text x="138" y="156" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">SHA-256を記録し上書き禁止</text>
+  <rect x="284" y="74" width="192" height="114" rx="8" fill="#FFFFFF" stroke="#6D3E86" stroke-width="1.8"/>
+  <text x="380" y="102" text-anchor="middle" fill="#6D3E86" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">code/run_analysis.jl</text>
+  <text x="380" y="130" text-anchor="middle" fill="#2A2733" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Project + Manifest固定</text>
+  <text x="380" y="156" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">schema.toml で入口検査</text>
+  <rect x="526" y="74" width="192" height="114" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="622" y="102" text-anchor="middle" fill="#2B7A1E" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">output/ + metadata/runs/</text>
+  <text x="622" y="130" text-anchor="middle" fill="#2A2733" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">tables / figures / .toml</text>
+  <text x="622" y="156" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">run_idで同名異内容を拒否</text>
+  <text x="259" y="132" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">──▶</text>
+  <text x="501" y="132" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">──▶</text>
+  <text x="380" y="222" text-anchor="middle" fill="#2A2733" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">const PROJECT_ROOT = realpath(normpath(joinpath(@__DIR__, "..")))</text>
+  <text x="380" y="246" text-anchor="middle" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">作業フォルダ(pwd)に依存せず、新しいプロセスでの clean run で結論の同等性を検証する</text>
+</svg>

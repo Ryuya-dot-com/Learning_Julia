@@ -86,6 +86,11 @@ println(round(cdf(latent, 90), digits = 3))`,
         "違いを最も直接に確認するには、同じlatent sampleへ2つの観測規則を適用します。truncation相当の除外は行数を減らし、censoring相当のclampは行数を保ったまま境界値を増やします。",
         "平均も異なります。下側を除外した標本平均は大きく上がり、下側を境界へ置換した平均も元平均から動きます。両方を『90以上のdata』として通常のfitへ渡すだけでは、異なる情報を同じものとして扱ってしまいます。",
       ],
+      fig: {
+        src: "figures/truncated-vs-censored-mixture.svg",
+        alt: "左パネルは下限90でのtruncated再正規化曲線とcensored境界確率質量0.252の比較、右パネルは2成分MixtureModelの520〜580の谷と同モーメント単一正規分布の比較",
+        cap: "左：truncatedは区間内を再正規化し、censoredは境界点90に確率質量0.252を積む。右：同じ平均・SDでも混合分布の谷を単一Normalは埋められない",
+      },
       code: `using Random, Statistics, Distributions
 
 rng = Xoshiro(2026)
@@ -109,7 +114,7 @@ true`,
       b: [
         "`truncated`と`censored`は、既知の元分布と境界から新しい分布オブジェクトを作ります。constructorが使えることと、打切りdataから元分布の未知parameterを`fit_mle`で自動推定できることは別です。",
         "実際の推定では、通常観測の密度、左・右打切りの累積確率、truncationの正規化確率を観測理由ごとに尤度へ入れます。生存時間model、Tobit、専用尤度、Bayes modelなど、問いと観測規則に合う実装を選び、単なるclamp後の通常回帰と区別します。",
-        "この補講の範囲は生成・確率計算・予測診断です。未検証の自作optimizerを初心者向けAPIとして配布せず、推定へ進むときは別の検証環境と回復試験を用意します。",
+        "この補講の範囲は生成・確率計算・予測診断です。打切りや切断を含む尤度の最適化へ進む場合は、既知の値から生成したデータで真値を復元できるか(パラメータ回復試験)を先に確かめてから実データへ適用します。",
       ],
     },
     {
@@ -171,7 +176,7 @@ true`,
       t: "同じ周辺分布でも、同時事象の確率は依存で変わる",
       b: [
         "相関あり・独立のどちらも、各変数単独では平均0・SD1のNormalにできます。それでも『両方が1を超える』確率は、正の相関がある方で大きくなります。周辺分布を別々に診断するだけでは、このjoint riskを復元できません。",
-        "相関はdependence全体を1数へ要約したものです。非線形依存、裾依存、clusterや時系列構造をMvNormalだけで十分と決めません。まず独立生成との反例で、joint構造をmodelへ入れる必要性を確認します。",
+        "相関は依存構造全体を1つの数値へ要約したものです。非線形依存、裾依存、クラスタや時系列構造を `MvNormal` だけで十分と決めません。まず独立生成との反例で、joint構造をモデルへ入れる必要性を確認します。",
       ],
       code: `using Random, Statistics, Distributions
 
@@ -210,7 +215,7 @@ println(var(d))`,
       t: "混合分散はwithinとbetweenの両方を含む",
       b: [
         "混合平均はcomponent平均の加重平均です。混合分散は各component内の分散だけでなく、component平均が全体平均から離れているbetween成分も含みます。全体SDだけから各componentのSDを逆算できません。",
-        "同じ全体平均・分散を持つ単一Normalを作れても、2群の間の谷や両側の山は再現されません。P0-Cと同じく、平均とSDだけで分布全体が合うと判断しません。",
+        "同じ全体平均・分散を持つ単一Normalを作れても、2群の間の谷や両側の山は再現されません。補講「分布の推定と予測診断」と同じく、平均とSDだけで分布全体が合うと判断しません。",
       ],
       code: `using Statistics, Distributions
 
@@ -259,22 +264,24 @@ true`,
       t: "完了条件は、見え方の違いをreplicate dataで復元すること",
       b: [
         "truncatedでは行数減少と境界内の再正規化、censoredでは行数保持と境界への確率質量を確認します。MvNormalではshape、共分散の正定値性、経験相関、joint eventを確認します。MixtureModelではcomponent・weights・全体moment・谷や裾を確認します。",
-        "成果物には観測規則、境界、共分散matrixと変数順、component parameterとweights、RNG、sample size、replicate数を保存します。raw値や打切りflagを上書きせず、P0-Bのround trip契約で診断表を読み戻します。",
-        "これでP0-Aの入力監査、P0-Bの成果物、P0-Cのfitと予測診断、P1の観測境界・依存・異質性が一本につながります。R・Stan連携は公開済みの任意トラックへ進み、専用尤度による推定は研究検証として分離します。",
+        "成果物には観測規則、境界、共分散行列と変数順、componentのパラメータと重み、RNG、標本サイズ、replicate数を保存します。元の観測値や打切りフラグを上書きせず、補講「複数CSVと分析成果物の入出力」で学んだround trip契約で診断表を読み戻します。",
+        "これで「複数CSVと分析成果物の入出力」の入力監査と成果物保存、「分布の推定と予測診断」の当てはめと反証、そしてこの補講の観測境界・依存・異質性が一本につながります。R・Stan連携は公開済みの任意トラックへ進み、専用尤度による推定は個別の研究検証として切り分けます。",
       ],
     },
   ],
   ex: [
     {
       k: "choice",
+      afterPage: "latent値・観測値・観測理由を別の列にする",
       q: "検出限界90未満の値がすべて90として記録され、行数は保たれる観測過程はどれですか？",
-      opts: ["censoring", "truncation", "単純な欠測"],
+      opts: ["censoring", "truncation", "単純な完全ランダム欠測"],
       ans: 0,
       why: "censoringでは限界外の値が境界値へ置換され、連続分布でも境界に確率質量が生じます。",
       hint: "値が消えたか、境界へ記録されたかを見ます。",
     },
     {
       k: "fill",
+      afterPage: "truncatedは、区間外が標本に現れない条件付き分布",
       q: "Normal分布dから90以上だけが標本へ入る条件付き分布を作る関数名を入力してください。",
       code: `selected = 〔?〕(d; lower = 90)`,
       accept: ["truncated"],
@@ -285,6 +292,7 @@ true`,
     },
     {
       k: "fill",
+      afterPage: "censoredは、区間外を境界値として記録する分布",
       q: "Normal分布dの90未満を90として記録する分布を作る関数名を入力してください。",
       code: `recorded = 〔?〕(d; lower = 90)`,
       accept: ["censored"],
@@ -295,18 +303,20 @@ true`,
     },
     {
       k: "choice",
+      afterPage: "多変量sampleは、各列が1観測になる",
       q: "`rand(rng, MvNormal(zeros(2), Sigma), 5000)`の結果について正しい説明はどれですか？",
       opts: [
         "2×5000のmatrixで、各列が1つの多変量観測",
-        "5000×2のmatrixで、各行が必ず1観測",
-        "長さ5000のscalar vector",
+        "5000×2のmatrixで、各行が必ず1つの多変量観測になる",
+        "長さ5000の1次元scalar vectorがそのまま返される",
       ],
       ans: 0,
       why: "多変量分布からn個生成すると、変数次元×nのmatrixになり、各列が1標本です。",
-      hint: "公式multivariate interfaceのsample方向を確認します。",
+      hint: "`MvNormal` から `n` 個生成した行列の行数・列数の並びを思い出しましょう。",
     },
     {
       k: "tf",
+      afterPage: "Distributions.jlのMixtureModelは推定器ではない",
       q: "依存と混合分布について、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -329,6 +339,7 @@ true`,
     },
     {
       k: "fill",
+      afterPage: "完了条件は、見え方の違いをreplicate dataで復元すること",
       q: "mixture dのcomponent混合比を返す関数名を入力してください。",
       code: `weights = 〔?〕(d)`,
       accept: ["probs"],

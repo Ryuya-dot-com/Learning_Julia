@@ -34,6 +34,8 @@ const CHECKS = [
     "scripts/mixed-models-check.jl",
     "scripts/measurement-error-check.jl",
     "scripts/power-design-check.jl",
+    "scripts/intermediate-track-check.jl",
+    "scripts/advanced-comp-track-check.jl",
 ]
 
 # 引数なしは従来どおり全検査。--list は環境準備前でも対象を確認できる。

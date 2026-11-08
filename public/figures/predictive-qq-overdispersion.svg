@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 312" width="760" height="312" role="img" aria-label="QQ診断による平均一致Exponential誤モデルの反証と過分散カウントにおけるPoissonの0・右裾不一致">
+  <title>QQ診断による平均一致Exponential誤モデルの反証と過分散カウントにおけるPoissonの0・右裾不一致</title>
+  <rect width="760" height="312" rx="10" fill="#FFFFFF"/>
+  <line x1="66.0" y1="240.7" x2="360.0" y2="240.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="244.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">400</text>
+  <line x1="66.0" y1="184.4" x2="360.0" y2="184.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="188.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">500</text>
+  <line x1="66.0" y1="128.1" x2="360.0" y2="128.1" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="132.1" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">600</text>
+  <line x1="66.0" y1="71.8" x2="360.0" y2="71.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="75.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">700</text>
+  <line x1="66.0" y1="252.0" x2="66.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="66.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="150.0" y1="252.0" x2="150.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="150.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">500</text>
+  <line x1="234.0" y1="252.0" x2="234.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="234.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1000</text>
+  <line x1="318.0" y1="252.0" x2="318.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="318.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1500</text>
+  <rect x="66.0" y="38.0" width="294.0" height="214.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="213.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">QQ診断：同じ平均 538ms でも形は別物</text>
+  <text x="213.0" y="292.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">fit済みモデルの理論分位点 (ms)</text>
+  <text x="22.0" y="145.0" text-anchor="middle" transform="rotate(-90 22.0 145.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">観測された反応時間 (ms)</text>
+  <line x1="129.8" y1="252.0" x2="193.7" y2="38.0" stroke="#8A8296" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="68.9" cy="219.3" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="136.1" cy="219.3" r="3.7" fill="#2B7A1E"/>
+  <circle cx="74.9" cy="211.5" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="141.4" cy="211.5" r="3.7" fill="#2B7A1E"/>
+  <circle cx="81.4" cy="201.3" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="144.5" cy="201.3" r="3.7" fill="#2B7A1E"/>
+  <circle cx="88.3" cy="195.1" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="146.9" cy="195.1" r="3.7" fill="#2B7A1E"/>
+  <circle cx="95.9" cy="187.2" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="149.1" cy="187.2" r="3.7" fill="#2B7A1E"/>
+  <circle cx="104.1" cy="183.3" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="151.0" cy="183.3" r="3.7" fill="#2B7A1E"/>
+  <circle cx="113.1" cy="179.4" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="152.9" cy="179.4" r="3.7" fill="#2B7A1E"/>
+  <circle cx="123.2" cy="174.8" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="154.7" cy="174.8" r="3.7" fill="#2B7A1E"/>
+  <circle cx="134.5" cy="169.8" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="156.6" cy="169.8" r="3.7" fill="#2B7A1E"/>
+  <circle cx="147.4" cy="163.0" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="158.5" cy="163.0" r="3.7" fill="#2B7A1E"/>
+  <circle cx="162.5" cy="155.7" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="160.5" cy="155.7" r="3.7" fill="#2B7A1E"/>
+  <circle cx="180.7" cy="146.1" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="162.8" cy="146.1" r="3.7" fill="#2B7A1E"/>
+  <circle cx="203.4" cy="133.7" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="165.3" cy="133.7" r="3.7" fill="#2B7A1E"/>
+  <circle cx="233.8" cy="120.2" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="168.4" cy="120.2" r="3.7" fill="#2B7A1E"/>
+  <circle cx="280.0" cy="101.1" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="172.6" cy="101.1" r="3.7" fill="#2B7A1E"/>
+  <circle cx="356.6" cy="66.2" r="3.4" fill="#CB3C33" fill-opacity="0.82"/>
+  <circle cx="180.6" cy="66.2" r="3.7" fill="#2B7A1E"/>
+  <text x="158.0" y="58.0" fill="#2B7A1E" font-size="9.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">緑：LogNormal (対角線 y=x 上に整列)</text>
+  <text x="158.0" y="75.0" fill="#CB3C33" font-size="9.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">赤：Exponential (短すぎ＆長すぎの裾)</text>
+  <text x="158.0" y="91.0" fill="#6E6879" font-size="9.3" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">平均一致だけでは分布の適合は言えない</text>
+  <line x1="438.0" y1="252.0" x2="732.0" y2="252.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="430.0" y="256.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.00</text>
+  <line x1="438.0" y1="187.8" x2="732.0" y2="187.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="430.0" y="191.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.15</text>
+  <line x1="438.0" y1="123.6" x2="732.0" y2="123.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="430.0" y="127.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.30</text>
+  <line x1="438.0" y1="59.4" x2="732.0" y2="59.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="430.0" y="63.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.45</text>
+  <line x1="471.9" y1="252.0" x2="471.9" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="471.9" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0</text>
+  <line x1="528.5" y1="252.0" x2="528.5" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="528.5" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">1–2</text>
+  <line x1="585.0" y1="252.0" x2="585.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="585.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">3–5</text>
+  <line x1="641.5" y1="252.0" x2="641.5" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="641.5" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">6–9</text>
+  <line x1="698.1" y1="252.0" x2="698.1" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="698.1" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">10+</text>
+  <rect x="438.0" y="38.0" width="294.0" height="214.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="585.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">過分散カウント：0と右裾の同時不一致</text>
+  <text x="585.0" y="292.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">カウント区間</text>
+  <text x="394.0" y="145.0" text-anchor="middle" transform="rotate(-90 394.0 145.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">割合 / 予測確率</text>
+  <rect x="454.4" y="133.1" width="16.0" height="118.9" rx="2" fill="#9558B2" fill-opacity="0.82"/>
+  <rect x="473.4" y="240.4" width="16.0" height="11.6" rx="2" fill="#F6D8D5" stroke="#CB3C33" stroke-width="1.5"/>
+  <rect x="511.0" y="133.1" width="16.0" height="118.9" rx="2" fill="#9558B2" fill-opacity="0.82"/>
+  <rect x="530.0" y="134.8" width="16.0" height="117.2" rx="2" fill="#F6D8D5" stroke="#CB3C33" stroke-width="1.5"/>
+  <rect x="567.5" y="156.9" width="16.0" height="95.1" rx="2" fill="#9558B2" fill-opacity="0.82"/>
+  <rect x="586.5" y="20.1" width="16.0" height="231.9" rx="2" fill="#F6D8D5" stroke="#CB3C33" stroke-width="1.5"/>
+  <rect x="624.0" y="204.4" width="16.0" height="47.6" rx="2" fill="#9558B2" fill-opacity="0.82"/>
+  <rect x="643.0" y="186.4" width="16.0" height="65.6" rx="2" fill="#F6D8D5" stroke="#CB3C33" stroke-width="1.5"/>
+  <rect x="680.6" y="204.4" width="16.0" height="47.6" rx="2" fill="#9558B2" fill-opacity="0.82"/>
+  <rect x="699.6" y="250.2" width="16.0" height="1.8" rx="2" fill="#F6D8D5" stroke="#CB3C33" stroke-width="1.5"/>
+  <text x="446.0" y="56.0" fill="#6D3E86" font-size="9.7" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">紫棒：観測 (平均 3.61, 分散 18.57, 0率 27.8%)</text>
+  <text x="446.0" y="72.0" fill="#CB3C33" font-size="9.7" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">赤枠：Poisson(3.61) (0率 2.7%, 10以上 0.4%)</text>
+</svg>

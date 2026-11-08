@@ -4,6 +4,7 @@
 main { overflow-wrap: anywhere; }
 main pre:focus-visible { outline-offset: -3px; }
 .code-source:focus-visible { outline-color: white; }
+.code-copy-btn:focus-visible { outline-color: white; }
 
 .skip-link {
   position: absolute;

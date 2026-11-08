@@ -54,7 +54,7 @@ elseif exchange_path isa AbstractString
                 isempty(strip(csv_text)) ? nothing : readdlm(IOBuffer(csv_text), ',', header = true)
             end
         catch err
-            # ponytail: 引用符エラーだけ文面で識別する。専用例外が提供されたら型判定へ移す。
+            # 引用符の不整合による読込エラーも捕捉して再入力の案内へ戻す
             quote_error = err isa ErrorException &&
                 (startswith(err.msg, "truncated column at row ") ||
                  startswith(err.msg, "unexpected character '"))

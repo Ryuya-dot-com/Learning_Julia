@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 304" width="760" height="304" role="img" aria-label="CSV.Chunks と Chan–Welford 法による定数メモリ厳密結合と、チャンク中央値平均の反例">
+  <title>CSV.Chunks と Chan–Welford 法による定数メモリ厳密結合と、チャンク中央値平均の反例</title>
+  <rect width="760" height="304" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="24" width="356" height="254" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="202" y="48" text-anchor="middle" fill="#2A2733" font-size="12.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① RunningStats (n, mean, m2) の厳密チャンク結合</text>
+  <rect x="40" y="68" width="98" height="48" rx="7" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="89" y="89" text-anchor="middle" fill="#4682B4" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">Chunk 1</text>
+  <text x="89" y="107" text-anchor="middle" fill="#2A2733" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">(nₖ, μₖ, M2ₖ)</text>
+  <rect x="152" y="68" width="98" height="48" rx="7" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="201" y="89" text-anchor="middle" fill="#4682B4" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">Chunk 2</text>
+  <text x="201" y="107" text-anchor="middle" fill="#2A2733" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">(nₖ, μₖ, M2ₖ)</text>
+  <rect x="264" y="68" width="98" height="48" rx="7" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="313" y="89" text-anchor="middle" fill="#4682B4" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">Chunk 3</text>
+  <text x="313" y="107" text-anchor="middle" fill="#2A2733" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">(nₖ, μₖ, M2ₖ)</text>
+  <text x="202" y="138" text-anchor="middle" fill="#2B7A1E" font-size="10.8" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">↓ merge_stats(a, b)（メモリ O(1)・桁落ちなし）</text>
+  <rect x="40" y="150" width="324" height="52" rx="7" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="202" y="172" text-anchor="middle" fill="#2B7A1E" font-size="10.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✓ 厳密一致：件数 n・平均 mean・不偏分散 var・最小/最大</text>
+  <text x="202" y="191" text-anchor="middle" fill="#2A2733" font-size="9.6" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">M2 = M2ₐ + M2_b + (μ_b − μₐ)² · nₐn_b / (nₐ + n_b)</text>
+  <rect x="40" y="212" width="324" height="52" rx="7" fill="#FBEDEC" stroke="#CB3C33" stroke-width="1.6"/>
+  <text x="202" y="233" text-anchor="middle" fill="#CB3C33" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✕ チャンク別の中央値や分位点を単純平均してはいけない</text>
+  <text x="202" y="252" text-anchor="middle" fill="#2A2733" font-size="9.8" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">mean([median(c1), median(c2)]) = 61.5 ≠ 真の中央値 51.5</text>
+  <line x1="442.0" y1="248.0" x2="732.0" y2="248.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="434.0" y="252.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0%</text>
+  <line x1="442.0" y1="198.0" x2="732.0" y2="198.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="434.0" y="202.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">25%</text>
+  <line x1="442.0" y1="148.0" x2="732.0" y2="148.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="434.0" y="152.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">50%</text>
+  <line x1="442.0" y1="48.0" x2="732.0" y2="48.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="434.0" y="52.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">100%</text>
+  <line x1="501.7" y1="248.0" x2="501.7" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="501.7" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">全件CSV.read</text>
+  <line x1="587.0" y1="248.0" x2="587.0" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="587.0" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">CSV.Chunks</text>
+  <line x1="672.3" y1="248.0" x2="672.3" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="672.3" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Arrow mmap</text>
+  <rect x="442.0" y="38.0" width="290.0" height="210.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="587.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② 分割読込とArrow列指向による省メモリ化</text>
+  <text x="587.0" y="288.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">大規模データの読込方式</text>
+  <text x="398.0" y="143.0" text-anchor="middle" transform="rotate(-90 398.0 143.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">ピークRAM使用量（相対比）</text>
+  <rect x="473.7" y="48.0" width="56" height="200.0" rx="5" fill="#CB3C33" fill-opacity="0.84"/>
+  <text x="501.7" y="40.0" text-anchor="middle" fill="#CB3C33" font-size="9.4" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">100% (全列展開)</text>
+  <rect x="559.0" y="232.0" width="56" height="16.0" rx="5" fill="#2B7A1E" fill-opacity="0.84"/>
+  <text x="587.0" y="224.0" text-anchor="middle" fill="#2B7A1E" font-size="9.4" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">定数チャンク枠のみ</text>
+  <rect x="644.3" y="224.0" width="56" height="24.0" rx="5" fill="#6D3E86" fill-opacity="0.84"/>
+  <text x="672.3" y="216.0" text-anchor="middle" fill="#6D3E86" font-size="9.4" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">必要な1列だけ参照</text>
+</svg>

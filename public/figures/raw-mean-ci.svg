@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" width="600" height="320" role="img" aria-label="統制群・介入群の生データ（各n=30）、標本平均（503.8 ms, 523.0 ms）、95%信頼区間">
+  <title>統制群・介入群の生データ（各n=30）、標本平均（503.8 ms, 523.0 ms）、95%信頼区間</title>
+  <rect width="600" height="320" rx="10" fill="#FFFFFF"/>
+  <line x1="70.0" y1="223.9" x2="570.0" y2="223.9" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="62.0" y="227.9" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">400</text>
+  <line x1="70.0" y1="185.9" x2="570.0" y2="185.9" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="62.0" y="189.9" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">450</text>
+  <line x1="70.0" y1="147.8" x2="570.0" y2="147.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="62.0" y="151.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">500</text>
+  <line x1="70.0" y1="109.7" x2="570.0" y2="109.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="62.0" y="113.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">550</text>
+  <line x1="70.0" y1="71.7" x2="570.0" y2="71.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="62.0" y="75.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">600</text>
+  <line x1="70.0" y1="33.6" x2="570.0" y2="33.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="62.0" y="37.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">650</text>
+  <line x1="206.4" y1="262.0" x2="206.4" y2="267.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="206.4" y="281.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">統制 (n=30)</text>
+  <line x1="433.6" y1="262.0" x2="433.6" y2="267.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="433.6" y="281.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">介入 (n=30)</text>
+  <rect x="70.0" y="26.0" width="500.0" height="236.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="26.0" y="144.0" text-anchor="middle" transform="rotate(-90 26.0 144.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">反応時間 (ms)</text>
+  <circle cx="193.7" cy="182.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="198.9" cy="135.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="229.9" cy="195.0" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="223.4" cy="127.0" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="180.9" cy="143.4" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="209.3" cy="129.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="219.6" cy="159.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="201.9" cy="105.5" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="215.1" cy="130.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="190.1" cy="147.6" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="187.1" cy="120.4" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="189.7" cy="193.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="213.5" cy="221.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="180.0" cy="121.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="204.5" cy="174.5" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="190.9" cy="181.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="231.4" cy="210.4" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="177.1" cy="189.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="237.6" cy="124.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="191.9" cy="183.6" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="204.9" cy="164.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="220.5" cy="126.3" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="236.2" cy="93.2" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="181.5" cy="117.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="203.3" cy="76.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="226.9" cy="87.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="186.1" cy="107.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="177.1" cy="182.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="186.8" cy="107.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="223.7" cy="105.6" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="429.5" cy="117.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="428.5" cy="134.5" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="415.6" cy="146.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="407.3" cy="146.3" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="402.0" cy="143.2" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="422.5" cy="156.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="447.2" cy="118.3" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="413.1" cy="115.5" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="432.2" cy="117.7" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="426.7" cy="95.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="446.6" cy="143.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="432.1" cy="133.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="448.2" cy="107.6" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="405.7" cy="104.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="446.6" cy="76.1" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="407.8" cy="88.0" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="439.3" cy="192.2" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="421.3" cy="250.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="462.7" cy="179.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="440.7" cy="157.7" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="443.2" cy="143.7" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="427.4" cy="118.4" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="419.2" cy="68.2" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="436.9" cy="169.7" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="459.4" cy="101.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="436.3" cy="101.9" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="446.2" cy="136.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="414.4" cy="113.3" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="460.1" cy="105.4" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <circle cx="426.6" cy="123.8" r="4.0" fill="#595959" fill-opacity="0.45"/>
+  <line x1="206.4" y1="159.4" x2="206.4" y2="130.3" stroke="#1F1C26" stroke-width="2.8"/>
+  <line x1="198.4" y1="159.4" x2="214.4" y2="159.4" stroke="#1F1C26" stroke-width="2.4"/>
+  <line x1="198.4" y1="130.3" x2="214.4" y2="130.3" stroke="#1F1C26" stroke-width="2.4"/>
+  <polygon points="206.4,138.1 213.2,144.9 206.4,151.7 199.6,144.9" fill="#1F1C26"/>
+  <line x1="433.6" y1="144.0" x2="433.6" y2="116.5" stroke="#1F1C26" stroke-width="2.8"/>
+  <line x1="425.6" y1="144.0" x2="441.6" y2="144.0" stroke="#1F1C26" stroke-width="2.4"/>
+  <line x1="425.6" y1="116.5" x2="441.6" y2="116.5" stroke="#1F1C26" stroke-width="2.4"/>
+  <polygon points="433.6,123.5 440.4,130.3 433.6,137.1 426.8,130.3" fill="#1F1C26"/>
+  <rect x="378" y="34" width="182" height="42" rx="6" fill="#FAF8F4" stroke="#ECE8DF"/>
+  <circle cx="392" cy="47" r="4" fill="#595959" fill-opacity="0.55"/>
+  <text x="403" y="51" fill="#6E6879" font-size="11" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">観測値 (表示用に微小ずらし)</text>
+  <polygon points="392.0,60.0 397.0,65.0 392.0,70.0 387.0,65.0" fill="#1F1C26"/>
+  <text x="403" y="69" fill="#2A2733" font-size="11" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">標本平均と95% CI</text>
+</svg>

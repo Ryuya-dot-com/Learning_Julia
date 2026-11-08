@@ -8,6 +8,8 @@ const NOTEBOOKS = [
     "public/notebooks/nb4-model.jl",
     "public/notebooks/nb5-advanced.jl",
     "public/notebooks/nb6-r.jl",
+    "public/notebooks/nb7-intermediate.jl",
+    "public/notebooks/nb8-advanced-comp.jl",
 ]
 
 active_project = Base.active_project()

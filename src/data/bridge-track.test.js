@@ -7,8 +7,8 @@ import { LESSONS } from "./lessons/eager.js";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const read = (path) => readFileSync(join(ROOT, path), "utf8");
 
-describe("R・Stan連携トラック", () => {
-  it("番号付き37本を動かさず、4本の任意トラックとして公開する", () => {
+describe("R・Stan・Python連携トラック", () => {
+  it("番号付き37本を動かさず、5本の任意トラックとして公開する", () => {
     const bridge = LESSONS.filter((lesson) => lesson.section === "bridge");
 
     expect(LESSONS.filter((lesson) => lesson.num != null)).toHaveLength(37);
@@ -17,12 +17,13 @@ describe("R・Stan連携トラック", () => {
       "julia-to-r",
       "r-to-julia",
       "julia-to-stan",
+      "julia-python-ml-bridge",
     ]);
-    expect(bridge.map((lesson) => lesson.numInSection)).toEqual([1, 2, 3, 4]);
+    expect(bridge.map((lesson) => lesson.numInSection)).toEqual([1, 2, 3, 4, 5]);
     expect(bridge.every((lesson) => lesson.num === null)).toBe(true);
   });
 
-  it("受け渡し契約、両方向のR連携、Stanの実行・診断を分けて教える", () => {
+  it("受け渡し契約、両方向のR連携、Stanの実行・診断、Pythonとの機械学習分業を分けて教える", () => {
     const text = JSON.stringify(LESSONS.filter((lesson) => lesson.section === "bridge"));
 
     for (const concept of [
@@ -36,6 +37,10 @@ describe("R・Stan連携トラック", () => {
       "stan_sample",
       "divergence",
       "chain別draws CSV",
+      "PythonCall",
+      "CondaPkg",
+      "pyconvert",
+      "column-major",
     ]) {
       expect(text, `${concept} が連携トラックにない`).toContain(concept);
     }
@@ -142,7 +147,7 @@ describe("R・Stan連携トラック", () => {
     expect(roadmap).toContain("Linux／WindowsのCI");
     expect(roadmap).not.toContain("Windowsは別環境での確認が残っています");
     expect(roadmap).toContain("RCall・JuliaCallの埋め込み実行は定期CIの対象ではありません");
-    for (const id of ["julia-to-r", "r-to-julia"]) {
+    for (const id of ["julia-to-r", "r-to-julia", "julia-python-ml-bridge"]) {
       const text = JSON.stringify(LESSONS.find((lesson) => lesson.id === id).pages[0]);
       expect(text).toContain("定期CIの実行対象ではありません");
       expect(text).toContain("Rscript経由の連携とは別です");

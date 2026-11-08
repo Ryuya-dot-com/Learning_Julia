@@ -10,7 +10,7 @@ julia --project=validation/categorical scripts/setup-categorical-validation-env.
 julia --project=validation scripts/run-numeric-checks.jl --public
 ```
 
-`--public` は本編・補講・配布テンプレートの20本を実行し、GitHub Pages公開前の必須条件です。RとCmdStanを含む実行確認は、別のR・Stan定期CIで行います。
+`--public` は本編・中級編・上級編・補講・配布テンプレートの22本を実行し、GitHub Pages公開前の必須条件です。RとCmdStanを含む実行確認は、別のR・Stan定期CIで行います。
 
 ## P2研究の数値検証
 
@@ -22,14 +22,14 @@ julia --startup-file=no --project=validation/p2-likelihood scripts/run-numeric-c
 
 `--p2` は研究用の12本を実行します。`p2-research.yml` でローカルAPIのブラウザ検査とともに変更時・毎週実行し、Pages公開の成否とは分けます。静的P2プレビューの配布・通信・画面の検査は公開条件に残します。
 
-引数なしの `run-numeric-checks.jl` は従来どおり全32本を実行します。本編・多カテゴリ・P2のJulia環境とSciPyの準備が必要です。対象だけを見る場合は、環境準備前でも `julia --startup-file=no scripts/run-numeric-checks.jl --public --list`（研究用は `--p2 --list`）で確認できます。
+引数なしの `run-numeric-checks.jl` は従来どおり全34本を実行します。本編・多カテゴリ・P2のJulia環境とSciPyの準備が必要です。対象だけを見る場合は、環境準備前でも `julia --startup-file=no scripts/run-numeric-checks.jl --public --list`（研究用は `--p2 --list`）で確認できます。
 
 ## Notebookの検証範囲
 
-- `julia --project=validation scripts/run-notebook-smoke.jl`: NB1–NB6の未回答状態をPlutoで実行。変更時・毎週実行します。
+- `julia --project=validation scripts/run-notebook-smoke.jl`: NB1–NB8の未回答状態をPlutoで実行。変更時・毎週実行します。
 - `julia --project=validation scripts/nb-exec-check.jl NOTEBOOK ANSWERS`: ローカルの非公開模範解答を差し込み、全✅まで確認する完全検証。定期CIでは実行していません。
 - `julia --startup-file=no --project=validation scripts/nb5-grading-test.jl`: NB5課題6の判定セル・反復記録・集計を検査。200反復の実適合、評価回数上限による未収束、定数応答による例外、無効な推定値、全失敗時の分母、同じseedの再現も確認します。7条件の少数反復でCSV往復・再集計・欠測と空文字の区別・既存出力の保護も検査します。模範解答やPlutoの起動は不要ですが、MixedModelsやCSVなどのvalidation環境を使います。Plutoの定期CIでも実行し、ほかの課題の解答検査とは分けます。
-- `julia --startup-file=no --project=validation scripts/notebook-input-test.jl`: NB1–NB6の51判定セル（NB5課題6以外）と、NB3の表作成・NB4の予測／損失計算・NB5の確率採点を直接実行します。未回答、型違い、要素の欠測、表の列不足、NamedTuple・辞書のキー不足、CSV読込失敗、値やhashの不一致、異なるモデル・作図内容を検査します。配布済みのデータと公開の基準値を使い、非公開解答は読みません。Rのcommandを組み立てる検査はしますが、R・Stanの実行はしません。Plutoの定期CIで実行します。図の検査にも実際のPlotsを使うため、Notebookと同じStatsPlotsを検証用環境にも登録しています。上のNB5専用検査と合わせて全52判定を対象にします。
+- `julia --startup-file=no --project=validation scripts/notebook-input-test.jl`: NB1–NB8の59判定セル（NB5課題6以外）と、NB3の表作成・NB4の予測／損失計算・NB5の確率採点を直接実行します。未回答、型違い、要素の欠測、表の列不足、NamedTuple・辞書のキー不足、CSV読込失敗、値やhashの不一致、異なるモデル・作図内容を検査します。配布済みのデータと公開の基準値を使い、非公開解答は読みません。Rのcommandを組み立てる検査はしますが、R・Stanの実行はしません。Plutoの定期CIで実行します。図の検査にも実際のPlotsを使うため、Notebookと同じStatsPlotsを検証用環境にも登録しています。上のNB5専用検査と合わせて全60判定を対象にします。
 
 未回答状態の成功は、学習者の解答が正しく採点されることまで保証しません。模範解答は `docs/nb-answers/` にローカル管理され、Gitには含まれません。NB6は外部ソフトなしでも取り組める境界設計の演習で、RCall・JuliaCallの埋め込み実行やStanのコンパイルを定期検証するものではありません。P2研究Notebookは `pluto-smoke.yml` 内で別途実行します。
 

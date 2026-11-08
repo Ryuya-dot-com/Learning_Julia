@@ -15,9 +15,9 @@ export default {
     {
       t: "必須環境が多いので任意発展にする",
       b: [
-        "この演習にはJulia packageのStanSampleだけでなく、CmdStanとC++ toolchainが必要です。Stan.jlのstable文書では、StanSample v6はCmdStan 2.35.0以上を必要とします。環境構築に時間がかかるため、本編修了の条件にはしません。",
-        "CMDSTANまたはJULIA_CMDSTAN_HOMEへCmdStan directoryを設定してからStanSampleを読み込みます。使用するStanSampleとCmdStanの組合せは、実行時の公式文書で再確認します。",
-        "配布templateではStanSample 7.10.3とCmdStan 2.39.0を固定し、公式archiveのSHA-256照合、一時directoryでの安全な展開、project内build、4 chainのsampling、stansummaryとdiagnoseまでを二つのscriptで実行できます。macOS arm64とLinux arm64での新規導入に加え、GitHub ActionsのLinux x86_64とWindows x86_64でもCmdStanの新規buildからR／Stan成果物の生成・再利用まで確認済みです。",
+        "この演習にはJuliaパッケージの `StanSample` だけでなく、CmdStan本体とC++コンパイラ環境が必要です。`Stan.jl` の公式ドキュメントでは、`StanSample` v6以降はCmdStan 2.35.0以上を必要とします。環境構築に時間がかかるため、本編修了の条件にはしません。",
+        "`CMDSTAN` または `JULIA_CMDSTAN_HOME` へCmdStanフォルダを設定してから `StanSample` を読み込みます。使用する `StanSample` とCmdStanの組合せは、実行時の公式ドキュメントで再確認します。",
+        "配布テンプレートでは `StanSample 7.10.3` と `CmdStan 2.39.0` を固定し、公式アーカイブのSHA-256照合、一時フォルダでの安全な展開、プロジェクト内ビルド、4 chainのサンプリング、`stansummary` と `diagnose` までを二つのスクリプトで実行できます(macOS・Linux・Windowsの各環境で動作確認済みです)。",
       ],
       code: `pkg> activate path/to/stan-analysis
 pkg> add StanSample
@@ -59,6 +59,11 @@ stan_data = Dict(
 
 @assert stan_data["N"] == length(stan_data["y"])
 @assert all(in((0, 1)), stan_data["y"])`,
+      fig: {
+        src: "figures/stansample-cmdstan-diagnostics.svg",
+        alt: "StanSampleとCmdStan 2.39の実行パイプラインおよびBeta(4, 8)事後分布・収束診断の照合図",
+        cap: "左：入力契約検査から CmdStan 4-chain sampling、R̂・ESS・divergence 診断までを一組で記録する。右：Beta(1, 1) 事前と10試行中3成功に対する事後 Beta(4, 8)（理論平均 0.333）との検算。",
+      },
     },
     {
       t: "compileとsamplingを分けて読む",
@@ -121,6 +126,7 @@ analytic_rep_mean = N * analytic_theta_mean       # 4.5`,
   ex: [
     {
       k: "choice",
+      afterPage: "Stanは別の推定engineである",
       q: "StanSample.jlがsampling時に呼び出す外部engineはどれでしょう?",
       opts: ["CmdStan", "RCall", "DataFrames"],
       ans: 0,
@@ -129,6 +135,7 @@ analytic_rep_mean = N * analytic_theta_mean       # 4.5`,
     },
     {
       k: "fill",
+      afterPage: "成功終了と収束診断を分ける",
       q: "samplingの終了状態を確認する関数を答えましょう。",
       code: "〔?〕(rc) || error(\"Stan sampling failed\")",
       accept: ["success", "stansample.success"],
@@ -139,14 +146,16 @@ analytic_rep_mean = N * analytic_theta_mean       # 4.5`,
     },
     {
       k: "choice",
+      afterPage: "生のdraws CSVを保存する",
       q: "CmdStanの結果として優先して保存するものはどれでしょう?",
-      opts: ["chain別の生draws CSVと実行設定", "係数平均を写した画像だけ", "最後に表示した一行だけ"],
+      opts: ["chain別の生draws CSVと実行設定", "コンソール画面に表示された係数平均を写した画像ファイルだけ", "最後に表示した一行だけ"],
       ans: 0,
       why: "生drawsと設定があれば、要約や診断を再計算できます。最終表だけではchainの状態を再確認できません。",
       hint: "後からR̂やESSを再計算できるものを選びます。",
     },
     {
       k: "tf",
+      afterPage: "生のdraws CSVを保存する",
       q: "Stanの実行と診断について、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -169,16 +178,18 @@ analytic_rep_mean = N * analytic_theta_mean       # 4.5`,
     },
     {
       k: "choice",
+      afterPage: "Stanへ移す理由を記録する",
       q: "Juliaで足りる解析をStanへ移す判断として適切なのはどれでしょう?",
-      opts: ["必要な尤度・階層構造・診断など研究上の理由を記録する", "新しい道具なので必ず移す", "両方の結果が違っても速い方を採用する"],
+      opts: ["必要な尤度・階層構造・診断など研究上の理由を記録する", "新しい道具なので必ず移す", "両方の推定結果が大きく違っても計算が速い方の数値だけを採用する"],
       ans: 0,
       why: "外部engineを増やす費用に見合う研究上の必要性を示し、二実装がある場合は合成dataで差を検証します。",
       hint: "道具ではなく、推定したい対象と検証可能性から判断します。",
     },
     {
       k: "choice",
+      afterPage: "外部engineの失敗を途中結果で埋めない",
       q: "解析解のある小さなmodelをStanでも実行する主な利点はどれでしょう?",
-      opts: ["model・data受け渡し・draw読込の実装を検算できる", "R̂を確認しなくてよくなる", "実データの測定妥当性が保証される"],
+      opts: ["model・data受け渡し・draw読込の実装を検算できる", "R̂を確認しなくてよくなる", "回収した実データの心理尺度の構成概念妥当性まで自動的に保証される"],
       ans: 0,
       why: "既知の事後分布と照合すれば実装経路を検算できますが、sampling診断や研究設計の評価は別に必要です。",
       hint: "解析解が保証する範囲を考えます。",

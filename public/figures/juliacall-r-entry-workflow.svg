@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 292" width="760" height="292" role="img" aria-label="Rを解析の入口に保ったまま JuliaCall（julia_setup・julia_call）で高速関数だけを呼ぶ構成">
+  <title>Rを解析の入口に保ったまま JuliaCall（julia_setup・julia_call）で高速関数だけを呼ぶ構成</title>
+  <rect width="760" height="292" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="24" width="712" height="244" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="380" y="48" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Rスクリプトを全体の入口に保ち、計算ボトルネックの関数だけをJuliaへ委譲する</text>
+  <rect x="42" y="76" width="210" height="116" rx="8" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.8"/>
+  <text x="147" y="104" text-anchor="middle" fill="#4682B4" font-size="11.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① R Session 初期化</text>
+  <text x="147" y="132" text-anchor="middle" fill="#2A2733" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">julia_setup()</text>
+  <text x="147" y="160" text-anchor="middle" fill="#6E6879" font-size="9.6" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Pkg.activate(project_dir)</text>
+  <rect x="274" y="76" width="210" height="116" rx="8" fill="#FFFFFF" stroke="#6D3E86" stroke-width="1.8"/>
+  <text x="379" y="104" text-anchor="middle" fill="#6D3E86" font-size="11.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② Julia 関数読込</text>
+  <text x="379" y="132" text-anchor="middle" fill="#2A2733" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">include("src/analysis.jl")</text>
+  <text x="379" y="160" text-anchor="middle" fill="#6E6879" font-size="9.6" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">純粋な関数を公開</text>
+  <rect x="506" y="76" width="210" height="116" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="611" y="104" text-anchor="middle" fill="#2B7A1E" font-size="11.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">③ 呼び出しと検証</text>
+  <text x="611" y="132" text-anchor="middle" fill="#2A2733" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">julia_call("fn", x)</text>
+  <text x="611" y="160" text-anchor="middle" fill="#6E6879" font-size="9.6" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">初回JITと2回目以降を分離計測</text>
+  <text x="263" y="134" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">▶</text>
+  <text x="495" y="134" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">▶</text>
+  <text x="380" y="226" text-anchor="middle" fill="#2A2733" font-size="10.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">R→Julia→R の相互再帰は避け、一方向の呼び出しと単純な数値配列/NamedTupleの受け渡しに絞る</text>
+  <text x="380" y="248" text-anchor="middle" fill="#6E6879" font-size="9.6" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">julia_assign("project_dir", project_dir) でパスも値として安全に渡す</text>
+</svg>

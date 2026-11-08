@@ -47,8 +47,13 @@ for t in rt
 end
 println("外れ値: $(slow) 件")`,
       out: "外れ値: 2 件",
+      fig: {
+        src: "figures/first-rt-analysis-outliers.svg",
+        alt: "反応時間データの平均・標準偏差・最小最大と 1000 ms 閾値による外れ値試行の検出プロット",
+        cap: "左：5試行の反応時間の平均（519.6 ms）・標準偏差（±84.46 ms）・最小値・最大値。右：基準線 t > 1000 ms を超える外れ値試行（1250.0, 1600.3 ms の2件）のカウント。",
+      },
       a: [
-        "「くり返し」と同じく、この書き方はREPL(対話モード)用で、そのままファイルに保存して実行するとエラーになります。ファイルで動かす方法は、続編の環境構築レッスンで扱います。",
+        "「くり返し」と同じく、この書き方はREPL(対話モード)用で、そのままファイルに保存して実行するとエラーになります。ファイルで動かす方法は、次の「Juliaを手元に入れる」で扱います。",
       ],
     },
     {
@@ -65,23 +70,22 @@ println("外れ値: $(slow) 件")`,
       t: "ここから先の世界",
       b: [
         "おめでとうございます、Juliaの土台はこれで完成です!実際の研究では、次のようなパッケージが定番です。",
-        "`CSV.jl`(データファイルの読みこみ)、`DataFrames.jl`(表形式データの操作)、`Plots.jl`(グラフ描画)、`MixedModels.jl`(混合モデル)。",
+        "`CSV.jl`(データファイルの読みこみ)、`DataFrames.jl`(表形式データの操作)、`StatsPlots.jl` や `Makie.jl`(グラフ描画)、`MixedModels.jl`(混合モデル)。",
         "Julia本体のインストールは、公式サイト julialang.org から juliaup を使う方法がおすすめ。ノートブック環境の `Pluto.jl` は、この続きの学習にぴったりです。くわしい手順は次の「Juliaを手元に入れる」で案内します。",
       ],
     },
   ],
   ex: [
     {
-      k: "choice",
-      q: "配列の平均値を求める関数はどれでしょう?",
-      opts: [
-        "mean",
-        "average",
-        "middle",
-      ],
-      ans: 0,
+      k: "fill",
+      q: "反応時間の配列 `rt` の平均値を求めます。空欄〔?〕に入る関数名を入力しましょう。",
+      code: `using Statistics
+avg = 〔?〕(rt)`,
+      accept: ["mean"],
+      show: "mean",
       why: "`mean(rt)` で平均が求められます。標準偏差は `std(rt)` です。",
-      hint: "統計でも「平均」を表す英単語です。",
+      hint: "統計でも「平均」を表す4文字の英単語です。",
+      placeholder: "関数名",
     },
     {
       k: "choice",
@@ -104,7 +108,7 @@ println(mean(rt))`,
       opts: [
         "using Statistics",
         "open Statistics",
-        "import math",
+        "import Statistics.math",
       ],
       ans: 0,
       why: "標準ライブラリ Statistics を `using` で読みこむと、統計関数が使えるようになります。",

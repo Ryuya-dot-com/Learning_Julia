@@ -21,7 +21,7 @@ begin
             Plots.current(previous)
         end
         length(p.series_list) == length(reference.series_list) || return false
-        # ponytail: Plots 1.xの描画系列を照合。更新時は実際の図で再検査する。
+        # Plots 1.xの描画系列と軸設定を照合する
         all(isequal(a[k], b[k]) for (a, b) in zip(p.series_list, reference.series_list)
             for k in (:seriestype, :x, :y, :primary)) || return false
         all(isequal(p[1][axis][k], reference[1][axis][k]) for axis in (:xaxis, :yaxis)

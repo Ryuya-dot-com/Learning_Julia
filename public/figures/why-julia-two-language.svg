@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 305" width="760" height="305" role="img" aria-label="二言語問題の解消とJuliaが得意な計算領域">
+  <title>二言語問題の解消とJuliaが得意な計算領域</title>
+  <rect width="760" height="305" rx="10" fill="#FFFFFF"/>
+  <line x1="68.0" y1="207.6" x2="358.0" y2="207.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="60.0" y="211.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">遅い</text>
+  <line x1="68.0" y1="76.2" x2="358.0" y2="76.2" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="60.0" y="80.2" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">高速</text>
+  <line x1="126.0" y1="250.0" x2="126.0" y2="255.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="126.0" y="269.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">記述が長い・複雑</text>
+  <line x1="300.0" y1="250.0" x2="300.0" y2="255.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="300.0" y="269.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">数式に近く短い</text>
+  <rect x="68.0" y="38.0" width="290.0" height="212.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="213.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">「二言語問題」を1つの言語で解く</text>
+  <text x="213.0" y="290.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">コードの書きやすさ・試行錯誤のしやすさ</text>
+  <text x="24.0" y="144.0" text-anchor="middle" transform="rotate(-90 24.0 144.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">手書きループの実行速度</text>
+  <rect x="236.2" y="44.4" width="116.0" height="74.2" rx="10" fill="#F3ECF7" stroke="#9558B2" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <circle cx="134.7" cy="69.8" r="8.5" fill="#4682B4"/>
+  <text x="147.7" y="67.8" fill="#2A2733" font-size="11" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">C / C++ / Fortran</text>
+  <text x="147.7" y="82.8" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">高速だが型宣言・コンパイルが重厚</text>
+  <circle cx="300.0" cy="199.1" r="8.5" fill="#D97724"/>
+  <text x="212.0" y="183.1" fill="#2A2733" font-size="11" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">R・Python (手書きループ)</text>
+  <text x="198.0" y="197.1" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">直感的だが1試行ずつの反復は苦手</text>
+  <line x1="290.0" y1="191.1" x2="146.7" y2="85.8" stroke="#CB3C33" stroke-width="1.7" stroke-dasharray="5 3"/>
+  <text x="175.3" y="150.5" fill="#CB3C33" font-size="9.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">本番だけC++等で書き直し?</text>
+  <circle cx="305.8" cy="71.9" r="10.5" fill="#2B7A1E" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="287.8" y="56.9" fill="#2B7A1E" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Julia</text>
+  <text x="244.2" y="109.0" fill="#5A3B6E" font-size="9.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">短く書けて、そのまま機械語へ!</text>
+  <text x="567.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">場面でわかるJuliaの効きどころ</text>
+  <rect x="398.0" y="38.0" width="338.0" height="212.0" rx="10" fill="#FAF8F4" stroke="#8A8296" stroke-width="1.1"/>
+  <text x="412.0" y="62.0" fill="#2A2733" font-size="11.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">A. 既存の集計・行列計算を1回呼ぶとき</text>
+  <text x="412.0" y="79.0" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">（どの言語も裏側でC/BLASを呼ぶため速さはほぼ同等）</text>
+  <text x="412.0" y="100.0" fill="#2A2733" font-size="10.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">R / Python</text>
+  <rect x="486.0" y="89.0" width="34" height="14" rx="4" fill="#8A8296"/>
+  <text x="526.0" y="100.0" fill="#6E6879" font-size="10" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">~0.02 s</text>
+  <text x="412.0" y="120.0" fill="#2B7A1E" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Julia</text>
+  <rect x="486.0" y="109.0" width="30" height="14" rx="4" fill="#2B7A1E"/>
+  <text x="522.0" y="120.0" fill="#2B7A1E" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">~0.02 s (同等)</text>
+  <line x1="412.0" y1="136.0" x2="722.0" y2="136.0" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="412.0" y="158.0" fill="#2A2733" font-size="11.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">B. 独自のモデルを何万回も反復するとき</text>
+  <text x="412.0" y="175.0" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">（反応時間DDM・ブートストラップ・検出力計算・MCMC）</text>
+  <text x="412.0" y="198.0" fill="#CB3C33" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">純粋なループ</text>
+  <rect x="486.0" y="187.0" width="224" height="15" rx="4" fill="#CB3C33"/>
+  <text x="492.0" y="198.0" fill="#FFFFFF" font-size="9.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">数十秒〜数分（1ステップずつ型を解釈）</text>
+  <text x="412.0" y="222.0" fill="#2B7A1E" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Juliaループ</text>
+  <rect x="486.0" y="211.0" width="10" height="15" rx="3" fill="#2B7A1E"/>
+  <text x="502.0" y="222.0" fill="#2B7A1E" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">約0.1〜0.3秒！（書き直さず数十倍高速）</text>
+  <text x="412.0" y="241.0" fill="#6E6879" font-size="9.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">※ 初回実行時だけコンパイルに数秒かかります（2回目以降は一瞬）</text>
+</svg>

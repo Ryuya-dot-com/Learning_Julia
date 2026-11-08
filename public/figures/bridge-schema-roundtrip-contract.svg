@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296" width="760" height="296" role="img" aria-label="Julia・R・Stan間でデータを渡す前のスキーマ契約・SHA-256・往復検査（round trip）の設計">
+  <title>Julia・R・Stan間でデータを渡す前のスキーマ契約・SHA-256・往復検査（round trip）の設計</title>
+  <rect width="760" height="296" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="24" width="712" height="248" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="380" y="48" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">言語をつなぐ前に固定する「データ契約（Schema + Round Trip + SHA-256）」</text>
+  <rect x="44" y="76" width="192" height="118" rx="8" fill="#F3ECF7" stroke="#6D3E86" stroke-width="1.8"/>
+  <text x="140" y="104" text-anchor="middle" fill="#6D3E86" font-size="11.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① Julia 前処理・集計</text>
+  <text x="140" y="132" text-anchor="middle" fill="#2A2733" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">trials.csv / Arrow</text>
+  <text x="140" y="160" text-anchor="middle" fill="#6E6879" font-size="9.6" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">主キー・単位・欠損表現を確定</text>
+  <rect x="284" y="76" width="192" height="118" rx="8" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="380" y="104" text-anchor="middle" fill="#2B7A1E" font-size="11.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② schema.toml + SHA-256</text>
+  <text x="380" y="132" text-anchor="middle" fill="#2A2733" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">型・水準・許容範囲</text>
+  <text x="380" y="160" text-anchor="middle" fill="#6E6879" font-size="9.6" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">別プロセス読戻しでround trip検査</text>
+  <rect x="524" y="76" width="192" height="118" rx="8" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.8"/>
+  <text x="620" y="104" text-anchor="middle" fill="#4682B4" font-size="11.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">③ R / Stan 外部エンジン</text>
+  <text x="620" y="132" text-anchor="middle" fill="#2A2733" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">CFA・特殊検定・HMC</text>
+  <text x="620" y="160" text-anchor="middle" fill="#6E6879" font-size="9.6" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">最小結果＋診断＋版情報を戻す</text>
+  <text x="260" y="136" text-anchor="middle" fill="#2A2733" font-size="14" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">──▶</text>
+  <text x="500" y="136" text-anchor="middle" fill="#2A2733" font-size="14" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">──▶</text>
+  <text x="380" y="232" text-anchor="middle" fill="#2A2733" font-size="10.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Rのfactor水準や日付・NA表現を暗黙変換任せにせず、文字列＋水準リストで受け渡す</text>
+  <text x="380" y="254" text-anchor="middle" fill="#6E6879" font-size="9.6" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">names(restored) == names(trials) &amp;&amp; nrow(restored) == nrow(trials)</text>
+</svg>

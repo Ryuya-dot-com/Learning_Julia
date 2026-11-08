@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 304" width="760" height="304" role="img" aria-label="ポインタボックス配列とisbits不変struct連続メモリ配置の比較、およびExpr抽象構文木マクロのコンパイル時変換図">
+  <title>ポインタボックス配列とisbits不変struct連続メモリ配置の比較、およびExpr抽象構文木マクロのコンパイル時変換図</title>
+  <rect width="760" height="304" rx="10" fill="#FFFFFF"/>
+  <rect x="20" y="22" width="350" height="260" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="195" y="43" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">なぜ自作 struct の配列が C 言語並みに速いのか？</text>
+  <rect x="32" y="54" width="326" height="96" rx="8" fill="#FFFFFF" stroke="#CB3C33" stroke-width="1.5"/>
+  <text x="44" y="72" fill="#CB3C33" font-size="10.0" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✕ ポインタ参照配列 (Vector{Any} / 動的言語のクラス配列)</text>
+  <rect x="44" y="80" width="86" height="24" rx="4" fill="#FBEDEC" stroke="#CB3C33" stroke-width="1.2"/>
+  <text x="87" y="96" text-anchor="middle" fill="#CB3C33" font-size="9.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">ptr[1] → 0x..</text>
+  <rect x="52" y="114" width="76" height="26" rx="5" fill="#FFFFFF" stroke="#CB3C33" stroke-width="1.2" stroke-dasharray="3 2"/>
+  <text x="90" y="131" text-anchor="middle" fill="#2A2733" font-size="8.6" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">Heap Box 1</text>
+  <rect x="146" y="80" width="86" height="24" rx="4" fill="#FBEDEC" stroke="#CB3C33" stroke-width="1.2"/>
+  <text x="189" y="96" text-anchor="middle" fill="#CB3C33" font-size="9.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">ptr[2] → 0x..</text>
+  <rect x="154" y="114" width="76" height="26" rx="5" fill="#FFFFFF" stroke="#CB3C33" stroke-width="1.2" stroke-dasharray="3 2"/>
+  <text x="192" y="131" text-anchor="middle" fill="#2A2733" font-size="8.6" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">Heap Box 2</text>
+  <rect x="248" y="80" width="86" height="24" rx="4" fill="#FBEDEC" stroke="#CB3C33" stroke-width="1.2"/>
+  <text x="291" y="96" text-anchor="middle" fill="#CB3C33" font-size="9.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">ptr[3] → 0x..</text>
+  <rect x="256" y="114" width="76" height="26" rx="5" fill="#FFFFFF" stroke="#CB3C33" stroke-width="1.2" stroke-dasharray="3 2"/>
+  <text x="294" y="131" text-anchor="middle" fill="#2A2733" font-size="8.6" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">Heap Box 3</text>
+  <rect x="32" y="160" width="326" height="110" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="44" y="179" fill="#2B7A1E" font-size="10.0" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✓ Julia の isbits 不変 struct (Vector{Uncertain})</text>
+  <text x="44" y="196" fill="#2A2733" font-size="9.2" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">isbitstype(Uncertain) == true / 1要素16Bが隙間なく連続配置！</text>
+  <rect x="42" y="206" width="50" height="32" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.3"/>
+  <text x="67" y="226" text-anchor="middle" fill="#2A2733" font-size="8.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">v₁ (8B)</text>
+  <rect x="92" y="206" width="50" height="32" fill="#E8F4FA" stroke="#2B7A1E" stroke-width="1.3"/>
+  <text x="117" y="226" text-anchor="middle" fill="#2A2733" font-size="8.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">se₁ (8B)</text>
+  <rect x="142" y="206" width="50" height="32" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.3"/>
+  <text x="167" y="226" text-anchor="middle" fill="#2A2733" font-size="8.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">v₂ (8B)</text>
+  <rect x="192" y="206" width="50" height="32" fill="#E8F4FA" stroke="#2B7A1E" stroke-width="1.3"/>
+  <text x="217" y="226" text-anchor="middle" fill="#2A2733" font-size="8.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">se₂ (8B)</text>
+  <rect x="242" y="206" width="50" height="32" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.3"/>
+  <text x="267" y="226" text-anchor="middle" fill="#2A2733" font-size="8.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">v₃ (8B)</text>
+  <rect x="292" y="206" width="50" height="32" fill="#E8F4FA" stroke="#2B7A1E" stroke-width="1.3"/>
+  <text x="317" y="226" text-anchor="middle" fill="#2A2733" font-size="8.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">se₃ (8B)</text>
+  <text x="44" y="256" fill="#2B7A1E" font-size="9.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">ポインタ追跡ゼロ・キャッシュ直撃・ループ内ヒープ割当 0 B</text>
+  <rect x="386" y="22" width="354" height="260" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="563" y="43" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">コード自身がデータ構造 (Expr)：マクロの仕組み</text>
+  <rect x="402" y="56" width="322" height="56" rx="8" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.7"/>
+  <text x="414" y="78" fill="#4682B4" font-size="10.0" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① 人間が書く構文 (Surface Syntax)</text>
+  <text x="414" y="98" fill="#2A2733" font-size="9.2" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">@. y = a * x + b   または   @formula(rt ~ 1 + cond)</text>
+  <rect x="402" y="126" width="322" height="56" rx="8" fill="#FFFFFF" stroke="#6D3E86" stroke-width="1.7"/>
+  <text x="414" y="148" fill="#6D3E86" font-size="10.0" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② 構文木データ Expr としてマクロが受け取る</text>
+  <text x="414" y="168" fill="#2A2733" font-size="9.2" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">ex.head == :(=)  /  ex.args == [:y, :(a * x + b)]</text>
+  <rect x="402" y="196" width="322" height="56" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.7"/>
+  <text x="414" y="218" fill="#2B7A1E" font-size="10.0" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">③ コンパイル前に高速・安全なコードへ書き換え</text>
+  <text x="414" y="238" fill="#2A2733" font-size="9.2" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">Broadcast.materialize!(y, broadcasted(+, ...)) → 割当0B!</text>
+  <line x1="563" y1="112" x2="563" y2="126" stroke="#6D3E86" stroke-width="2.0"/>
+  <line x1="563" y1="182" x2="563" y2="196" stroke="#2B7A1E" stroke-width="2.0"/>
+  <text x="563" y="270" text-anchor="middle" fill="#6E6879" font-size="9.2" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">実行時オーバーヘッド0で DSL（@formula, @model, @.）を実現</text>
+</svg>

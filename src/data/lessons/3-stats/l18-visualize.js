@@ -24,6 +24,11 @@ df = CSV.read("rt_data.csv", DataFrame)
 histogram(df.rt, bins = 6, legend = false,
           xlabel = "RT (ms)", ylabel = "count")
 savefig("rt_hist.png")`,
+      fig: {
+        src: "figures/rt-hist.svg",
+        alt: "rt_data.csv の反応時間ヒストグラム。450〜650 msの50 ms刻み4区間で、度数は順に2、4、4、2。",
+        cap: "`rt_data.csv`（12試行）の実行結果イメージ。450〜650 msの4区間に分かれ、度数は順に2・4・4・2になります。",
+      },
       a: [
         "整数の`bins = 6`は区間数の目安です。境界が切りのよい値に調整されるため、このデータでは450〜650 msを50 ms刻みに分けた4区間になり、度数は順に2、4、4、2です。厳密に6区間にするなら境界を7個指定します。`savefig`で画像ファイルとして保存できます。",
         "反応時間のデータは、たいてい左に山があって右にゆるく裾を引くかたちになります。まれに極端に遅い試行があるからです。「記述統計の深掘り」で平均が外れ値に引っぱられたのは、この裾のせいでした。",
@@ -57,6 +62,11 @@ println(round.(quantile(incong, [0.25, 0.5, 0.75]), digits = 1))`,
       ],
       code: `@df df boxplot(:cond, :rt, legend = false, ylabel = "RT (ms)")
 savefig("rt_box.png")`,
+      fig: {
+        src: "figures/rt-box.svg",
+        alt: "条件別の反応時間の箱ひげ図。congの中央値は508.9 ms、incongの中央値は593.2 ms。",
+        cap: "条件別の箱ひげ図。前のページで求めた四分位数（`cong` は 500.0 / 508.9 / 519.4、`incong` は 575.0 / 593.2 / 600.5）がそのまま箱の上下と中央線に対応します。",
+      },
       a: [
         "`@df df` と先頭に置くと、そのあとの `:cond` や `:rt` が「df の列」として解釈されます。`df.cond` や `df.rt` と書く手間が省けます。",
         "`@` で始まるのでマクロです。「グループ集計と結合」の `@chain` と同じ仲間で、「コードを書きかえてから実行する命令」でした。",

@@ -6,15 +6,19 @@
 **教材はこちら → https://ryuya-dot-com.github.io/Learning_Julia/**
 
 - 基礎編から測定・混合モデル・研究計画まで、番号付き全37レッスンを公開中
-- エラー診断、文字列処理、分布選択・推定・予測診断、観測境界・依存・混合生成、複数CSV入出力、再現可能な研究、Gitなど、番号なし補講も公開中
-- RCall、JuliaCall、StanSampleを扱う番号なしのR・Stan連携トラック4本も公開中
-- データ操作から外部エンジン連携まで、実際に手を動かすPluto演習ノートブック6本を収録
+- エラー診断、文字列処理、分布選択・推定・予測診断、観測境界・依存・混合生成、複数CSV入出力、再現可能な研究、Git、日常開発の実用ツール（Revise・Test・BenchmarkTools・論文表自動出力）、プロットで見るJuliaの強みと適材適所、Juliaらしい設計技法（多重ディスパッチ・isbits構造体・ASTマクロ）など、番号なし補講12本も公開中
+- RCall、JuliaCall、StanSample、PythonCallを扱う番号なしのR・Stan・Python連携トラック5本も公開中
+- 型安定性・メモリ割当、並列モンテカルロ、自作対数尤度・プロファイル尤度、分割読込・省メモリ集計、順序・多項ロジット実装、カイ二乗分析の深化・対数線形モデル、予測機械学習（Lasso・決定木・リーク防止CV）、多次元・反復データの可視化設計（Makie・AlgebraOfGraphics）を扱う番号なしの中級編トラック8本も公開中
+- 微分方程式、確率過程（DDM）、状態空間カルマンフィルタ、MCMC／HMCの原理、階層順序モデル・離散選択、コレスポンデンス分析・多重コレスポンデンス分析（MCA）、潜在クラスタEM・逆伝播・科学機械学習（SciML）、事後予測・較正曲線・位相平面の診断可視化を扱う番号なしの上級編トラック8本も公開中
+- データ操作から高速化・動的モデル・外部エンジン連携まで、実際に手を動かすPluto演習ノートブック8本を収録
+- Juliaのメリットを対話プロットで体感できる「なぜJulia？」シミュレータ、R・Python → Julia 逆引き対訳辞典、目的別スターターレシピ（`.jl` 保存対応）、REPLプロンプト自動除去つき1クリックコピーをアプリ内に搭載
+- ホームとチートシートの両方から、関数名・マクロ・統計用語で全70レッスンと27枚の早見表を横断検索可能
 - 全体像とNow／Next／Later／保留の判断規準は [学習ロードマップ](https://ryuya-dot-com.github.io/Learning_Julia/roadmap.html) を参照
 - 進みぐあいはページを開いているあいだだけ記録されます(サーバには何も送信しません)
 
 ## レッスンの追加方法
 
-レッスン本文は1本につき1ファイルです。`src/data/lessons/<セクション>/` に本文を追加し、`src/data/lessons/catalog.js` に同じ `path`・`id`・`title`・`tag`・`exCount` を登録します。本文だけでは一覧に表示されず、同期検査も失敗します。
+レッスン本文は1本につき1ファイルです。`src/data/lessons/<セクション>/` に本文を追加し、`src/data/lessons/catalog.js` に同じ `path`・`id`・`title`・`tag`・`exCount` と、本文に実在する検索語 `kw`（5語以上）を登録します。本文だけでは一覧に表示されず、同期検査・検索語検査も失敗します。
 
 ```
 src/data/
@@ -45,7 +49,7 @@ npm run build && npm run preview  # 公開と同条件での確認(base パス�
 
 `main` に push すると GitHub Actions がテスト → ビルド → GitHub Pages への公開を自動で行います。
 
-公開条件はWeb検査、本編の数値検証20本、本編と静的P2プレビューのブラウザ検査です。P2研究の数値検証12本とローカルAPIの実行検査は、別の `.github/workflows/p2-research.yml` で変更時・毎週実行し、Pages公開の依存先にはしません。数値検証の対象・準備手順は [validation/README.md](validation/README.md) を参照してください。
+公開条件はWeb検査、本編の数値検証22本、本編と静的P2プレビューのブラウザ検査です。P2研究の数値検証12本とローカルAPIの実行検査は、別の `.github/workflows/p2-research.yml` で変更時・毎週実行し、Pages公開の依存先にはしません。数値検証の対象・準備手順は [validation/README.md](validation/README.md) を参照してください。
 
 ### キーボード操作・拡大表示の確認
 

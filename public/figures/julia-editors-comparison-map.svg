@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 292" width="760" height="292" role="img" aria-label="Juliaの4つの開発環境（REPL・Pluto.jl・VS Code・Jupyter/IJulia）の目的別使い分けマップ">
+  <title>Juliaの4つの開発環境（REPL・Pluto.jl・VS Code・Jupyter/IJulia）の目的別使い分けマップ</title>
+  <rect width="760" height="292" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="22" width="712" height="248" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="380" y="46" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">目的で選ぶJuliaの4つの道具（どれを選んでも動くJulia本体は同じ）</text>
+  <rect x="42" y="64" width="328" height="84" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="58" y="90" fill="#2B7A1E" font-size="12" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">REPL（対話画面）</text>
+  <text x="58" y="112" fill="#2A2733" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">すべての土台・パッケージ追加</text>
+  <text x="58" y="132" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">1行打つと即座に結果が返る電卓環境</text>
+  <rect x="390" y="64" width="328" height="84" rx="8" fill="#FFFFFF" stroke="#6D3E86" stroke-width="1.8"/>
+  <text x="406" y="90" fill="#6D3E86" font-size="12" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Pluto.jl（リアクティブ）</text>
+  <text x="406" y="112" fill="#2A2733" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">各STEPの演習ノートに最適</text>
+  <text x="406" y="132" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">環境情報が.jl内に埋まり再現性が高い</text>
+  <rect x="42" y="162" width="328" height="84" rx="8" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.8"/>
+  <text x="58" y="188" fill="#4682B4" font-size="12" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">VS Code + Julia拡張</text>
+  <text x="58" y="210" fill="#2A2733" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">RStudioに一番近い開発環境</text>
+  <text x="58" y="230" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">スクリプトから選択行をREPLへ送って実行</text>
+  <rect x="390" y="162" width="328" height="84" rx="8" fill="#FFFFFF" stroke="#D97724" stroke-width="1.8"/>
+  <text x="406" y="188" fill="#D97724" font-size="12" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Jupyter (IJulia.jl)</text>
+  <text x="406" y="210" fill="#2A2733" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Ju = Julia・Python・R</text>
+  <text x="406" y="230" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Pythonと共通の操作感でノートを共有</text>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 286" width="760" height="286" role="img" aria-label="Juliaの文字列連結（*）と変数埋め込み（$補間）・文字列関数の図解">
+  <title>Juliaの文字列連結（*）と変数埋め込み（$補間）・文字列関数の図解</title>
+  <rect width="760" height="286" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="24" width="336" height="238" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="192" y="48" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① 文字列をつなげる演算子は「*」</text>
+  <rect x="48" y="72" width="110" height="46" rx="8" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.8"/>
+  <text x="103" y="100" text-anchor="middle" fill="#4682B4" font-size="14" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">"心理"</text>
+  <text x="184" y="101" text-anchor="middle" fill="#6D3E86" font-size="18" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">*</text>
+  <rect x="210" y="72" width="110" height="46" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="265" y="100" text-anchor="middle" fill="#2B7A1E" font-size="14" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">"学"</text>
+  <rect x="72" y="142" width="240" height="48" rx="8" fill="#F3ECF7" stroke="#6D3E86" stroke-width="2.0"/>
+  <text x="192" y="171" text-anchor="middle" fill="#6D3E86" font-size="15" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">"心理学"</text>
+  <text x="192" y="218" text-anchor="middle" fill="#6E6879" font-size="10.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">length("Julia") → 5  /  uppercase("julia") → "JULIA"</text>
+  <text x="192" y="240" text-anchor="middle" fill="#CB3C33" font-size="10.0" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">注意：+ は数値の足し算用（文字列には * を使う）</text>
+  <rect x="382" y="24" width="354" height="238" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="559" y="48" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② 文字列補間 $(変数) で値を埋めこむ</text>
+  <rect x="408" y="68" width="138" height="44" rx="7" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="477" y="95" text-anchor="middle" fill="#4682B4" font-size="12" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">name = "佐藤"</text>
+  <rect x="572" y="68" width="138" height="44" rx="7" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.6"/>
+  <text x="641" y="95" text-anchor="middle" fill="#2B7A1E" font-size="12" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">score = 85</text>
+  <rect x="398" y="132" width="322" height="44" rx="7" fill="#FFFFFF" stroke="#8A8296" stroke-width="1.4"/>
+  <text x="559" y="159" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">"$(name)さんの得点は $(score) 点です"</text>
+  <rect x="398" y="194" width="322" height="48" rx="8" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="559" y="223" text-anchor="middle" fill="#2B7A1E" font-size="13.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">"佐藤さんの得点は 85 点です"</text>
+</svg>

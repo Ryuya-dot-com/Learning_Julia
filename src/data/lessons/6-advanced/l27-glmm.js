@@ -10,7 +10,7 @@ export default {
       b: [
         "`必須理解` は、独立な単位、within／between、交差／入れ子を見分け、研究デザインからランダム切片・傾きのformula候補を説明できることです。初回はモデルを適合できなくても構いません。",
         "`出力読解` では、固定効果、分散成分、特異適合、条件付き／周辺予測がどの母集団への推論かを読みます。係数表だけでなく、一般化単位と診断を言葉にできることを優先します。",
-        "`任意実装` は、`MixedModels.jl` によるLMM／GLMMの適合、モデル比較、bootstrap、grouped validationです。通常の検証環境にpackageが準備された後に実行し、この章の途中で環境を変更しません。",
+        "`任意実装` は、`MixedModels.jl` によるLMM／GLMMの適合、モデル比較、bootstrap、grouped validationです。あらかじめ手元のプロジェクト環境に必要なパッケージを準備してから実行し、この章の途中で環境を変更しません。",
       ],
     },
     {
@@ -109,6 +109,11 @@ println((naive = round(stderror(m_naive)[2], digits = 2),
       b: [
         "ランダム切片モデルは、速い人・遅い人を表しますが、条件効果が大きい人・小さい人を表せません。操作が参加者内で変化し、同じ参加者内に各水準の反復があるなら、デザインが許す条件傾きを検討します。",
       ],
+      fig: {
+        src: "figures/lmm-random-slopes-shrinkage.svg",
+        alt: "左パネルは個人ごとに切片も条件傾きも異なるランダム傾きモデルの直線群、右パネルは試行数の少ない参加者ほど母集団平均47.2msへ強く引き寄せられる部分プーリング（縮小推定）の比較図",
+        cap: "左：条件効果の個人差を0に固定すると固定効果SEが過小になりやすい。右：部分プーリングでは試行数が少なく不確かな水準ほど母集団平均へ縮む",
+      },
       code: `m_intercept = fit(MixedModel,
     @formula(rt ~ 1 + group + condition_centered + group & condition_centered +
                  (1 | subj) + (1 | item)), rt_df; progress = false)
@@ -330,7 +335,7 @@ println((singular = MixedModels.issingular(too_complex),
       t: "LMMとGLMMは応答分布で分ける",
       b: [
         "連続反応時間を正規残差で表すのがLMM、0/1反応をBernoulli分布とlogit linkで表すのがロジスティックGLMMです。ランダム効果を入れたからすべてGLMMなのではなく、応答分布が正規線形モデルを越えるかで『generalized』を区別します。",
-        "L31の `glm(..., Binomial(), LogitLink())` は固定効果だけのロジスティックGLMです。ここでは `(1 | subj) + (1 | item)` を加えるためGLMMです。固定効果の指数変換は、ランダム効果が同じ値という条件付きORであり、母集団平均確率や意思決定上のリスク差へ直接置き換えません。",
+        "「ロジスティック回帰」で学んだ `glm(..., Binomial(), LogitLink())` は固定効果だけのロジスティックGLMです。ここでは `(1 | subj) + (1 | item)` を加えるためGLMMです。固定効果の指数変換は、ランダム効果が同じ値という条件付きORであり、母集団平均確率や意思決定上のリスク差へ直接置き換えません。",
       ],
       code: `rng_binary = Xoshiro(3403)
 n_binary_subj, n_binary_item = 80, 16
@@ -365,7 +370,8 @@ println((log_odds = round(coef(m_binary)[2], digits = 2),
         "0/1反応でも、条件効果が参加者ごとに異なる設計ならランダム傾きを検討します。ランダム切片だけでは、参加者ごとの基準成功率は変えられても条件差は全員同じに固定されます。各参加者が両条件を経験して初めて、その傾き分散をデータが支えます。",
         "この例ではランダム切片だけの条件係数SEは0.099、ランダム傾きを入れると0.136です。条件差の個人差を0へ固定したモデルは確信過剰でした。平均条件効果の符号だけでなく、誰・どの項目を越えて一般化するかをランダム構造へ反映します。",
       ],
-      code: `rng_binary_slope = Xoshiro(3405)
+      code: `logistic_glmm(x) = inv(1 + exp(-x))
+rng_binary_slope = Xoshiro(3405)
 n_slope_subj, n_slope_item = 100, 20
 u0_slope = randn(rng_binary_slope, n_slope_subj) .* 0.7
 u1_slope = randn(rng_binary_slope, n_slope_subj)
@@ -565,7 +571,7 @@ println((
       b: [
         "Juliaにも便利な部品はありますが、RのsjPlotにあるtab_modelとplot_modelを一つで置き換える定番パッケージは、現状ありません。モデル表はcoeftable／RegressionTables.jl、固定効果に基づく予測・EM平均はEffects.jl、描画はCairoMakie.jl、ランダム効果の専門図はMixedModelsMakie.jl、という組合せが実務的です。",
         "最も堅い既定経路は、DataFrame(coeftable(model))で固定効果を表にし、VarCorr(model)でランダム効果と残差を別に確認することです。係数フォレスト図も、この係数表の推定値と区間をCairoMakieへ渡せば作れます。表の体裁より先に、固定効果・分散成分・条件付き予測のどれを示す図かを決めます。",
-        "この教材のMixedModels 5.8.0では、最新のRegressionTables 0.7.9と依存関係が衝突するため、共存できる0.5.10を検証用に固定しました。ただし0.5.10の混合モデル表はランダム効果を表示せず、既定の推定法・R²欄も誤解を招くため、固定効果の横並び比較だけに限定します。現行ドキュメントのrender=AsciiTable()ではなく、旧APIのrenderSettings=asciiOutput()を使う点にも注意します。",
+        "なお `MixedModels 5.8.0` を使う環境では、最新の `RegressionTables 0.7` 系と依存関係が衝突することがあり、共存できる `0.5.10` 系が入る場合があります。ただし `0.5.10` の混合モデル表はランダム効果を表示せず、既定の推定法・R²欄も誤解を招くため、固定効果の横並び比較だけに限定します。新しい版の `render=AsciiTable()` ではなく、0.5系の `renderSettings=asciiOutput()` を使う点にも注意します。",
       ],
       code: `using DataFrames, RegressionTables
 fixed_table = DataFrame(coeftable(m_slope))
@@ -583,8 +589,8 @@ println((fixed_rows = nrow(fixed_table),
                                               comparison_text)))`,
       out: `(fixed_rows = 4, has_condition = true, random_structure_in_table = false)`,
       a: [
-        "falseはバグを隠すための成功条件ではなく、互換版の限界を固定した監査結果です。論文表ではcomparison_textの上に『固定効果』と明記し、完全な式、VarCorr(m_slope)、ML／REML、singular判定を別欄へ併記します。",
-        "RegressionTablesの新旧APIを混ぜると、そのままでは動きません。Project.tomlとManifest.tomlを保存し、教材・論文・共同研究ごとに環境を分けます。将来compatが解消したら、最新APIとランダム効果欄を再検証して更新します。",
+        "`random_structure_in_table = false` は、`RegressionTables 0.5` 系の出力表にランダム効果構造が含まれないという仕様上の制約を示しています。論文表では `comparison_text` の上に『固定効果』と明記し、完全な式、`VarCorr(m_slope)`、ML／REML、singular判定を別欄へ併記します。",
+        "`RegressionTables` の0.5系と0.7系のようにメジャー更新前後のAPIを混ぜると、そのままでは動きません。`Project.toml` と `Manifest.toml` を保存し、論文・共同研究ごとに環境を分けておけば、将来のパッケージ更新で出力形式が変わっても再現できます。",
       ],
     },
     {
@@ -663,11 +669,12 @@ fig`,
   ex: [
     {
       k: "choice",
+      afterPage: "擬似反復は特にbetween効果を壊す",
       q: "60人が各24試行を行う研究で、参加者ごとに一つだけ割り当てたgroupの効果を推定します。通常の回帰で1440行を独立とみなす主な問題はどれですか？",
       opts: [
         "group効果を支える独立単位を1440個のように数える擬似反復になる",
-        "group変数が自動的に連続変数へ変わる",
-        "条件効果が必ず0になる",
+        "0と1で符号化したgroup変数が回帰の内部で自動的に連続正規乱数へ書き換わってしまう",
+        "参加者内のcondition主効果の点推定値そのものが数学的に必ず0へ強制されてしまう",
       ],
       ans: 0,
       why: "groupは参加者間でしか変化しません。同じ参加者の24行は独立な24人ではなく、参加者クラスタをモデル化する必要があります。",
@@ -675,6 +682,7 @@ fig`,
     },
     {
       k: "fill",
+      afterPage: "ランダム切片だけでは条件差の個人差を表せない",
       q: "参加者ごとに切片とcondition傾きが変わる項を入力しましょう。",
       code: `@formula(rt ~ 1 + condition + 〔?〕)`,
       accept: ["(1+condition|subj)", "(1 + condition | subj)"],
@@ -685,11 +693,12 @@ fig`,
     },
     {
       k: "choice",
+      afterPage: "参加者と項目は交差する",
       q: "全参加者が複数の共通項目へ回答したとき、参加者と項目の構造を表す式はどれですか？",
       opts: [
         "(1 | subj) + (1 | item)",
-        "(1 | subj)だけ",
-        "(1 | item)だけ",
+        "(1 | subj)だけを置き項目差は無視する",
+        "(1 | item)だけを置き参加者差は無視する",
       ],
       ans: 0,
       why: "参加者と項目は互いに交差し、両方が抽出・一般化の単位です。",
@@ -697,6 +706,7 @@ fig`,
     },
     {
       k: "tf",
+      afterPage: "特異適合はデータとモデルの境界信号",
       q: "混合効果モデルについて、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -719,18 +729,20 @@ fig`,
     },
     {
       k: "choice",
+      afterPage: "効果図は予測値と区間から明示的に作る",
       q: "0／1で数値符号化したgroupを持つ混合モデルから、sjPlot風の表と両群の効果図を再現可能に作る手順はどれですか？",
       opts: [
         "完全な式・VarCorrを保存し、Effectsの参照グリッドへgroup=[0, 1]を明示する",
-        "RegressionTables 0.5.10の既定表だけ保存し、Effectsではgroupの値を指定しない",
-        "ランダム効果を固定効果へ変換し、観測行を独立として通常回帰する",
+        "RegressionTables 0.5.10の既定表だけ保存し、Effectsではgroupの値を指定せず既定平均に任せる",
+        "ランダム効果をすべて固定効果ダミーへ展開し、観測行を互いに独立とみなして通常の単回帰を当てる",
       ],
       ans: 0,
-      why: "互換版の固定効果表にはランダム構造が出ず、数値groupは典型値へ固定されうるため、モデル構造の別保存と明示的な参照グリッドが必要です。",
+      why: "`RegressionTables 0.5` 系の固定効果表にはランダム構造が出ず、数値groupは典型値へ固定されうるため、モデル構造の別保存と明示的な参照グリッドが必要です。",
       hint: "表が省略する情報と、予測時に固定される値を別々に考えます。",
     },
     {
       k: "fill",
+      afterPage: "混合モデルの監査可能な実務フロー",
       q: "【発展】患者は一つのclinicに属し、baselineから毎月追跡されます。treatmentは患者ごとに一度だけ割付。clinicごとの基準差と、患者ごとの基準値・時間傾きを表すランダム効果項を入力してください。patient IDは全clinicで一意です。",
       code: `@formula(outcome ~ 1 + time_since_baseline + treatment +
     time_since_baseline & treatment + 〔?〕)`,
@@ -747,11 +759,12 @@ fig`,
     },
     {
       k: "choice",
+      afterPage: "混合モデルの監査可能な実務フロー",
       q: "【発展】12校で学校単位のprogramを割り付け、各校のclassに属する生徒を6時点追跡します。school_classは全体で一意です。学校・classの基準差と、生徒ごとの時間傾きを表す式はどれですか？",
       opts: [
         "score ~ 1 + time + program + time & program + (1 | school) + (1 | school_class) + (1 + time | student)",
-        "score ~ 1 + time + program + time & program + (1 + program | student)",
-        "score ~ 1 + time + program + time & program + (1 + time | school)だけ",
+        "score ~ 1 + time + program + time & program + (1 + program | student) + (1 + program | school_class) だけ",
+        "score ~ 1 + time + program + time & program + (1 + time | school) だけを置き学級・生徒クラスタはすべて省く",
       ],
       ans: 0,
       why: "programは学校間、timeは生徒内です。指定された一般化範囲にはschool・classの切片とstudentの切片・time傾きが必要です。ただしprogram効果の独立な支持単位は主に12校なので、小標本推論には追加注意が要ります。",
@@ -759,11 +772,12 @@ fig`,
     },
     {
       k: "choice",
+      afterPage: "混合モデルの監査可能な実務フロー",
       q: "【発展】毎日promptを参加者内で再割付し、共通itemへの0／1反応を測ります。prompt効果の個人差とitem差へ一般化する最小のランダム構造はどれですか？",
       opts: [
         "(1 + prompt | subj) + (1 | item)",
-        "(1 | subj) + (1 + prompt | item)だけ",
-        "(1 + subj | prompt) + (1 | item)",
+        "(1 | subj) + (1 + prompt | item)だけを置き参加者差を固定する",
+        "(1 + subj | prompt) + (1 | item)のように割付と単位を逆転させる",
       ],
       ans: 0,
       why: "promptが各参加者内で変化するので参加者別prompt傾きを置けます。共通itemは交差した抽出単位なのでitem切片も必要です。item別prompt差も一般化対象なら、設計が支える範囲でitem傾きを追加検討します。",
@@ -771,6 +785,7 @@ fig`,
     },
     {
       k: "tf",
+      afterPage: "混合モデルの監査可能な実務フロー",
       q: "【発展】パネルデータの式設計について、それぞれ正しいか判定しましょう。",
       items: [
         {

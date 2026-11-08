@@ -61,8 +61,13 @@ println(slow)`,
 ─────┼────────────────────────────────────
    1 │ P01      incong     601.3    false
    2 │ P02      incong     624.9     true`,
+      fig: {
+        src: "figures/dataframe-select-subset.svg",
+        alt: "DataFrameにおける列の選択（select）と条件による行の絞り込み（df[df.rt .> 600, :]）の対比図",
+        cap: "左：select(df, :id, :rt) はコロン付きの列名（シンボル）で縦方向の列を選ぶ。右：df[df.rt .> 600, :]（または subset）は条件に合う横方向の行を絞りこむ。",
+      },
       a: [
-        "読み方は「df のうち、rt が600をこえる行の、すべての列(`:`)」。`df.rt .> 600` が各行の true/false を作り、true の行だけが残ります。同じことは `subset(df, :rt => ByRow(>(600)))` というDataFrames流の書き方でもできます。",
+        "読み方は「df のうち、rt が600をこえる行の、すべての列(`:`)」。`df.rt .> 600` が各行の true/false を作り、true の行だけが残ります。同じことは `subset(df, :rt => ByRow(>(600)))`(「rt列を1行ずつ見て600より大きい行を残す」というDataFrames流の書き方)でも書けます。",
       ],
     },
   ],

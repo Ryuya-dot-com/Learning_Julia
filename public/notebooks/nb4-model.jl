@@ -28,7 +28,7 @@ begin
         finally
             Plots.current(previous)
         end
-        # ponytail: Plots 1.xの描画系列を照合。元の乱数列そのものは図から復元しない。
+        # Plots 1.xの描画系列と軸設定を照合する
         return all(isequal(a[k], b[k]) for (a, b) in zip(p.series_list, reference.series_list)
                    for k in (:seriestype, :x, :y, :primary)) &&
                all(isequal(p[1][axis][k], reference[1][axis][k]) for axis in (:xaxis, :yaxis)

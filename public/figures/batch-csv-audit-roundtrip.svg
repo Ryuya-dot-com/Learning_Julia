@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296" width="760" height="296" role="img" aria-label="複数CSVの列挙・source列つき厳密読込・主キー重複検査・役割別成果物出力とround trip検証">
+  <title>複数CSVの列挙・source列つき厳密読込・主キー重複検査・役割別成果物出力とround trip検証</title>
+  <rect width="760" height="296" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="22" width="712" height="252" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="380" y="46" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">一括入出力の6段階パイプライン：途中で契約違反があれば集計前に停止する</text>
+  <rect x="42" y="68" width="200" height="76" rx="8" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.8"/>
+  <text x="142" y="98" text-anchor="middle" fill="#4682B4" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">① readdir(sort=true)</text>
+  <text x="142" y="122" text-anchor="middle" fill="#2A2733" font-size="10.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0件停止・.csvのみ列挙</text>
+  <rect x="280" y="68" width="200" height="76" rx="8" fill="#FFFFFF" stroke="#6D3E86" stroke-width="1.8"/>
+  <text x="380" y="98" text-anchor="middle" fill="#6D3E86" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">② types + strict=true</text>
+  <text x="380" y="122" text-anchor="middle" fill="#2A2733" font-size="10.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">型推測に頼らず入口検査</text>
+  <rect x="518" y="68" width="200" height="76" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="618" y="98" text-anchor="middle" fill="#2B7A1E" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">③ source=:source_file</text>
+  <text x="618" y="122" text-anchor="middle" fill="#2A2733" font-size="10.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">cols=:setequal で連結</text>
+  <rect x="42" y="166" width="200" height="76" rx="8" fill="#FFFFFF" stroke="#D97724" stroke-width="1.8"/>
+  <text x="142" y="196" text-anchor="middle" fill="#D97724" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">④ 主キー・範囲監査</text>
+  <text x="142" y="220" text-anchor="middle" fill="#2A2733" font-size="10.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">allunique(id, trial) 検査</text>
+  <rect x="280" y="166" width="200" height="76" rx="8" fill="#FFFFFF" stroke="#6D3E86" stroke-width="1.8"/>
+  <text x="380" y="196" text-anchor="middle" fill="#6D3E86" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">⑤ 役割別テーブル出力</text>
+  <text x="380" y="220" text-anchor="middle" fill="#2A2733" font-size="10.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">要約・係数・除外記録を分離</text>
+  <rect x="518" y="166" width="200" height="76" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="618" y="196" text-anchor="middle" fill="#2B7A1E" font-size="11.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">⑥ 別プロセスRound Trip</text>
+  <text x="618" y="220" text-anchor="middle" fill="#2A2733" font-size="10.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">上書き拒否＋読戻し一致確認</text>
+</svg>

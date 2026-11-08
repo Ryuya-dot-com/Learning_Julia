@@ -31,11 +31,16 @@ println(msg)`,
 score = 85
 println("$(name)さんの得点は $(score) 点です")`,
       out: "佐藤さんの得点は 85 点です",
+      fig: {
+        src: "figures/strings-concat-interpolation.svg",
+        alt: "Juliaの文字列連結（*）と変数埋め込み（$補間）・文字列関数の図解",
+        cap: "左：文字列どうしをつなぐ演算子は + ではなく *。右：$(変数名) を使うと文字列の中に変数の値が展開される。",
+      },
     },
     {
       t: "便利な文字列関数",
       b: [
-        "文字数を数える `length` など、便利な関数がそろっています。",
+        "文字数を数える `length` や、英字を大文字に変える `uppercase` など、便利な関数がそろっています。",
       ],
       code: `println(length("Julia"))
 println(uppercase("julia"))`,
