@@ -10,14 +10,14 @@ export default {
       t: "再現性は、同じ数字が出たことだけではない",
       b: [
         "再現可能な分析とは、第三者が『どの入力を、どの環境とコードで、どの検査を通して、どの成果物へ変えたか』を追跡できる分析です。同じp値を手で再入力した資料は、計算結果が同じでも再現可能なworkflowではありません。",
-        "この補講では、データ保存回で分けたraw・derived・code・output・metadataを一本の実行経路へ結びます。新しいpackageは増やさず、Julia標準機能とCSV.jl・DataFrames.jlで小さな研究projectを組み立てます。",
+        "この補講では、「データの整形・保存・再利用」で分けたraw・derived・code・output・metadataを一本の実行経路へ結びます。新しいパッケージは増やさず、Julia標準機能と `CSV.jl`・`DataFrames.jl` で小さな研究プロジェクトを組み立てます。",
         "目標は『自分のPCでもう一度動いた』より厳しく、別の作業directory、新しいJulia process、既知のenvironmentから再実行しても、入力と成果物の対応を監査できる状態です。",
       ],
     },
     {
       t: "一つの研究に、一つのenvironmentを置く",
       b: [
-        "`Project.toml`は直接依存packageとcompatなど、projectの意図を記述します。`Manifest.toml`は直接・間接依存を含む解決済みの状態です。研究分析はapplicationとして両方をversion管理し、ManifestはPkgに生成・更新させて手編集しません。",
+        "`Project.toml` は直接使うパッケージやバージョン条件(compat)など、プロジェクトの意図を記述します。`Manifest.toml` は直接・間接依存を含む解決済みの完全な一覧です。研究分析では実行環境そのものを固定するため両方をバージョン管理し、`Manifest.toml` は `Pkg` に生成・更新させて手編集しません。",
         "共同研究者はproject rootでenvironmentをinstantiateしてから分析を実行します。`activate`だけでは未導入packageを取得しないため、初回準備と通常実行を区別します。package更新は分析途中に無意識に行わず、別branchで数値検証後に反映します。",
       ],
       code: `# 初回準備: Julia REPLのpackage mode
@@ -50,6 +50,11 @@ julia --project=. code/run_analysis.jl`,
 └─ output/
    ├─ tables/
    └─ figures/`,
+      fig: {
+        src: "figures/reproducible-project-provenance.svg",
+        alt: "再現可能な研究プロジェクトのディレクトリ構造（raw不変・schema契約・run metadata・clean run）の図解",
+        cap: "data/raw/ を読み取り専用に保ち、code/run_analysis.jl を単一入口として schema.toml 検査・成果物出力・metadata/runs/ の来歴記録を一本につなぐ。",
+      },
       a: [
         "大容量・機微データをGitへ入れるという意味ではありません。version管理する対象と、安全な保管場所・access権・取得手順を分けます。rawを置けない場合は、取得元、version、checksum、access条件をmetadataへ残します。",
       ],
@@ -57,7 +62,7 @@ julia --project=. code/run_analysis.jl`,
     {
       t: "pwdではなく、scriptの場所からpathを作る",
       b: [
-        "`CSV.read(\"data/example/trials_synthetic.csv\", ...)`は、Juliaを起動した作業directoryが変わると別の場所を探します。`@__DIR__`はscript fileのdirectoryを基準にできるので、入口scriptが`code/`にあるなら一つ上をproject rootとして固定できます。",
+        "`CSV.read(\"data/raw/trials.csv\", ...)` のような相対パスは、Juliaを起動した作業フォルダが変わると別の場所を探します。`@__DIR__` はスクリプトファイル自身のフォルダを基準にできるので、入口スクリプトが `code/` にあるなら一つ上をプロジェクトルートとして固定できます。",
       ],
       code: `const PROJECT_ROOT = realpath(normpath(joinpath(@__DIR__, "..")))
 
@@ -157,7 +162,7 @@ println((participant_id = string(eltype(data.participant_id)),
     true
 end
 
-println((rows = 6, valid = validate_trials(data)))`,
+println((rows = nrow(data), valid = validate_trials(data)))`,
       out: `(rows = 6, valid = true)`,
       a: [
         "実務では、この前に必須列と列順、schema指定後の型も検査します。検査に合格したことは、参加者除外や測定定義が妥当だという証明ではありません。構造検査と科学的判断を混同しません。",
@@ -185,7 +190,7 @@ end`,
       t: "run IDを内容から作り、同名異内容を拒否する",
       b: [
         "`final.csv`、`final2.csv`、`final_revised.csv`では、どの入力と環境からできたか分かりません。raw、schema、dictionary、Project、Manifest、分析codeのSHA-256を組み合わせ、短いfingerprintをrun IDにします。同じ材料なら同じID、どれかが変われば別IDになります。",
-        "同じrun IDの成果物がすでにありbytesも同じなら再利用できます。内容が違うなら上書きせず停止します。これにより、同じ名前が二つの意味を持つ事故を隠しません。次は検証用projectで実行した完全なpath集合です。",
+        "同じrun IDの成果物がすでにありバイト列も同じなら再利用できます。内容が違うなら上書きせず停止します。これにより、同じ名前が二つの意味を持つ事故を隠しません。次は6つの構成ファイルのSHA-256からrun IDを作る例です。",
       ],
       code: `using SHA
 
@@ -279,18 +284,19 @@ julia --project=. code/run_stan_bridge.jl`,
       },
       a: [
         "展開機能つきfile managerを使っても構いません。公開合成例を実データで上書きせず、READMEに従って`data/raw/`へ別fileとして置きます。schema、dictionary、study.toml、primary key、欠測・除外規則、privacy方針も研究固有の定義へ変更してください。",
-        "配布archiveも最終成果物ではなくsource templateから再生成できる派生物です。CIはarchiveを一時directoryへ展開し、sourceとのchecksum一致、新しいJulia processでの2回実行、未知水準での停止を検査します。Stanの実走検査はtoolchainと時間を要するため、通常検査から分けて明示的に有効化します。",
+        "自分の研究データを配布・保管するときも、展開先の別フォルダで新しいJuliaプロセスから2回実行し、1回目に成果物が生成され、2回目に同じ内容が再利用され、未知の水準を入れたときに正しく停止することを確かめましょう。Stan連携スクリプトを試す場合はC++コンパイラとビルド時間が必要なため、通常のJulia分析とは分けて実行します。",
       ],
     },
   ],
   ex: [
     {
       k: "choice",
+      afterPage: "一つの研究に、一つのenvironmentを置く",
       q: "研究projectのProject.tomlとManifest.tomlの説明として最も適切なのはどれですか？",
       opts: [
         "Projectは直接依存とcompatなどを表し、Manifestは解決済みの直接・間接依存を記録する",
-        "Projectはraw dataを、Manifestは分析結果を保存する",
-        "Manifestだけを手編集し、Projectは毎回削除する",
+        "Projectは生の参加者実験データを格納し、Manifestは推定後の回帰係数とp値の表だけを保存する",
+        "Manifestだけを毎回テキストエディタで手編集して管理し、Projectは不要なので実行ごとに削除する",
       ],
       ans: 0,
       why: "両方をversion管理し、ManifestはPkgに生成・更新させます。environment固定とdata保存は別の層です。",
@@ -298,6 +304,7 @@ julia --project=. code/run_stan_bridge.jl`,
     },
     {
       k: "fill",
+      afterPage: "pwdではなく、scriptの場所からpathを作る",
       q: "code/run_analysis.jlの場所を基準にproject rootを作ります。空欄へ入るmacroを入力してください。",
       code: `const PROJECT_ROOT = normpath(joinpath(〔?〕, ".."))`,
       accept: ["@__dir__", "@__dir__()"],
@@ -308,18 +315,33 @@ julia --project=. code/run_stan_bridge.jl`,
     },
     {
       k: "choice",
+      afterPage: "schemaを機械可読な契約として保存する",
       q: "rt_ms列が何を測り、単位がmsであることと、100〜3000の範囲だけを許すことを残したい場合、最もよい構成はどれですか？",
       opts: [
         "意味と単位をdata dictionaryへ、機械検査する型と範囲をschemaへ置く",
-        "どちらもCSVの型推測だけに任せる",
-        "Manifest.tomlへ参加者ごとのrt_msを書く",
+        "意味も単位も許容範囲も書かず、実行時のCSV.readによる自動型推測だけにすべて任せる",
+        "Manifest.tomlの末尾へ参加者ごとのrt_msの実測値と単位メモを直接書き足して管理する",
       ],
       ans: 0,
       why: "dictionaryは人の解釈、schemaは機械的な受理・拒否を担当し、互いを補完します。",
       hint: "科学的意味と構造的制約は、同じ問いではありません。",
     },
     {
+      k: "choice",
+      afterPage: "run IDを内容から作り、同名異内容を拒否する",
+      q: "同じrun IDのCSVがすでに存在しますが、再計算した内容は異なっていました。最も安全な処理はどれですか？",
+      opts: [
+        "上書きせず停止し、fingerprintの材料と非決定性を調査する",
+        "既存の同名CSVを警告なしで黙って上書きし、古い実行記録もそのまま放置する",
+        "原因を調べずにファイル名だけをfinal_revised2.csvへ手作業で変えて保存する",
+      ],
+      ans: 0,
+      why: "同じIDが異なる内容を指す状態はprovenanceの破綻です。原因を解決してから別IDまたは同一bytesとして保存します。",
+      hint: "run IDは入力・schema・環境・codeの同一性を表す契約です。",
+    },
+    {
       k: "tf",
+      afterPage: "環境固定は必要だが、研究の正しさを保証しない",
       q: "再現可能性について、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -342,23 +364,12 @@ julia --project=. code/run_stan_bridge.jl`,
     },
     {
       k: "choice",
-      q: "同じrun IDのCSVがすでに存在しますが、再計算した内容は異なっていました。最も安全な処理はどれですか？",
-      opts: [
-        "上書きせず停止し、fingerprintの材料と非決定性を調査する",
-        "古いCSVを黙って上書きする",
-        "final_revised2.csvへ名前だけ変えて保存する",
-      ],
-      ans: 0,
-      why: "同じIDが異なる内容を指す状態はprovenanceの破綻です。原因を解決してから別IDまたは同一bytesとして保存します。",
-      hint: "run IDは入力・schema・環境・codeの同一性を表す契約です。",
-    },
-    {
-      k: "choice",
+      afterPage: "実行可能templateを展開し、clean runする",
       q: "共同研究者が分析を再実行する手順として最も監査しやすいのはどれですか？",
       opts: [
         "projectを取得→environmentをinstantiate→新processで入口script→schema・checksum・主要結果を検査",
-        "著者のREPL historyを推測→見た目が似るまでセルを任意順に実行",
-        "保存済みp値だけを新しい文書へ転記",
+        "著者の手元REPL履歴を口頭で推測し、出力の見た目が似るまでノートブックのセルを順不同に何度も手動実行する",
+        "コードや生データの検証はすべて省き、以前に保存されたp値の文字列だけを新しい原稿ファイルへ手作業で転記する",
       ],
       ans: 0,
       why: "環境、実行順、入力、成果物を一つの検査可能な経路として再現します。",

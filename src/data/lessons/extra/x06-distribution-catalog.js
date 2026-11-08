@@ -9,10 +9,15 @@ export default {
     {
       t: "分布名の暗記ではなく、候補を絞る地図を作る",
       b: [
-        "確率分布編ではBernoulli、Binomial、Poisson、Normal、LogNormalを使いました。この補講では、研究でよく出会う分布を『取りうる値』『データの生まれ方』『平均と分散の関係』で比較します。",
+        "「確率変数と確率分布」ではBernoulli、Binomial、Poisson、Normal、LogNormalを使いました。この補講では、研究でよく出会う分布を『取りうる値』『データの生まれ方』『平均と分散の関係』で比較します。",
         "最初の問いは離散か連続か、値の範囲は何かです。次に、1回の結果か、決まった回数の合計か、一定区間の発生数か、正の量か、0から1の割合かを考えます。最後に仮定がdataと目的に十分かを予測で確認します。",
         "分布は観測されたhistogramへ名前を貼る分類器ではなく、未知のdataを生成するmodelです。同じ形に見えても生成過程が違えば、外挿や不確かさは変わります。",
       ],
+      fig: {
+        src: "figures/distribution-catalog-sixpack.svg",
+        alt: "Binomial、Poisson対NegativeBinomial、Normal対TDist、LogNormal、Gamma、Betaの6大分布一覧図",
+        cap: "図: 取りうる値の範囲（support）と生成過程で整理した主要6分布群。見た目の形だけでなく、境界の有無や平均・分散関係から候補を絞る。",
+      },
     },
     {
       t: "0／1と成功数: Bernoulli・Binomial",
@@ -148,6 +153,7 @@ true`,
   ex: [
     {
       k: "choice",
+      afterPage: "0／1と成功数: Bernoulli・Binomial",
       q: "20問中の正答数を表す出発点として最も自然な分布はどれですか？",
       opts: ["Binomial", "Beta", "Normal"],
       ans: 0,
@@ -156,6 +162,7 @@ true`,
     },
     {
       k: "fill",
+      afterPage: "0／1と成功数: Bernoulli・Binomial",
       q: "分布dが値xを取りうるか確認する関数名を入力してください。",
       code: `possible = 〔?〕(d, x)`,
       accept: ["insupport"],
@@ -165,7 +172,21 @@ true`,
       placeholder: "関数名",
     },
     {
+      k: "choice",
+      afterPage: "正の連続値: LogNormal・Gamma・Exponential",
+      q: "上限のない非負の発生回数で、標本分散が標本平均より大きく過分散（overdispersion）が疑われるとき、Poisson分布と比較する第一候補はどれですか？",
+      opts: [
+        "NegativeBinomial（負の二項分布）",
+        "Bernoulli（ベルヌーイ分布：0か1の1試行のみ）",
+        "Beta（ベータ分布：0から1の連続した割合のみ）",
+      ],
+      ans: 0,
+      why: "Poissonは平均と分散が等しい（λ）制約を持ちますが、NegativeBinomialは分散が平均より大きいカウントデータを表現できます。",
+      hint: "0以上の整数を取り、Poissonより右裾と分散の広がりを許す離散分布を選びます。",
+    },
+    {
       k: "tf",
+      afterPage: "0から1の連続値: Beta",
       q: "分布選択について、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -188,11 +209,12 @@ true`,
     },
     {
       k: "choice",
+      afterPage: "選択後は、生成した予測と反例をdataへ戻す",
       q: "候補分布を選んだ後の確認として最も適切なのはどれですか？",
       opts: [
         "観測と同じ設計でreplicate dataを生成し、重要な分位点や0の割合を比較する",
         "分布名が有名ならdataとの比較を省略する",
-        "histogramの見た目だけでparameterizationも決める",
+        "観測histogramの見た目だけでparameterizationも無検証に決めてしまう",
       ],
       ans: 0,
       why: "分布が研究上重要な特徴をどのように予測するか、観測dataへ戻して確認します。",

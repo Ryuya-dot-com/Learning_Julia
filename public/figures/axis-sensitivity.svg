@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 295" width="660" height="295" role="img" aria-label="同じ推定値と95%信頼区間を全範囲（0〜650 ms）と拡大表示（450〜600 ms）で並べた比較図">
+  <title>同じ推定値と95%信頼区間を全範囲（0〜650 ms）と拡大表示（450〜600 ms）で並べた比較図</title>
+  <rect width="660" height="295" rx="10" fill="#FFFFFF"/>
+  <line x1="68.0" y1="248.0" x2="318.0" y2="248.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="60.0" y="252.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="68.0" y1="183.4" x2="318.0" y2="183.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="60.0" y="187.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">200</text>
+  <line x1="68.0" y1="118.8" x2="318.0" y2="118.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="60.0" y="122.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">400</text>
+  <line x1="68.0" y1="54.2" x2="318.0" y2="54.2" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="60.0" y="58.2" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">600</text>
+  <line x1="136.2" y1="248.0" x2="136.2" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="136.2" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">統制</text>
+  <line x1="249.8" y1="248.0" x2="249.8" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="249.8" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">介入</text>
+  <rect x="68.0" y="38.0" width="250.0" height="210.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="193.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">全範囲 (0〜650 ms)</text>
+  <text x="24.0" y="143.0" text-anchor="middle" transform="rotate(-90 24.0 143.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">反応時間 (ms)</text>
+  <line x1="386.0" y1="248.0" x2="636.0" y2="248.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="378.0" y="252.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">450</text>
+  <line x1="386.0" y1="178.0" x2="636.0" y2="178.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="378.0" y="182.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">500</text>
+  <line x1="386.0" y1="108.0" x2="636.0" y2="108.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="378.0" y="112.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">550</text>
+  <line x1="386.0" y1="38.0" x2="636.0" y2="38.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="378.0" y="42.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">600</text>
+  <line x1="454.2" y1="248.0" x2="454.2" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="454.2" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">統制</text>
+  <line x1="567.8" y1="248.0" x2="567.8" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="567.8" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">介入</text>
+  <rect x="386.0" y="38.0" width="250.0" height="210.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="511.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">拡大表示 (450〜600 ms)</text>
+  <line x1="136.2" y1="91.4" x2="136.2" y2="79.0" stroke="#1F1C26" stroke-width="2.4"/>
+  <line x1="129.2" y1="91.4" x2="143.2" y2="91.4" stroke="#1F1C26" stroke-width="2.2"/>
+  <line x1="129.2" y1="79.0" x2="143.2" y2="79.0" stroke="#1F1C26" stroke-width="2.2"/>
+  <polygon points="136.2,79.2 142.2,85.2 136.2,91.2 130.2,85.2" fill="#1F1C26"/>
+  <line x1="249.8" y1="84.9" x2="249.8" y2="73.2" stroke="#1F1C26" stroke-width="2.4"/>
+  <line x1="242.8" y1="84.9" x2="256.8" y2="84.9" stroke="#1F1C26" stroke-width="2.2"/>
+  <line x1="242.8" y1="73.2" x2="256.8" y2="73.2" stroke="#1F1C26" stroke-width="2.2"/>
+  <polygon points="249.8,73.0 255.8,79.0 249.8,85.0 243.8,79.0" fill="#1F1C26"/>
+  <line x1="454.2" y1="199.3" x2="454.2" y2="145.9" stroke="#1F1C26" stroke-width="2.4"/>
+  <line x1="447.2" y1="199.3" x2="461.2" y2="199.3" stroke="#1F1C26" stroke-width="2.2"/>
+  <line x1="447.2" y1="145.9" x2="461.2" y2="145.9" stroke="#1F1C26" stroke-width="2.2"/>
+  <polygon points="454.2,166.6 460.2,172.6 454.2,178.6 448.2,172.6" fill="#1F1C26"/>
+  <line x1="567.8" y1="171.1" x2="567.8" y2="120.5" stroke="#1F1C26" stroke-width="2.4"/>
+  <line x1="560.8" y1="171.1" x2="574.8" y2="171.1" stroke="#1F1C26" stroke-width="2.2"/>
+  <line x1="560.8" y1="120.5" x2="574.8" y2="120.5" stroke="#1F1C26" stroke-width="2.2"/>
+  <polygon points="567.8,139.8 573.8,145.8 567.8,151.8 561.8,145.8" fill="#1F1C26"/>
+</svg>

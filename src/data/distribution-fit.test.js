@@ -75,7 +75,7 @@ describe("分布の推定と予測診断の学習契約", () => {
       expect(checker, `${contract}がJulia検証にない`).toContain(contract);
     }
     expect(runner).toContain('"scripts/distribution-fit-check.jl"');
-    expect(deploy).toContain("Run 32 numerical regression checks");
+    expect(deploy).toContain("scripts/run-numeric-checks.jl --public");
   });
 
   it("公式文書・L19・NB2・ロードマップ・READMEを同期する", () => {

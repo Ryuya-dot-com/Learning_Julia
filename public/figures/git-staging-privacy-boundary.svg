@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296" width="760" height="296" role="img" aria-label="Gitの3段階（Working Tree・Staging Area・Commit）と公開allowlist対非公開rawの境界図">
+  <title>Gitの3段階（Working Tree・Staging Area・Commit）と公開allowlist対非公開rawの境界図</title>
+  <rect width="760" height="296" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="24" width="350" height="248" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="199" y="48" text-anchor="middle" fill="#2A2733" font-size="12.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① Working Tree → Staging → 検証済みCommit</text>
+  <rect x="44" y="68" width="310" height="46" rx="7" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="58" y="87" fill="#4682B4" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Working Tree（作業中の編集）</text>
+  <text x="58" y="104" fill="#2A2733" font-size="9.8" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">git status --short / git diff</text>
+  <rect x="44" y="130" width="310" height="46" rx="7" fill="#FFFFFF" stroke="#6D3E86" stroke-width="1.6"/>
+  <text x="58" y="149" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Staging Area（次の記録候補）</text>
+  <text x="58" y="166" fill="#2A2733" font-size="9.8" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">git add ... / git diff --staged</text>
+  <rect x="44" y="192" width="310" height="46" rx="7" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.6"/>
+  <text x="58" y="211" fill="#2B7A1E" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Commit & Annotated Tag</text>
+  <text x="58" y="228" fill="#2A2733" font-size="9.8" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">git commit / git tag -a v1.0</text>
+  <rect x="392" y="24" width="344" height="248" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="564" y="48" text-anchor="middle" fill="#2A2733" font-size="12.2" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② 公開境界：.gitignore は履歴削除ではない</text>
+  <rect x="410" y="68" width="308" height="82" rx="7" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.6"/>
+  <text x="424" y="90" fill="#2B7A1E" font-size="10.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✓ Git追跡・公開Allowlistに入れるもの</text>
+  <text x="424" y="112" fill="#2A2733" font-size="9.8" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">code/  metadata/schema.toml  Project/Manifest</text>
+  <text x="424" y="132" fill="#2A2733" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">機微情報を含まない公開用合成データ（synthetic）</text>
+  <rect x="410" y="164" width="308" height="88" rx="7" fill="#FBEDEC" stroke="#CB3C33" stroke-width="1.6"/>
+  <text x="424" y="186" fill="#CB3C33" font-size="10.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✕ 最初からGitの外へ隔離するもの</text>
+  <text x="424" y="208" fill="#2A2733" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">参加者の実個票（raw）・対応表・秘密鍵・token</text>
+  <text x="424" y="228" fill="#CB3C33" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">一度commitすると後からignoreしても履歴に残る!</text>
+</svg>

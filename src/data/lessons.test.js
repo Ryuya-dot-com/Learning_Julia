@@ -7,6 +7,9 @@ import { fileURLToPath } from "node:url";
 import { LESSONS } from "./lessons/eager.js";
 import { LESSONS as LESSON_CATALOG, loadLesson } from "./lessons/index.js";
 import { SECTIONS } from "./sections.js";
+import { CHEATS, CHEAT_GROUPS } from "./cheats.js";
+import { buildLessonItems } from "./lessons/registry.js";
+import { parseHashRoute, formatHashRoute } from "../route.js";
 
 // 演習形式の許容値(仕様4.6)
 const ALLOWED_K = ["choice", "fill", "tf"];
@@ -99,6 +102,17 @@ describe("レッスンデータ", () => {
       expect(page, `${id} の意図的エラー例が見つからない`).toBeTruthy();
       expect(page.a?.join(" ").length, `${id} のエラー解説がない`).toBeGreaterThan(40);
     }
+  });
+
+  it("探索の可視化は実測のビン数・度数と試行単位を説明する", () => {
+    const lesson = LESSONS.find((item) => item.id === "exploratory-visualization");
+    const text = lesson.pages.flatMap((page) => page.a ?? []).join(" ");
+    expect(text).toContain("区間数の目安");
+    expect(text).toContain("4区間になり、度数は順に2、4、4、2");
+    expect(text).not.toContain("6本の棒に分ける");
+    expect(text).not.toContain("山が2つに割れます");
+    expect(text).toContain("人の割合ではありません");
+    expect(text).toContain("有意差や因果関係があるとは判断しません");
   });
 
   it("id が重複していない", () => {
@@ -203,7 +217,7 @@ describe("データの整形・保存・再利用回の学習契約", () => {
     expect(text).toContain('formula = \\"rt ~ condition\\"');
   });
 
-  it("保守script・validation環境・CIが17本の検証に保存往復を含む", () => {
+  it("保守script・validation環境・本編の公開検査が保存往復を含む", () => {
     const checker = readFileSync(join(ROOT, "scripts", "data-persistence-check.jl"), "utf8");
     const runner = readFileSync(join(ROOT, "scripts", "run-numeric-checks.jl"), "utf8");
     const project = readFileSync(join(ROOT, "validation", "Project.toml"), "utf8");
@@ -216,7 +230,7 @@ describe("データの整形・保存・再利用回の学習契約", () => {
     expect(checker).toContain("sha256");
     expect(checker).toContain("eltype(arrow_data.condition) <: CategoricalValue");
     expect(runner).toContain('"scripts/data-persistence-check.jl"');
-    expect(deploy).toContain("Run 32 numerical regression checks");
+    expect(deploy).toContain("scripts/run-numeric-checks.jl --public");
   });
 
   it("ロードマップがRData・RDSを訂正し、Stanを任意bridgeにする", () => {
@@ -290,7 +304,7 @@ describe("再現可能な研究プロジェクト補講の学習契約", () => {
       expect(checker, `${concept} がworkflow検証にない`).toContain(concept);
     }
     expect(runner).toContain('"scripts/reproducible-workflow-check.jl"');
-    expect(deploy).toContain("Run 32 numerical regression checks");
+    expect(deploy).toContain("scripts/run-numeric-checks.jl --public");
   });
 
   it("ロードマップと保存回から公開補講へ到達できる", () => {
@@ -419,7 +433,7 @@ describe("Gitで研究履歴と公開境界を管理する補講の学習契約"
       expect(checker, `${concept} がGit境界検証にない`).toContain(concept);
     }
     expect(runner).toContain('"scripts/version-control-boundary-check.jl"');
-    expect(deploy).toContain("Run 32 numerical regression checks");
+    expect(deploy).toContain("scripts/run-numeric-checks.jl --public");
   });
 
   it("ロードマップとdownload版へ到達できる", () => {
@@ -456,6 +470,25 @@ describe("浮動小数点と数値安定性の学習契約", () => {
     }
     expect(text).toContain("-921.034");
     expect(text).toContain("(raw = true, rounded = false, shown = 0.05)");
+    expect(text).toContain("先取り案内");
+  });
+
+  it("全教材本文・演習にレビュー応答由来のメタ表現が残っていない", () => {
+    for (const lesson of LESSONS) {
+      const serialized = JSON.stringify(lesson);
+      expect(serialized, `${lesson.id} に『ご指摘』が残っている`).not.toContain("ご指摘");
+      expect(serialized, `${lesson.id} に内部スプリントIDが残っている`).not.toMatch(/P0-[ABC]|次のP1|P1の観測境界/);
+      expect(serialized, `${lesson.id} に内部用語が残っている`).not.toMatch(
+        /検証スクリプト|番号なし補講|縦横変換と一括読み込み|確率分布編|scripts\/run-numeric-checks\.jl/
+      );
+      expect(serialized, `${lesson.id} に固定レッスン番号参照が残っている`).not.toMatch(/(?:L26|L29|L31)(?:の|で|と)/);
+    }
+    const notebookDir = join(ROOT, "public", "notebooks");
+    for (const name of readdirSync(notebookDir).filter((file) => file.endsWith(".jl"))) {
+      const content = readFileSync(join(notebookDir, name), "utf8");
+      expect(content, `${name} に ponytail コメントが残っている`).not.toContain("# ponytail:");
+      expect(content, `${name} に旧レッスン名が残っている`).not.toContain("縦横変換と一括読み込み");
+    }
   });
 
   it("確率分布回が裾確率・桁落ち・log空間の安定計算へ接続する", () => {
@@ -844,8 +877,60 @@ describe("重回帰・ANCOVA・モデル比較回の学習契約", () => {
   });
 });
 
+describe("説明と練習問題の読順", () => {
+  it("全教材で説明の順序と問題の添字を保ち、脱落・重複なくまとめへ進む", () => {
+    for (const lesson of LESSONS) {
+      const items = buildLessonItems(lesson);
+      expect(items.filter((item) => item.kind === "page").map((item) => item.p)).toEqual(lesson.pages);
+      const exercises = items.filter((item) => item.kind === "ex");
+      expect(exercises.map((item) => item.i).sort((a, b) => a - b)).toEqual(lesson.ex.map((_, i) => i));
+      for (const item of exercises) expect(item.e).toBe(lesson.ex[item.i]);
+      expect(items.at(-1)).toEqual({ kind: "done" });
+      expect(items).toHaveLength(lesson.pages.length + lesson.ex.length + 1);
+      if (lesson.ex.every((e) => e.afterPage === undefined)) {
+        expect(items.slice(0, lesson.pages.length).every((item) => item.kind === "page")).toBe(true);
+        expect(exercises.map((item) => item.i)).toEqual(lesson.ex.map((_, i) => i));
+      }
+    }
+  });
+
+  it("同じ説明に複数問を配置でき、指定のない問題は章末へ置く", () => {
+    const lesson = { id: "example", pages: [{ t: "前半" }, { t: "後半" }], ex: [
+      { afterPage: "前半" }, { afterPage: "前半" }, {},
+    ] };
+    const items = buildLessonItems(lesson);
+    expect(items.map((item) => item.kind)).toEqual(["page", "ex", "ex", "page", "ex", "done"]);
+    expect(items[1].reviewPage).toBe(lesson.pages[0]);
+    expect(items[2].reviewPage).toBe(lesson.pages[0]);
+    expect(items[4].reviewPage).toBeUndefined();
+  });
+
+  it("存在しない、または重複した見出しへの参照は停止する", () => {
+    for (const pages of [[{ t: "別の説明" }], [{ t: "説明" }, { t: "説明" }]]) {
+      expect(() => buildLessonItems({ id: "bad-link", pages, ex: [{ afterPage: "説明" }] }))
+        .toThrow("bad-link: afterPage must match exactly one page: 説明");
+    }
+  });
+});
+
 describe("回帰診断とVIF回の学習契約", () => {
   const id = "regression-diagnostics";
+
+  it("6問を関連する説明の直後に置き、後半の識別・評価・選択後推論も確認する", () => {
+    const lesson = LESSONS.find((item) => item.id === id);
+    const items = buildLessonItems(lesson);
+    expect(lesson.ex).toHaveLength(6);
+    expect(items.filter((item) => item.kind === "ex").map((item) => item.i)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(items[6].kind).toBe("ex");
+    for (const [i, item] of items.entries()) {
+      if (item.kind !== "ex") continue;
+      expect(items[i - 1].p).toBe(item.reviewPage);
+      expect(item.e.afterPage).toBe(item.reviewPage.t);
+    }
+    expect(lesson.ex[3].q).toContain("x3 = x1 + x2");
+    expect(lesson.ex[4].q).toContain("独立したテスト標本");
+    expect(lesson.ex[5].q).toContain("p値が最小");
+  });
 
   it("L30としてANCOVAの直後、ロジスティック回帰の直前に並ぶ", () => {
     const numberedIds = LESSONS.filter((lesson) => lesson.num != null).map((lesson) => lesson.id);
@@ -1231,7 +1316,7 @@ describe("発展ブロックの学習深度契約", () => {
     expect(roadmap).toContain("simulation任意");
     expect(notebook).toContain("任意実装ラボ");
     expect(notebook).toContain("ノートを実行しなくてもSTEP 5の学習は完了");
-    expect(notebook).toContain("番号つき37本+ノートブック5冊");
+    expect(notebook).toContain("計算例の確認、研究計画書の達成、未検証の点を分けて");
   });
 });
 
@@ -1639,6 +1724,22 @@ describe("デザインの検定力設計回の学習契約", () => {
     expect(notebook).toContain("singular_rate");
     expect(notebook).not.toContain("Random.seed!");
   });
+
+  it("NB5の計算例と研究計画書を分け、6観点で根拠と未達箇所を確認する", () => {
+    const notebook = readFileSync(join(ROOT, "public", "notebooks", "nb5-advanced.jl"), "utf8");
+    const rubric = notebook.split("## 卒業制作: 研究計画書の採点基準")[1].split("## 自由課題")[0];
+    expect([...rubric.matchAll(/^\| [1-6]\. /gm)]).toHaveLength(6);
+    expect(rubric).toContain("合計点で不足を相殺しません");
+    expect(rubric).toContain("反復ID・例外・収束状態");
+    expect(rubric).toContain("未実行・未検証");
+    expect(notebook).toContain("解析失敗と特異適合を別々に記録します");
+    expect(notebook).toContain("detection_rate_all");
+    expect(notebook).toContain("return_code");
+    expect(notebook).not.toContain("解析失敗率はまだ測っていません");
+    expect(notebook).toContain("研究上の仮定や設計判断は自動採点していません");
+    expect(notebook).not.toContain("ノートブック5冊は完走");
+    expect(JSON.stringify(LESSONS.find((item) => item.id === id))).toContain("末尾の6観点");
+  });
 });
 
 describe("演習", () => {
@@ -1692,7 +1793,7 @@ describe("演習", () => {
   it("テキスト中のバッククォートが対で閉じている(T コンポーネントの描画が壊れないこと)", () => {
     const texts = [];
     for (const l of LESSONS) {
-      for (const p of l.pages) texts.push(...(p.b || []), ...(p.a || []), p.t);
+      for (const p of l.pages) texts.push(...(p.b || []), ...(p.a || []), p.t, p.fig?.cap);
       for (const ex of l.ex) {
         texts.push(ex.q, ex.why, ex.hint, ...(ex.opts || []));
         for (const it of ex.items || []) texts.push(it.s, it.why);
@@ -1702,5 +1803,137 @@ describe("演習", () => {
       const count = (String(t).match(/`/g) || []).length;
       expect(count % 2, `バッククォートが奇数個: ${String(t).slice(0, 40)}…`).toBe(0);
     }
+  });
+});
+
+describe("埋め込み図版・チートシート・URLハッシュ遷移", () => {
+  it("page.fig を持つ全ページに対応するSVGファイルとalt属性が存在する", () => {
+    const figPages = LESSONS.flatMap((l) =>
+      l.pages
+        .map((p, idx) => (p.fig ? { lessonId: l.id, pageNum: idx + 1, fig: p.fig } : null))
+        .filter(Boolean)
+    );
+    expect(figPages.length).toBeGreaterThanOrEqual(8);
+    for (const { lessonId, pageNum, fig } of figPages) {
+      expect(typeof fig.src, `${lessonId} P${pageNum} src`).toBe("string");
+      expect(fig.src).toMatch(/^figures\/[a-z0-9-]+\.svg$/);
+      expect(typeof fig.alt, `${lessonId} P${pageNum} alt`).toBe("string");
+      expect(fig.alt.trim().length).toBeGreaterThan(10);
+      const svgPath = join(ROOT, "public", fig.src);
+      expect(existsSync(svgPath), `${svgPath} が存在しない`).toBe(true);
+      const svgContent = readFileSync(svgPath, "utf8");
+      expect(svgContent).toContain("<svg");
+      expect(svgContent).toContain("</svg>");
+    }
+  });
+
+  it("チートシートが全カテゴリを網羅し、空行や重複タイトルがない", () => {
+    expect(CHEAT_GROUPS[0]).toBe("すべて");
+    const allowedGroups = new Set(CHEAT_GROUPS.slice(1));
+    expect(CHEATS.length).toBeGreaterThanOrEqual(18);
+    const titles = CHEATS.map((c) => c.title);
+    expect(new Set(titles).size).toBe(titles.length);
+    for (const group of allowedGroups) {
+      expect(CHEATS.some((c) => c.group === group), `${group} に属するカードがない`).toBe(true);
+    }
+    for (const card of CHEATS) {
+      expect(allowedGroups.has(card.group), `${card.title} の group が未定義`).toBe(true);
+      expect(card.rows.length).toBeGreaterThan(0);
+      for (const [code, desc] of card.rows) {
+        expect(code.trim().length).toBeGreaterThan(0);
+        expect(desc.trim().length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("URLハッシュを安全に解釈・生成し、#main-content スキップリンクを無視する", () => {
+    expect(parseHashRoute("", LESSON_CATALOG)).toEqual({ name: "home" });
+    expect(parseHashRoute("#", LESSON_CATALOG)).toEqual({ name: "home" });
+    expect(parseHashRoute("#main-content", LESSON_CATALOG)).toBeNull();
+    expect(parseHashRoute("#cheat", LESSON_CATALOG)).toEqual({ name: "cheat" });
+    expect(parseHashRoute("#lesson/exploratory-visualization", LESSON_CATALOG)).toEqual({
+      name: "lesson",
+      id: "exploratory-visualization",
+      step: 1,
+    });
+    expect(parseHashRoute("#lesson/exploratory-visualization/3", LESSON_CATALOG)).toEqual({
+      name: "lesson",
+      id: "exploratory-visualization",
+      step: 3,
+    });
+    expect(parseHashRoute("#lesson/exploratory-visualization/0", LESSON_CATALOG)).toEqual({
+      name: "lesson",
+      id: "exploratory-visualization",
+      step: 1,
+    });
+    expect(parseHashRoute("#lesson/does-not-exist/2", LESSON_CATALOG)).toEqual({ name: "home" });
+
+    expect(formatHashRoute({ name: "home" })).toBe("");
+    expect(formatHashRoute({ name: "cheat" })).toBe("#cheat");
+    expect(formatHashRoute({ name: "lesson", id: "exploratory-visualization", step: 1 })).toBe(
+      "#lesson/exploratory-visualization"
+    );
+    expect(formatHashRoute({ name: "lesson", id: "exploratory-visualization", step: 4 })).toBe(
+      "#lesson/exploratory-visualization/4"
+    );
+  });
+});
+
+describe("可視化・段階的演習配置・選択肢長バイアス防止の品質契約", () => {
+  it("全70レッスンすべてが実在する概念SVG図版（76か所以上のpage.fig・75枚以上のSVG）を持つ", () => {
+    const illustratedLessons = new Set();
+    let figPlacements = 0;
+    for (const lesson of LESSONS) {
+      for (const page of lesson.pages) {
+        if (!page.fig) continue;
+        figPlacements++;
+        illustratedLessons.add(lesson.id);
+        expect(page.fig.src).toMatch(/^figures\/[a-z0-9-]+\.svg$/);
+        expect(existsSync(join(ROOT, "public", page.fig.src)), `${page.fig.src} が public/ に存在しない`).toBe(true);
+        expect(page.fig.alt.trim().length, `${lesson.id} の alt が短すぎる`).toBeGreaterThanOrEqual(10);
+        expect(page.fig.cap.trim().length, `${lesson.id} の cap が短すぎる`).toBeGreaterThanOrEqual(10);
+      }
+      expect(illustratedLessons.has(lesson.id), `${lesson.id} に page.fig が1つもない`).toBe(true);
+    }
+    const svgFiles = readdirSync(join(ROOT, "public", "figures")).filter((f) => f.endsWith(".svg"));
+    expect(svgFiles.length).toBeGreaterThanOrEqual(75);
+    expect(figPlacements).toBeGreaterThanOrEqual(76);
+    expect(illustratedLessons.size).toBe(LESSONS.length);
+  });
+
+  it("7ページ以上の全26中長尺レッスンがafterPageで段階的に演習を挟み、全69レッスンで出題順が単調増加する", () => {
+    const mediumAndLongLessons = LESSONS.filter((lesson) => lesson.pages.length >= 7);
+    expect(mediumAndLongLessons.length).toBeGreaterThanOrEqual(26);
+    for (const lesson of mediumAndLongLessons) {
+      expect(
+        lesson.ex.every((e) => typeof e.afterPage === "string" && e.afterPage.length > 0),
+        `${lesson.id} (${lesson.pages.length}p) に afterPage 未設定の演習がある`
+      ).toBe(true);
+    }
+    for (const lesson of LESSONS) {
+      const items = buildLessonItems(lesson);
+      const exOrder = items.filter((item) => item.kind === "ex").map((item) => item.i);
+      expect(exOrder, `${lesson.id} の演習順が定義順から入れ替わっている`).toEqual(
+        lesson.ex.map((_, i) => i)
+      );
+    }
+  });
+
+  it("選択式問題で正解選択肢が唯一最長になる割合を30%以下に抑える", () => {
+    let totalChoice = 0;
+    let uniqueLongestCorrect = 0;
+    for (const lesson of LESSONS) {
+      for (const ex of lesson.ex) {
+        if (ex.k !== "choice") continue;
+        totalChoice++;
+        const lengths = ex.opts.map((opt) => opt.length);
+        const maxLen = Math.max(...lengths);
+        const isUniqueLongest =
+          lengths[ex.ans] === maxLen && lengths.filter((len) => len === maxLen).length === 1;
+        if (isUniqueLongest) uniqueLongestCorrect++;
+      }
+    }
+    expect(totalChoice).toBeGreaterThanOrEqual(145);
+    expect(uniqueLongestCorrect / totalChoice).toBeLessThanOrEqual(0.3);
   });
 });

@@ -29,6 +29,11 @@ println(value + increment)`,
 Int64
 ERROR: MethodError: no method matching +(::String, ::Int64)`,
       err: true,
+      fig: {
+        src: "figures/error-anatomy-stacktrace-guide.svg",
+        alt: "Juliaのエラーメッセージ（例外型・引数型・Stacktraceの自分のファイル行）の読み解き方の図解",
+        cap: "エラー全文を暗記する必要はなく、①1行目の例外名と渡した引数の型（::String, ::Int64）、②Stacktrace内の自分のファイル名と行番号、の順に確認して切り分ける。",
+      },
       a: [
         "この例の数値としての修正は`parse(Int, value) + increment`で5です。表示として連結したいなら`\"$(value)$(increment)\"`で`\"32\"`です。同じエラーでも研究上の意図によって正しい修正は変わります。",
       ],
@@ -85,13 +90,16 @@ ERROR: DimensionMismatch: participant_idとrt_msの行数が一致しません`,
         "stacktraceは、エラーへ至る関数呼び出しの経路です。通常は例外の直後に、`[1]`から原因に近い順でframeが並びます。まず自分の関数名、`.jl` file、行番号を探し、その行へ渡った入力を確認します。",
         "`try`／`catch`の中で元の場所を記録する必要があるとき、Juliaは`catch_backtrace()`を提供します。ただし初心者の解析では、まず未処理のエラーをそのまま再現し、表示されたstacktraceを保存する方が単純です。",
       ],
-      code: `function standardized(x)
-    (x .- mean(x)) ./ std(x)
-end
+      code: `using Statistics
 
-# scriptで失敗したら、まず次を記録する
+standardized(x) = (x .- mean(x)) ./ std(x)
+
+data = ["510", "525"] # 数値のつもりで文字列配列が渡った例
 println((input_type = typeof(data), input_size = size(data)))
 z = standardized(data)`,
+      out: `(input_type = Vector{String}, input_size = (2,))
+ERROR: MethodError: no method matching +(::String, ::String)`,
+      err: true,
       a: [
         "質問やissueには、エラー直前の数行、完全な最初のエラー、Juliaとpackageのversion、最小の合成入力を添えます。実データ、利用者名、token、絶対pathなどの機微情報は除きます。画像だけより検索可能なtextが役立ちます。",
       ],
@@ -129,6 +137,7 @@ missing`,
   ex: [
     {
       k: "choice",
+      afterPage: "MethodErrorは、関数名と引数の型を読む",
       q: "`MethodError: no method matching +(::String, ::Int64)`で最初に確認することはどれですか？",
       opts: [
         "+へ渡した値の型と、加算・連結のどちらを意図したか",
@@ -141,6 +150,7 @@ missing`,
     },
     {
       k: "fill",
+      afterPage: "BoundsError・KeyErrorは、存在する範囲を先に見る",
       q: "配列を安全に走査できる実在indexを取得します。空欄を入力してください。",
       code: `for i in 〔?〕(values)
     println(values[i])
@@ -153,6 +163,7 @@ end`,
     },
     {
       k: "tf",
+      afterPage: "try／catchは、予想した例外だけを値へ変える",
       q: "エラー対応について、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -175,10 +186,11 @@ end`,
     },
     {
       k: "choice",
+      afterPage: "最小再現例を作り、仮説を一つずつ検証する",
       q: "共同研究者へエラーを共有する方法として最も適切なのはどれですか？",
       opts: [
         "最小の合成入力、最初のエラー全文、version、期待した結果をtextで共有する",
-        "機微な実データとtokenを含む画面全体をそのまま公開する",
+        "機微な実データと認証tokenを含む画面全体のスクリーンショットをそのまま公開する",
         "『動きません』だけを書き、codeと入力型を伏せる",
       ],
       ans: 0,

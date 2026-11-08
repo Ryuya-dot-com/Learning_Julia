@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296" width="760" height="296" role="img" aria-label="ドット記法（.+・sqrt.・.- mean(rt)）による配列要素ごとの一括変換と中心化">
+  <title>ドット記法（.+・sqrt.・.- mean(rt)）による配列要素ごとの一括変換と中心化</title>
+  <rect width="760" height="296" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="24" width="352" height="248" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="200" y="48" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① ドット「.」は全要素へ計算を放送する合図</text>
+  <rect x="46" y="72" width="76" height="38" rx="6" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="84" y="96" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1</text>
+  <text x="196" y="96" text-anchor="middle" fill="#6D3E86" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">── sqrt.(x) ──▶</text>
+  <rect x="270" y="72" width="84" height="38" rx="6" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="312" y="96" text-anchor="middle" fill="#2B7A1E" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1.0</text>
+  <rect x="46" y="128" width="76" height="38" rx="6" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="84" y="152" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">4</text>
+  <text x="196" y="152" text-anchor="middle" fill="#6D3E86" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">── sqrt.(x) ──▶</text>
+  <rect x="270" y="128" width="84" height="38" rx="6" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="312" y="152" text-anchor="middle" fill="#2B7A1E" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2.0</text>
+  <rect x="46" y="184" width="76" height="38" rx="6" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="84" y="208" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">9</text>
+  <text x="196" y="208" text-anchor="middle" fill="#6D3E86" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">── sqrt.(x) ──▶</text>
+  <rect x="270" y="184" width="84" height="38" rx="6" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="312" y="208" text-anchor="middle" fill="#2B7A1E" font-size="13" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">3.0</text>
+  <text x="200" y="252" text-anchor="middle" fill="#6E6879" font-size="10.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">演算子は前（.+  ./）、関数は後ろ（sqrt.  log.）にドット</text>
+  <line x1="438.0" y1="209.7" x2="732.0" y2="209.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="430.0" y="213.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">-20.0</text>
+  <line x1="438.0" y1="141.0" x2="732.0" y2="141.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="430.0" y="145.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0.0</text>
+  <line x1="438.0" y1="72.3" x2="732.0" y2="72.3" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="430.0" y="76.3" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">+20.0</text>
+  <line x1="487.0" y1="244.0" x2="487.0" y2="249.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="487.0" y="263.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">500 ms</text>
+  <line x1="585.0" y1="244.0" x2="585.0" y2="249.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="585.0" y="263.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">520 ms</text>
+  <line x1="683.0" y1="244.0" x2="683.0" y2="249.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="683.0" y="263.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">540 ms</text>
+  <rect x="438.0" y="38.0" width="294.0" height="206.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="585.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② rt .- mean(rt) で平均からのずれを1行計算</text>
+  <text x="585.0" y="284.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">元の反応時間 rt（平均 520.0 ms）</text>
+  <text x="394.0" y="141.0" text-anchor="middle" transform="rotate(-90 394.0 141.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">平均からのずれ rt .- mean(rt)</text>
+  <line x1="438.0" y1="141.0" x2="732.0" y2="141.0" stroke="#8A8296" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <line x1="487.0" y1="141.0" x2="487.0" y2="209.7" stroke="#6D3E86" stroke-width="2.6"/>
+  <circle cx="487.0" cy="209.7" r="5.0" fill="#6D3E86"/>
+  <text x="497.0" y="213.7" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">-20.0</text>
+  <line x1="585.0" y1="141.0" x2="585.0" y2="141.0" stroke="#6D3E86" stroke-width="2.6"/>
+  <circle cx="585.0" cy="141.0" r="5.0" fill="#6D3E86"/>
+  <text x="595.0" y="145.0" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.0</text>
+  <line x1="683.0" y1="141.0" x2="683.0" y2="72.3" stroke="#6D3E86" stroke-width="2.6"/>
+  <circle cx="683.0" cy="72.3" r="5.0" fill="#6D3E86"/>
+  <text x="693.0" y="76.3" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">20.0</text>
+</svg>

@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 325" width="760" height="325" role="img" aria-label="平均500・SD50・n=40が完全に一致する単峰分布と二峰分布：棒＋SE表示（左）とRaincloud表示（右）">
+  <title>平均500・SD50・n=40が完全に一致する単峰分布と二峰分布：棒＋SE表示（左）とRaincloud表示（右）</title>
+  <rect width="760" height="325" rx="10" fill="#FFFFFF"/>
+  <line x1="58.0" y1="270.0" x2="334.0" y2="270.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="50.0" y="274.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="58.0" y1="198.6" x2="334.0" y2="198.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="50.0" y="202.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">200</text>
+  <line x1="58.0" y1="127.2" x2="334.0" y2="127.2" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="50.0" y="131.2" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">400</text>
+  <line x1="58.0" y1="55.8" x2="334.0" y2="55.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="50.0" y="59.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">600</text>
+  <line x1="133.3" y1="270.0" x2="133.3" y2="275.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="133.3" y="289.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">単峰 (n=40)</text>
+  <line x1="258.7" y1="270.0" x2="258.7" y2="275.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="258.7" y="289.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">二峰 (n=40)</text>
+  <rect x="58.0" y="38.0" width="276.0" height="232.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="196.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">棒＋SE：2群が完全に同一に見える</text>
+  <text x="14.0" y="154.0" text-anchor="middle" transform="rotate(-90 14.0 154.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">反応時間 (ms)</text>
+  <rect x="99.3" y="91.5" width="68" height="178.5" rx="3" fill="#4682B4" fill-opacity="0.28" stroke="#4682B4" stroke-width="1.6"/>
+  <line x1="133.3" y1="94.4" x2="133.3" y2="88.7" stroke="#2A2733" stroke-width="2.4"/>
+  <line x1="124.3" y1="94.4" x2="142.3" y2="94.4" stroke="#2A2733" stroke-width="2.0"/>
+  <line x1="124.3" y1="88.7" x2="142.3" y2="88.7" stroke="#2A2733" stroke-width="2.0"/>
+  <rect x="224.7" y="91.5" width="68" height="178.5" rx="3" fill="#9558B2" fill-opacity="0.28" stroke="#9558B2" stroke-width="1.6"/>
+  <line x1="258.7" y1="94.4" x2="258.7" y2="88.7" stroke="#2A2733" stroke-width="2.4"/>
+  <line x1="249.7" y1="94.4" x2="267.7" y2="94.4" stroke="#2A2733" stroke-width="2.0"/>
+  <line x1="249.7" y1="88.7" x2="267.7" y2="88.7" stroke="#2A2733" stroke-width="2.0"/>
+  <text x="196.0" y="61.2" text-anchor="middle" fill="#6E6879" font-size="10.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">どちらも mean=500.0, SE=7.9</text>
+  <line x1="414.0" y1="236.9" x2="730.0" y2="236.9" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="406.0" y="240.9" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">400</text>
+  <line x1="414.0" y1="195.4" x2="730.0" y2="195.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="406.0" y="199.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">450</text>
+  <line x1="414.0" y1="154.0" x2="730.0" y2="154.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="406.0" y="158.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">500</text>
+  <line x1="414.0" y1="112.6" x2="730.0" y2="112.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="406.0" y="116.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">550</text>
+  <line x1="414.0" y1="71.1" x2="730.0" y2="71.1" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="406.0" y="75.1" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">600</text>
+  <line x1="503.3" y1="270.0" x2="503.3" y2="275.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="503.3" y="289.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">単峰 (n=40)</text>
+  <line x1="647.6" y1="270.0" x2="647.6" y2="275.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="647.6" y="289.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">二峰 (n=40)</text>
+  <rect x="414.0" y="38.0" width="316.0" height="232.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="572.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Raincloud：隠れていた二峰性が即座に分かる</text>
+  <text x="370.0" y="154.0" text-anchor="middle" transform="rotate(-90 370.0 154.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">反応時間 (ms)</text>
+  <polygon points="489.6,261.7 490.5,261.7 490.9,258.4 491.5,255.1 492.3,251.8 493.2,248.5 494.3,245.1 495.4,241.8 496.7,238.5 498.2,235.2 499.7,231.9 501.4,228.6 503.4,225.3 505.8,221.9 508.5,218.6 511.5,215.3 514.9,212.0 518.4,208.7 522.1,205.4 525.6,202.1 529.1,198.7 532.3,195.4 535.2,192.1 538.0,188.8 540.5,185.5 542.7,182.2 544.7,178.9 546.1,175.5 547.0,172.2 547.3,168.9 546.9,165.6 545.9,162.3 544.4,159.0 542.7,155.7 541.0,152.3 539.3,149.0 537.9,145.7 536.7,142.4 535.9,139.1 535.1,135.8 534.4,132.5 533.6,129.1 532.4,125.8 531.0,122.5 529.2,119.2 527.1,115.9 524.7,112.6 522.3,109.3 519.9,105.9 517.6,102.6 515.3,99.3 512.9,96.0 510.6,92.7 508.2,89.4 505.7,86.1 503.2,82.7 500.8,79.4 498.5,76.1 496.4,72.8 494.7,69.5 493.4,66.2 492.5,62.9 491.9,59.5 491.8,56.2 491.8,52.9 492.1,49.6 492.5,46.3 489.6,46.3" fill="#4682B4" fill-opacity="0.26" stroke="#4682B4" stroke-width="1.6"/>
+  <circle cx="464.2" cy="166.8" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="462.2" cy="179.0" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="470.0" cy="166.5" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="470.7" cy="178.0" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="469.2" cy="196.4" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="464.2" cy="167.7" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="461.3" cy="104.5" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="471.4" cy="196.7" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="465.8" cy="125.2" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="464.1" cy="117.7" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="461.8" cy="33.3" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="467.2" cy="160.7" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="471.6" cy="199.8" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="462.9" cy="119.0" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="474.6" cy="124.2" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="466.6" cy="193.6" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="469.8" cy="192.2" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="474.3" cy="158.8" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="460.6" cy="154.2" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="460.1" cy="175.5" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="461.6" cy="164.4" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="466.9" cy="153.7" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="464.6" cy="95.3" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="463.7" cy="180.4" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="462.2" cy="88.0" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="473.4" cy="139.2" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="467.8" cy="108.1" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="463.0" cy="128.5" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="465.7" cy="205.3" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="470.4" cy="139.3" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="466.7" cy="221.5" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="467.2" cy="176.5" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="474.9" cy="133.0" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="469.9" cy="146.9" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="466.3" cy="205.1" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="474.8" cy="89.6" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="463.0" cy="173.2" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="472.3" cy="144.8" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="473.7" cy="122.9" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <circle cx="462.0" cy="234.6" r="3.1" fill="#4682B4" fill-opacity="0.62"/>
+  <line x1="485.4" y1="179.3" x2="485.4" y2="124.9" stroke="#2A2733" stroke-width="3.2"/>
+  <polygon points="485.4,149.2 490.2,154.0 485.4,158.8 480.6,154.0" fill="#2A2733"/>
+  <polygon points="633.8,261.7 633.8,261.7 633.8,258.4 633.8,255.1 633.8,251.8 633.8,248.5 633.8,245.1 633.8,241.8 633.8,238.5 633.8,235.2 633.9,231.9 634.0,228.6 634.4,225.3 635.4,221.9 637.4,218.6 641.3,215.3 647.5,212.0 656.3,208.7 667.0,205.4 677.8,202.1 686.4,198.7 690.6,195.4 689.3,192.1 682.9,188.8 672.9,185.5 661.9,182.2 651.9,178.9 644.2,175.5 639.2,172.2 636.3,168.9 634.8,165.6 634.2,162.3 633.9,159.0 633.9,155.7 633.9,152.3 633.9,149.0 634.1,145.7 634.7,142.4 636.1,139.1 638.9,135.8 643.8,132.5 651.5,129.1 661.8,125.8 673.5,122.5 684.0,119.2 690.7,115.9 691.5,112.6 686.4,109.3 677.0,105.9 665.8,102.6 655.4,99.3 647.1,96.0 641.3,92.7 637.7,89.4 635.7,86.1 634.6,82.7 634.1,79.4 633.9,76.1 633.9,72.8 633.8,69.5 633.8,66.2 633.8,62.9 633.8,59.5 633.8,56.2 633.8,52.9 633.8,49.6 633.8,46.3 633.8,46.3" fill="#9558B2" fill-opacity="0.26" stroke="#9558B2" stroke-width="1.6"/>
+  <circle cx="617.7" cy="190.9" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="612.5" cy="205.2" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="609.5" cy="190.4" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="609.0" cy="197.2" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="617.0" cy="188.2" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="618.2" cy="189.9" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="612.7" cy="199.5" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="618.2" cy="198.0" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="612.0" cy="195.6" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="614.7" cy="202.0" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="614.9" cy="201.0" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="615.3" cy="197.7" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="607.9" cy="196.0" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="611.0" cy="199.7" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="605.5" cy="188.2" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="610.3" cy="191.6" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="616.0" cy="193.6" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="618.9" cy="183.9" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="613.3" cy="188.9" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="604.5" cy="193.5" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="610.6" cy="115.7" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="609.0" cy="115.3" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="614.9" cy="115.0" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="619.2" cy="121.8" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="612.1" cy="123.6" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="612.5" cy="108.8" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="606.4" cy="106.4" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="605.5" cy="108.2" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="616.6" cy="111.1" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="610.8" cy="109.9" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="605.7" cy="110.8" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="615.3" cy="117.5" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="609.7" cy="116.3" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="607.3" cy="114.7" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="612.3" cy="110.7" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="609.2" cy="99.7" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="614.4" cy="116.4" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="616.3" cy="116.4" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="606.1" cy="117.9" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <circle cx="615.0" cy="112.7" r="3.1" fill="#9558B2" fill-opacity="0.62"/>
+  <line x1="629.7" y1="194.1" x2="629.7" y2="114.9" stroke="#2A2733" stroke-width="3.2"/>
+  <polygon points="629.7,149.2 634.5,154.0 629.7,158.8 624.9,154.0" fill="#2A2733"/>
+  <text x="647.6" y="158.0" text-anchor="start" fill="#CB3C33" font-size="10" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">← 平均500付近に実測0件！</text>
+</svg>

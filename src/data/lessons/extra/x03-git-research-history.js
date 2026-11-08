@@ -3,7 +3,7 @@
 export default {
   id: "git-research-history",
   title: "Gitで研究履歴と公開境界を管理する",
-  tag: "commit・branch・tagと機微dataを分ける",
+  tag: "commit・branch・tagと機微データを分ける",
   pages: [
     {
       t: "Gitは監査可能な履歴であり、privacy装置ではない",
@@ -26,6 +26,11 @@ git add code/run_analysis.jl metadata/schema.toml
 git diff --staged
 git commit -m "Validate trial schema before analysis"`,
       lang: "ターミナル",
+      fig: {
+        src: "figures/git-staging-privacy-boundary.svg",
+        alt: "Gitの3段階（Working Tree・Staging Area・Commit）と公開allowlist対非公開rawの境界図",
+        cap: "左：Working Tree → Staging Area → Commit の3段階確認。右：コード・schema・合成例は公開 allowlist に入れ、参加者の実個票（raw）や秘密情報は最初の commit より前に Git の外へ隔離する。",
+      },
     },
     {
       t: "commitはfile単位ではなく、検証可能な意味の単位にする",
@@ -43,9 +48,9 @@ git commit -m "Validate trial schema before analysis"`,
       ],
       code: `git switch -c env-update-2026-08
 
-# Pkgによる更新後、Project.tomlとManifest.tomlを同時に確認する
+# Pkgによる更新後、Project.tomlとManifest.tomlの差分と再実行結果を確認する
 git diff -- Project.toml Manifest.toml
-julia --project=validation scripts/run-numeric-checks.jl
+julia --project=. code/run_analysis.jl
 
 git add Project.toml Manifest.toml
 git commit -m "Update validated Julia environment"`,
@@ -88,7 +93,7 @@ input_classification = "synthetic-public"
       t: "機微情報を記録したら、削除操作より先に被害を止める",
       b: [
         "credentialやtokenを記録した場合は、まず失効・rotationし、それ以上使われない状態にします。個人データなら共有を止め、研究責任者、情報管理・倫理・法務など組織の手順に従って連絡し、影響範囲を評価します。『履歴を書き換えれば無事故』とは扱いません。",
-        "履歴書換えはcommit IDを変え、共同研究者のclone、fork、cache、release、LFS objectにコピーが残る可能性があります。force pushや履歴書換えを初心者が単独で行う手順としては掲載しません。担当者と対象・通知・再clone・再混入防止まで調整するincident responseです。",
+        "履歴書換えはcommit IDを変え、共同研究者のclone、fork、cache、release、LFSオブジェクトにコピーが残る可能性があります。強制pushや履歴書換えは初心者が単独で実行せず、情報管理の担当者と対象・通知・再clone・再混入防止まで調整して進めるインシデント対応です。",
         "共有前なら、追跡を止める操作とignore設定を検討できますが、過去に共有した履歴から消えたことにはなりません。credentialの失効、data breach評価、履歴修復は別々の課題です。",
       ],
     },
@@ -105,7 +110,7 @@ input_classification = "synthetic-public"
       b: [
         "Git LFSは、repositoryにはOIDとsizeなどを持つ小さなpointer fileを置き、実体をremote storageへ保存します。大きな画像や許可されたdatasetをversion管理する用途には役立ちます。",
         "しかしLFSはprivacy分類、匿名化、暗号化方針、同意、access承認の代用品ではありません。LFSで追跡しただけで機微dataを公開repositoryへ置けるようにはなりません。既存の過去履歴も、追跡規則を加えただけでは自動変換されません。",
-        "初心者向け本編では導入せず、『容量の問題』と『公開可否の問題』を分けて判断できることを到達点にします。必要な研究室だけが、組織の保管規程と共同研究者の導入手順を確認して採用します。",
+        "この補講ではLFSの導入操作には踏み込まず、『容量の問題』と『公開可否の問題』を分けて判断できることを到達点にします。必要な研究室だけが、組織の保管規程と共同研究者の導入手順を確認して採用します。",
       ],
     },
     {
@@ -139,7 +144,7 @@ git status --short`,
       t: "releaseは除外listではなく、公開allowlistから組み立てる",
       b: [
         "repository全体をcopyしてから『秘密らしいfileだけ除く』方式は、未知のbackup、log、raw、editor一時fileを見落とします。公開物は、README、code、Project／Manifest、schema、公開合成例など、公開すると決めたpathのallowlistから新しいdirectoryへ組み立てます。",
-        "この教材のarchive生成scriptは12 fileを明示し、`data/raw/`からはREADMEだけを含めます。CIはsourceとarchiveのfile一覧・checksumを比較し、さらに一時Git repositoryでprivate raw、`.env`、derived、output、run metadataが追跡されないことを検査します。",
+        "たとえば配布テンプレートを作る際も、公開対象ファイルだけを明示したallowlistから組み立て、`data/raw/` からは配置説明の `README.md` だけを含めます。公開前にはアーカイブを展開し、実データ、`.env`、中間生成物、個人パスを含む実行記録が混入していないか一覧とchecksumで確かめます。",
         "ただしallowlistも内容reviewを不要にしません。code内のtoken、READMEへ貼ったlocal path、合成例に混入した実record、画像metadataなどを、機械検査と人のreviewの両方で確認します。",
       ],
     },
@@ -169,18 +174,19 @@ git check-ignore -v data/raw/dummy-private.csv`,
         label: "公開境界つき研究project templateをdownload (.tar)",
       },
       a: [
-        "最後のcheckはdummy fileを作った後に実行します。実行可能性の検証は補講『再現可能な研究プロジェクト』、履歴・公開境界の検証はこの補講が担当します。",
+        "`git check-ignore -v` は対象ファイルが未作成でも規則の一致を確認できますが、実際に空の `data/raw/dummy-private.csv` を置いて `git status --short` に現れないことまで確かめるとより確実です。実行経路の組み立ては補講『再現可能な研究プロジェクト』、履歴と公開境界の管理はこの補講で対になっています。",
       ],
     },
   ],
   ex: [
     {
       k: "choice",
+      afterPage: "commitはfile単位ではなく、検証可能な意味の単位にする",
       q: "次のcommitへschema変更と対応するtestだけを入れたいとき、最も監査しやすい手順はどれですか？",
       opts: [
         "対象fileを明示してstageし、git diff --stagedを読んでからcommitする",
-        "directory内の全fileを無条件にstageし、差分を見ずcommitする",
-        "結果CSVだけをcommitし、codeは手元に残す",
+        "作業directory内の未整理fileまで無条件にすべてstageし、差分を見ずに一括commitする",
+        "生成された結果CSVだけを単独でcommitし、変換codeとtestは手元の未追跡状態のまま残す",
       ],
       ans: 0,
       why: "次に記録する意味のある変更単位を選び、stage済み差分をreviewします。",
@@ -188,6 +194,7 @@ git check-ignore -v data/raw/dummy-private.csv`,
     },
     {
       k: "fill",
+      afterPage: "commitはfile単位ではなく、検証可能な意味の単位にする",
       q: "次のcommitへ入るstage済み差分を表示します。空欄を入力してください。",
       code: `git diff 〔?〕`,
       accept: ["--staged", "--cached"],
@@ -197,7 +204,34 @@ git check-ignore -v data/raw/dummy-private.csv`,
       placeholder: "option",
     },
     {
+      k: "choice",
+      afterPage: "package更新はbranchで隔離し、数値差まで比較する",
+      q: "Julia package更新を研究分析へ反映する進め方として最も適切なのはどれですか？",
+      opts: [
+        "別branchでProject／Manifestを一緒に更新し、clean runと主要数値差を検証する",
+        "分析途中の本線branchでManifest.tomlだけを直接手編集して書き換え、再現testは省略する",
+        "最新版であれば常に正しいとみなして、すべての非推奨警告と主要推定値の変化を無検証で受け入れる",
+      ],
+      ans: 0,
+      why: "環境更新を分析変更として隔離し、依存graphと結論への影響を同時に検証します。",
+      hint: "version番号ではなく、更新前後の実行契約を見ます。",
+    },
+    {
+      k: "choice",
+      afterPage: "機微情報を記録したら、削除操作より先に被害を止める",
+      q: "公開repositoryへAPI tokenをcommitしてpushしたことに気づきました。最初の対応として最も適切なのはどれですか？",
+      opts: [
+        "tokenを失効・rotationし共有を止め、担当者と影響範囲・履歴修復を調整する",
+        "最新commit上で設定fileの名前だけを変更して追加pushすれば過去履歴からも消えたとみなす",
+        "漏えいした同じtoken文字列を別の.envへ移し替えるだけにして、管理者や共同研究者には通知しない",
+      ],
+      ans: 0,
+      why: "credentialを無効化して被害拡大を止めます。履歴修復はcloneやcacheも含む協調作業です。",
+      hint: "履歴から見えにくくする前に、秘密としての効力を止めます。",
+    },
+    {
       k: "tf",
+      afterPage: "annotated tagは検証済みcommitへ名前を付ける",
       q: "Gitと公開境界について、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -220,35 +254,12 @@ git check-ignore -v data/raw/dummy-private.csv`,
     },
     {
       k: "choice",
-      q: "公開repositoryへAPI tokenをcommitしてpushしたことに気づきました。最初の対応として最も適切なのはどれですか？",
-      opts: [
-        "tokenを失効・rotationし共有を止め、担当者と影響範囲・履歴修復を調整する",
-        "最新commitからfile名だけ変えれば完了とする",
-        "同じtokenを別の.envへ移し、何も通知しない",
-      ],
-      ans: 0,
-      why: "credentialを無効化して被害拡大を止めます。履歴修復はcloneやcacheも含む協調作業です。",
-      hint: "履歴から見えにくくする前に、秘密としての効力を止めます。",
-    },
-    {
-      k: "choice",
-      q: "Julia package更新を研究分析へ反映する進め方として最も適切なのはどれですか？",
-      opts: [
-        "別branchでProject／Manifestを一緒に更新し、clean runと主要数値差を検証する",
-        "分析途中のbranchでManifestだけを手編集し、testを省略する",
-        "最新版という理由だけで全警告と推定値差を受け入れる",
-      ],
-      ans: 0,
-      why: "環境更新を分析変更として隔離し、依存graphと結論への影響を同時に検証します。",
-      hint: "version番号ではなく、更新前後の実行契約を見ます。",
-    },
-    {
-      k: "choice",
+      afterPage: "releaseは除外listではなく、公開allowlistから組み立てる",
       q: "公開archiveの組み立て方として、漏えい耐性が最も高いのはどれですか？",
       opts: [
         "公開を承認したpathのallowlistから新規に組み立て、内容と一覧をCI・人の両方でreviewする",
-        "repository全体をcopyし、名前にsecretと付くfileだけ除外する",
-        "private repositoryなら内容確認なしで全fileを公開archiveへ入れる",
+        "作業中のrepository全体をそのまま丸ごとcopyし、ファイル名にsecretと付くものだけを手作業で除外する",
+        "普段private repositoryで管理しているなら安全とみなし、内容確認なしで全fileを公開archiveへ入れる",
       ],
       ans: 0,
       why: "denylistは未知のraw・log・backupを見落とします。allowlistにも内容reviewを重ねます。",

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 312" width="760" height="312" role="img" aria-label="MTMM（多特性−多方法）相関行列の3種類のセルと、収束相関・同一方法バイアス・異方法弁別相関の比較">
+  <title>MTMM（多特性−多方法）相関行列の3種類のセルと、収束相関・同一方法バイアス・異方法弁別相関の比較</title>
+  <rect width="760" height="312" rx="10" fill="#FFFFFF"/>
+  <text x="206" y="32" text-anchor="middle" fill="#2A2733" font-size="12" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">MTMM 相関行列のセル分類 (A・B抜粋)</text>
+  <text x="113.0" y="48.0" text-anchor="middle" fill="#2A2733" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">A:自己</text>
+  <text x="76.0" y="82.0" text-anchor="end" fill="#2A2733" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">A:自己</text>
+  <rect x="84.0" y="58.0" width="58.0" height="40.0" rx="5" fill="#EFECE6" stroke="#6E6879" stroke-width="1.2"/>
+  <text x="113.0" y="82.0" text-anchor="middle" fill="#6E6879" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1.0</text>
+  <rect x="146.0" y="58.0" width="58.0" height="40.0" rx="5" fill="#DCF2E3" stroke="#2B7A1E" stroke-width="1.2"/>
+  <text x="175.0" y="82.0" text-anchor="middle" fill="#2B7A1E" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.669</text>
+  <rect x="208.0" y="58.0" width="58.0" height="40.0" rx="5" fill="#FBE3E0" stroke="#CB3C33" stroke-width="1.2"/>
+  <text x="237.0" y="82.0" text-anchor="middle" fill="#CB3C33" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.364</text>
+  <rect x="270.0" y="58.0" width="58.0" height="40.0" rx="5" fill="#E5EFFB" stroke="#4682B4" stroke-width="1.2"/>
+  <text x="299.0" y="82.0" text-anchor="middle" fill="#4682B4" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.2</text>
+  <text x="175.0" y="48.0" text-anchor="middle" fill="#2A2733" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">A:観察</text>
+  <text x="76.0" y="126.0" text-anchor="end" fill="#2A2733" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">A:観察</text>
+  <rect x="84.0" y="102.0" width="58.0" height="40.0" rx="5" fill="#DCF2E3" stroke="#2B7A1E" stroke-width="1.2"/>
+  <text x="113.0" y="126.0" text-anchor="middle" fill="#2B7A1E" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.669</text>
+  <rect x="146.0" y="102.0" width="58.0" height="40.0" rx="5" fill="#EFECE6" stroke="#6E6879" stroke-width="1.2"/>
+  <text x="175.0" y="126.0" text-anchor="middle" fill="#6E6879" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1.0</text>
+  <rect x="208.0" y="102.0" width="58.0" height="40.0" rx="5" fill="#E5EFFB" stroke="#4682B4" stroke-width="1.2"/>
+  <text x="237.0" y="126.0" text-anchor="middle" fill="#4682B4" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.243</text>
+  <rect x="270.0" y="102.0" width="58.0" height="40.0" rx="5" fill="#FBE3E0" stroke="#CB3C33" stroke-width="1.2"/>
+  <text x="299.0" y="126.0" text-anchor="middle" fill="#CB3C33" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.349</text>
+  <text x="237.0" y="48.0" text-anchor="middle" fill="#2A2733" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">B:自己</text>
+  <text x="76.0" y="170.0" text-anchor="end" fill="#2A2733" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">B:自己</text>
+  <rect x="84.0" y="146.0" width="58.0" height="40.0" rx="5" fill="#FBE3E0" stroke="#CB3C33" stroke-width="1.2"/>
+  <text x="113.0" y="170.0" text-anchor="middle" fill="#CB3C33" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.364</text>
+  <rect x="146.0" y="146.0" width="58.0" height="40.0" rx="5" fill="#E5EFFB" stroke="#4682B4" stroke-width="1.2"/>
+  <text x="175.0" y="170.0" text-anchor="middle" fill="#4682B4" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.243</text>
+  <rect x="208.0" y="146.0" width="58.0" height="40.0" rx="5" fill="#EFECE6" stroke="#6E6879" stroke-width="1.2"/>
+  <text x="237.0" y="170.0" text-anchor="middle" fill="#6E6879" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1.0</text>
+  <rect x="270.0" y="146.0" width="58.0" height="40.0" rx="5" fill="#DCF2E3" stroke="#2B7A1E" stroke-width="1.2"/>
+  <text x="299.0" y="170.0" text-anchor="middle" fill="#2B7A1E" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.681</text>
+  <text x="299.0" y="48.0" text-anchor="middle" fill="#2A2733" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">B:観察</text>
+  <text x="76.0" y="214.0" text-anchor="end" fill="#2A2733" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">B:観察</text>
+  <rect x="84.0" y="190.0" width="58.0" height="40.0" rx="5" fill="#E5EFFB" stroke="#4682B4" stroke-width="1.2"/>
+  <text x="113.0" y="214.0" text-anchor="middle" fill="#4682B4" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.2</text>
+  <rect x="146.0" y="190.0" width="58.0" height="40.0" rx="5" fill="#FBE3E0" stroke="#CB3C33" stroke-width="1.2"/>
+  <text x="175.0" y="214.0" text-anchor="middle" fill="#CB3C33" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.349</text>
+  <rect x="208.0" y="190.0" width="58.0" height="40.0" rx="5" fill="#DCF2E3" stroke="#2B7A1E" stroke-width="1.2"/>
+  <text x="237.0" y="214.0" text-anchor="middle" fill="#2B7A1E" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.681</text>
+  <rect x="270.0" y="190.0" width="58.0" height="40.0" rx="5" fill="#EFECE6" stroke="#6E6879" stroke-width="1.2"/>
+  <text x="299.0" y="214.0" text-anchor="middle" fill="#6E6879" font-size="10.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1.0</text>
+  <text x="82" y="254" fill="#2B7A1E" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">■ 緑：同trait×異method (3trait収束平均 0.669)</text>
+  <text x="82" y="271" fill="#CB3C33" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">■ 赤：異trait×同method (共通methodで 0.286 へ膨張)</text>
+  <text x="82" y="288" fill="#4682B4" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">■ 青：異trait×異method (弁別基準平均 0.142)</text>
+  <line x1="448.0" y1="209.8" x2="730.0" y2="209.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="440.0" y="213.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">異trait×異method</text>
+  <line x1="448.0" y1="146.0" x2="730.0" y2="146.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="440.0" y="150.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">異trait×同method</text>
+  <line x1="448.0" y1="82.2" x2="730.0" y2="82.2" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="440.0" y="86.2" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">同trait×異method</text>
+  <line x1="448.0" y1="248.0" x2="448.0" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="448.0" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="514.4" y1="248.0" x2="514.4" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="514.4" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.2</text>
+  <line x1="580.7" y1="248.0" x2="580.7" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="580.7" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.4</text>
+  <line x1="647.1" y1="248.0" x2="647.1" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="647.1" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.6</text>
+  <line x1="713.4" y1="248.0" x2="713.4" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="713.4" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0.8</text>
+  <rect x="448.0" y="44.0" width="282.0" height="204.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="589.0" y="34.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">収束 &gt; 方法効果 &gt; 異特性 の順序条件</text>
+  <text x="589.0" y="288.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">6×6 MTMM 行列のセル平均相関 (L34実測)</text>
+  <rect x="448.0" y="70.2" width="222.0" height="24" rx="4" fill="#2B7A1E" fill-opacity="0.82"/>
+  <text x="676.0" y="86.2" fill="#2B7A1E" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0.669 (収束的証拠)</text>
+  <rect x="448.0" y="134.0" width="94.9" height="24" rx="4" fill="#CB3C33" fill-opacity="0.82"/>
+  <text x="548.9" y="150.0" fill="#CB3C33" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0.286 (方法共有の上乗せ)</text>
+  <rect x="448.0" y="197.8" width="47.1" height="24" rx="4" fill="#4682B4" fill-opacity="0.82"/>
+  <text x="501.1" y="213.8" fill="#4682B4" font-size="9.6" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0.142 (異方法の弁別基準)</text>
+</svg>

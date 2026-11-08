@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296" width="760" height="296" role="img" aria-label="REPLのモード切替（julia&gt; と pkg&gt;）およびファイル実行でも壊れない関数スコープの設計">
+  <title>REPLのモード切替（julia&gt; と pkg&gt;）およびファイル実行でも壊れない関数スコープの設計</title>
+  <rect width="760" height="296" rx="10" fill="#FFFFFF"/>
+  <rect x="24" y="24" width="344" height="248" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="196" y="48" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① REPLのモード切り替え（] と Backspace）</text>
+  <rect x="44" y="68" width="304" height="62" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="60" y="92" fill="#2B7A1E" font-size="12" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">julia&gt; 1 + 1</text>
+  <text x="60" y="114" fill="#2A2733" font-size="10.2" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">通常モード：計算・using Pluto・Pluto.run()</text>
+  <text x="128" y="152" text-anchor="middle" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">↓ 「 ] 」キーを押す</text>
+  <text x="272" y="152" text-anchor="middle" fill="#4682B4" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">↑ Backspace で戻る</text>
+  <rect x="44" y="166" width="304" height="62" rx="8" fill="#F3ECF7" stroke="#6D3E86" stroke-width="1.8"/>
+  <text x="60" y="190" fill="#6D3E86" font-size="12" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">(@v1.12) pkg&gt; add Pluto</text>
+  <text x="60" y="212" fill="#2A2733" font-size="10.2" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">パッケージモード：CSV や DataFrames の追加</text>
+  <text x="196" y="252" text-anchor="middle" fill="#6E6879" font-size="9.8" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">終了は julia&gt; で exit() または Ctrl+D</text>
+  <rect x="388" y="24" width="348" height="248" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="562" y="48" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② 処理を function に包めばどこでも同じ結果</text>
+  <rect x="406" y="68" width="312" height="72" rx="8" fill="#FBEDEC" stroke="#CB3C33" stroke-width="1.5"/>
+  <text x="420" y="90" fill="#CB3C33" font-size="10.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✕ ファイル直書きのループ更新（julia test.jl）</text>
+  <text x="420" y="110" fill="#2A2733" font-size="10.2" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">total = 0; for d in data total += d end</text>
+  <text x="420" y="128" fill="#CB3C33" font-size="9.8" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">→ UndefVarError: `total` not defined in local scope</text>
+  <rect x="406" y="156" width="312" height="96" rx="8" fill="#EAF6E6" stroke="#2B7A1E" stroke-width="1.8"/>
+  <text x="420" y="178" fill="#2B7A1E" font-size="10.8" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✓ 関数に包む（REPL・Pluto・ファイルすべてOK）</text>
+  <text x="420" y="198" fill="#2A2733" font-size="10.2" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">function total_of(data) ... return total end</text>
+  <text x="420" y="218" fill="#2B7A1E" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">total_of([2, 4, 6]) → 12（高速かつ安全）</text>
+  <text x="420" y="240" fill="#6E6879" font-size="9.6" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">後の「型安定性とメモリ割当」でも関数化が高速化の鍵になる</text>
+</svg>

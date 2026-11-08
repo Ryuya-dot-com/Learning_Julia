@@ -43,6 +43,11 @@ rt_ms = parse(Float64, replace(parts[3], " ms" => ""))
 
 println((participant_id, condition, rt_ms))`,
       out: `(participant_id = "P012", condition = "control", rt_ms = 512.4)`,
+      fig: {
+        src: "figures/text-log-normalization-pipeline.svg",
+        alt: "装置ログ文字列の split・strip・lowercase・tryparse による構造化と欠測・Unicode境界の監査図",
+        cap: "原文（raw）を上書きせず、split で区切って列数を検査してから strip・lowercase で正規化し、許可集合と tryparse で型変換・欠測監査を行うパイプライン。",
+      },
     },
     {
       t: "空文字・missing・nothingを同じにしない",
@@ -59,6 +64,9 @@ println(parsed)
 println(count(ismissing, parsed))`,
       out: `Union{Missing, Float64}[510.2, missing, missing]
 2`,
+      a: [
+        "この短い例では `something(..., missing)` で変換失敗を `missing` にしていますが、実データでは許可した欠測表記(`\"NA\"` など)と想定外の文字列混入を区別できるよう、後のページのように明示的に検査して止めるのが安全です。",
+      ],
     },
     {
       t: "Unicode文字列は、byte位置を文字番号と思わない",
@@ -110,7 +118,7 @@ println((changed = changed, total = length(responses)))`,
 (changed = 1, total = 3)`,
     },
     {
-      t: "変換pipelineを小さな関数とtestへする",
+      t: "変換パイプラインを小さな関数とテストにする",
       b: [
         "対話的に1行ずつ直した操作は、次のdataで再現できません。1 recordを変換する関数にし、正常例、境界例、未知形式をtestします。複数行では、失敗した行のkeyとruleを安全なlogへ残します。",
         "検査するのは関数が終了したことだけではありません。入力行数、出力行数、未知形式数、変換件数、ID一意性、数値範囲、原文checksumを確認します。変換後の値がもっともらしくても、行の対応がずれていれば分析には使えません。",
@@ -138,11 +146,12 @@ println(record)`,
   ex: [
     {
       k: "choice",
+      afterPage: "splitで区切り、列数を検査してからparseする",
       q: "`\" P012 | 512.4 \"`の前後空白を除き、`|`で分割する組み合わせはどれですか？",
       opts: [
         "strip.(split(text, '|'))",
         "parse(text, '|')",
-        "replace(text, missing)",
+        "replace.(text, '|' => missing)",
       ],
       ans: 0,
       why: "splitで区切った各部分へstripをbroadcastし、前後空白を除きます。",
@@ -150,6 +159,7 @@ println(record)`,
     },
     {
       k: "fill",
+      afterPage: "splitで区切り、列数を検査してからparseする",
       q: "文字列を数値へ変換し、失敗時にnothingを返す関数名を入力してください。",
       code: `value = 〔?〕(Float64, text)`,
       accept: ["tryparse"],
@@ -160,6 +170,7 @@ println(record)`,
     },
     {
       k: "tf",
+      afterPage: "Unicode文字列は、byte位置を文字番号と思わない",
       q: "文字列処理について、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -182,10 +193,11 @@ println(record)`,
     },
     {
       k: "choice",
+      afterPage: "文字列処理のゴールは、検索ではなく意味の保存",
       q: "log変換pipelineとして最も監査しやすい方法はどれですか？",
       opts: [
         "原文を保持し、関数化した規則・失敗件数・合成testを残す",
-        "原文列を手作業で上書きし、直した件数は記録しない",
+        "元の原文列を直接手作業で上書きし、修正した件数や規則は記録しない",
         "未知形式を最も近い既知値へ自動的に割り当てる",
       ],
       ans: 0,

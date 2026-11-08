@@ -34,7 +34,22 @@ const CHECKS = [
     "scripts/mixed-models-check.jl",
     "scripts/measurement-error-check.jl",
     "scripts/power-design-check.jl",
+    "scripts/intermediate-track-check.jl",
+    "scripts/advanced-comp-track-check.jl",
 ]
+
+# 引数なしは従来どおり全検査。--list は環境準備前でも対象を確認できる。
+ARGS in ([], ["--public"], ["--p2"], ["--list"],
+         ["--public", "--list"], ["--p2", "--list"]) ||
+    error("usage: run-numeric-checks.jl [--public|--p2] [--list]")
+scope = "--public" in ARGS ? :public : "--p2" in ARGS ? :p2 : :all
+checks = filter(CHECKS) do path
+    scope == :all || startswith(basename(path), "p2-") == (scope == :p2)
+end
+if "--list" in ARGS
+    println.(checks)
+    exit(0)
+end
 
 active_project = Base.active_project()
 isnothing(active_project) && error("No active Julia project. Use --project=validation.")
@@ -43,8 +58,8 @@ categorical_project_dir = joinpath(ROOT, "validation", "categorical")
 p2_likelihood_project_dir = joinpath(ROOT, "validation", "p2-likelihood")
 
 started = time()
-for (i, relative_path) in enumerate(CHECKS)
-    println("\nNUMERIC_CHECK [", i, "/", length(CHECKS), "] ", relative_path)
+for (i, relative_path) in enumerate(checks)
+    println("\nNUMERIC_CHECK [", i, "/", length(checks), "] ", relative_path)
     flush(stdout)
     path = joinpath(ROOT, relative_path)
     check_project = if endswith(relative_path, "categorical-outcomes-check.jl")
@@ -57,5 +72,5 @@ for (i, relative_path) in enumerate(CHECKS)
     run(`$(Base.julia_cmd()) --project=$check_project $path`)
 end
 
-println("\nNUMERIC_CHECK_PASS files=", length(CHECKS),
+println("\nNUMERIC_CHECK_PASS files=", length(checks), " scope=", scope,
         " elapsed_seconds=", round(time() - started; digits = 1))

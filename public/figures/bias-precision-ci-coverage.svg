@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 312" width="760" height="312" role="img" aria-label="推定量の正確さ（低バイアス）と精密さ（低分散）、および20研究の95%信頼区間被覆">
+  <title>推定量の正確さ（低バイアス）と精密さ（低分散）、および20研究の95%信頼区間被覆</title>
+  <rect width="760" height="312" rx="10" fill="#FFFFFF"/>
+  <line x1="58.0" y1="252.0" x2="352.0" y2="252.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="50.0" y="256.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0.0</text>
+  <line x1="58.0" y1="173.3" x2="352.0" y2="173.3" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="50.0" y="177.3" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0.25</text>
+  <line x1="58.0" y1="94.6" x2="352.0" y2="94.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="50.0" y="98.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0.50</text>
+  <line x1="113.1" y1="252.0" x2="113.1" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="113.1" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">-2</text>
+  <line x1="186.6" y1="252.0" x2="186.6" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="186.6" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">真値 θ</text>
+  <line x1="252.8" y1="252.0" x2="252.8" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="252.8" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">+バイアス</text>
+  <line x1="315.2" y1="252.0" x2="315.2" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="315.2" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">+3.5</text>
+  <rect x="58.0" y="38.0" width="294.0" height="214.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="205.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">正確さ (Bias) と精密さ (SE) は別軸</text>
+  <text x="205.0" y="292.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">推定値 θ̂ の分布</text>
+  <text x="14.0" y="145.0" text-anchor="middle" transform="rotate(-90 14.0 145.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">密度</text>
+  <line x1="186.6" y1="38.0" x2="186.6" y2="252.0" stroke="#2A2733" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polyline fill="none" stroke="#2B7A1E" stroke-width="2.4" points="61.7,252.0 63.5,252.0 65.3,252.0 67.1,252.0 68.9,252.0 70.7,252.0 72.5,252.0 74.3,252.0 76.1,252.0 77.9,252.0 79.7,252.0 81.5,252.0 83.3,252.0 85.1,252.0 86.9,252.0 88.7,252.0 90.5,252.0 92.3,252.0 94.1,251.9 95.9,251.9 97.7,251.9 99.5,251.9 101.3,251.8 103.1,251.8 104.9,251.7 106.7,251.6 108.5,251.4 110.4,251.3 112.2,251.0 114.0,250.7 115.8,250.4 117.6,250.0 119.4,249.4 121.2,248.7 123.0,247.9 124.8,246.9 126.6,245.7 128.4,244.3 130.2,242.6 132.0,240.6 133.8,238.2 135.6,235.5 137.4,232.4 139.2,228.8 141.0,224.7 142.8,220.1 144.6,215.0 146.4,209.4 148.2,203.1 150.0,196.3 151.8,189.0 153.6,181.1 155.4,172.7 157.2,163.9 159.0,154.8 160.8,145.3 162.6,135.7 164.4,126.0 166.2,116.3 168.0,106.8 169.8,97.6 171.6,88.8 173.5,80.7 175.3,73.2 177.1,66.6 178.9,60.9 180.7,56.3 182.5,52.8 184.3,50.6 186.1,49.6 187.9,49.8 189.7,51.3 191.5,54.0 193.3,58.0 195.1,63.0 196.9,69.0 198.7,76.0 200.5,83.7 202.3,92.2 204.1,101.1 205.9,110.4 207.7,120.0 209.5,129.7 211.3,139.4 213.1,149.0 214.9,158.3 216.7,167.3 218.5,176.0 220.3,184.2 222.1,191.8 223.9,199.0 225.7,205.6 227.5,211.6 229.3,217.1 231.1,222.0 232.9,226.4 234.7,230.2 236.5,233.6 238.4,236.6 240.2,239.2 242.0,241.4 243.8,243.3 245.6,244.9 247.4,246.2 249.2,247.3 251.0,248.2 252.8,249.0 254.6,249.6 256.4,250.1 258.2,250.5 260.0,250.9 261.8,251.1 263.6,251.3 265.4,251.5 267.2,251.6 269.0,251.7 270.8,251.8 272.6,251.8 274.4,251.9 276.2,251.9 278.0,251.9 279.8,252.0 281.6,252.0 283.4,252.0 285.2,252.0 287.0,252.0 288.8,252.0 290.6,252.0 292.4,252.0 294.2,252.0 296.0,252.0 297.8,252.0 299.6,252.0 301.5,252.0 303.3,252.0 305.1,252.0 306.9,252.0 308.7,252.0 310.5,252.0 312.3,252.0 314.1,252.0 315.9,252.0 317.7,252.0 319.5,252.0 321.3,252.0 323.1,252.0 324.9,252.0 326.7,252.0 328.5,252.0 330.3,252.0 332.1,252.0 333.9,252.0 335.7,252.0 337.5,252.0 339.3,252.0 341.1,252.0 342.9,252.0 344.7,252.0 346.5,252.0 348.3,252.0"/>
+  <polyline fill="none" stroke="#4682B4" stroke-width="2.4" stroke-dasharray="5 3" points="61.7,248.1 63.5,247.7 65.3,247.3 67.1,246.9 68.9,246.4 70.7,245.9 72.5,245.4 74.3,244.8 76.1,244.2 77.9,243.6 79.7,242.9 81.5,242.1 83.3,241.4 85.1,240.5 86.9,239.7 88.7,238.7 90.5,237.8 92.3,236.7 94.1,235.6 95.9,234.5 97.7,233.3 99.5,232.1 101.3,230.8 103.1,229.4 104.9,228.0 106.7,226.6 108.5,225.0 110.4,223.5 112.2,221.9 114.0,220.2 115.8,218.5 117.6,216.7 119.4,214.9 121.2,213.1 123.0,211.2 124.8,209.2 126.6,207.3 128.4,205.3 130.2,203.3 132.0,201.3 133.8,199.3 135.6,197.2 137.4,195.2 139.2,193.1 141.0,191.1 142.8,189.0 144.6,187.0 146.4,185.0 148.2,183.1 150.0,181.2 151.8,179.3 153.6,177.5 155.4,175.7 157.2,174.0 159.0,172.3 160.8,170.8 162.6,169.3 164.4,167.9 166.2,166.5 168.0,165.3 169.8,164.2 171.6,163.1 173.5,162.2 175.3,161.4 177.1,160.7 178.9,160.1 180.7,159.7 182.5,159.3 184.3,159.1 186.1,159.0 187.9,159.0 189.7,159.2 191.5,159.4 193.3,159.8 195.1,160.3 196.9,161.0 198.7,161.7 200.5,162.6 202.3,163.5 204.1,164.6 205.9,165.8 207.7,167.0 209.5,168.4 211.3,169.8 213.1,171.4 214.9,173.0 216.7,174.6 218.5,176.4 220.3,178.2 222.1,180.0 223.9,181.9 225.7,183.8 227.5,185.8 229.3,187.8 231.1,189.8 232.9,191.9 234.7,193.9 236.5,195.9 238.4,198.0 240.2,200.0 242.0,202.1 243.8,204.1 245.6,206.1 247.4,208.0 249.2,210.0 251.0,211.9 252.8,213.8 254.6,215.6 256.4,217.4 258.2,219.1 260.0,220.8 261.8,222.5 263.6,224.1 265.4,225.6 267.2,227.1 269.0,228.6 270.8,230.0 272.6,231.3 274.4,232.6 276.2,233.8 278.0,235.0 279.8,236.1 281.6,237.1 283.4,238.1 285.2,239.1 287.0,240.0 288.8,240.9 290.6,241.7 292.4,242.4 294.2,243.2 296.0,243.8 297.8,244.5 299.6,245.1 301.5,245.6 303.3,246.1 305.1,246.6 306.9,247.1 308.7,247.5 310.5,247.9 312.3,248.2 314.1,248.6 315.9,248.9 317.7,249.2 319.5,249.4 321.3,249.7 323.1,249.9 324.9,250.1 326.7,250.3 328.5,250.4 330.3,250.6 332.1,250.7 333.9,250.9 335.7,251.0 337.5,251.1 339.3,251.2 341.1,251.3 342.9,251.3 344.7,251.4 346.5,251.5 348.3,251.5"/>
+  <polyline fill="none" stroke="#CB3C33" stroke-width="2.4" points="61.7,252.0 63.5,252.0 65.3,252.0 67.1,252.0 68.9,252.0 70.7,252.0 72.5,252.0 74.3,252.0 76.1,252.0 77.9,252.0 79.7,252.0 81.5,252.0 83.3,252.0 85.1,252.0 86.9,252.0 88.7,252.0 90.5,252.0 92.3,252.0 94.1,252.0 95.9,252.0 97.7,252.0 99.5,252.0 101.3,252.0 103.1,252.0 104.9,252.0 106.7,252.0 108.5,252.0 110.4,252.0 112.2,252.0 114.0,252.0 115.8,252.0 117.6,252.0 119.4,252.0 121.2,252.0 123.0,252.0 124.8,252.0 126.6,252.0 128.4,252.0 130.2,252.0 132.0,252.0 133.8,252.0 135.6,252.0 137.4,252.0 139.2,252.0 141.0,252.0 142.8,252.0 144.6,252.0 146.4,252.0 148.2,252.0 150.0,252.0 151.8,252.0 153.6,252.0 155.4,252.0 157.2,252.0 159.0,252.0 160.8,251.9 162.6,251.9 164.4,251.9 166.2,251.9 168.0,251.8 169.8,251.7 171.6,251.6 173.5,251.5 175.3,251.4 177.1,251.2 178.9,251.0 180.7,250.6 182.5,250.3 184.3,249.8 186.1,249.2 187.9,248.5 189.7,247.6 191.5,246.6 193.3,245.3 195.1,243.8 196.9,242.0 198.7,239.9 200.5,237.4 202.3,234.6 204.1,231.3 205.9,227.6 207.7,223.4 209.5,218.6 211.3,213.3 213.1,207.5 214.9,201.1 216.7,194.1 218.5,186.6 220.3,178.6 222.1,170.1 223.9,161.1 225.7,151.9 227.5,142.4 229.3,132.7 231.1,123.0 232.9,113.3 234.7,103.9 236.5,94.9 238.4,86.3 240.2,78.3 242.0,71.1 243.8,64.7 245.6,59.4 247.4,55.1 249.2,52.0 251.0,50.1 252.8,49.5 254.6,50.1 256.4,52.0 258.2,55.1 260.0,59.4 261.8,64.7 263.6,71.1 265.4,78.3 267.2,86.3 269.0,94.9 270.8,103.9 272.6,113.3 274.4,123.0 276.2,132.7 278.0,142.4 279.8,151.9 281.6,161.1 283.4,170.1 285.2,178.6 287.0,186.6 288.8,194.1 290.6,201.1 292.4,207.5 294.2,213.3 296.0,218.6 297.8,223.4 299.6,227.6 301.5,231.3 303.3,234.6 305.1,237.4 306.9,239.9 308.7,242.0 310.5,243.8 312.3,245.3 314.1,246.6 315.9,247.6 317.7,248.5 319.5,249.2 321.3,249.8 323.1,250.3 324.9,250.6 326.7,251.0 328.5,251.2 330.3,251.4 332.1,251.5 333.9,251.6 335.7,251.7 337.5,251.8 339.3,251.9 341.1,251.9 342.9,251.9 344.7,251.9 346.5,252.0 348.3,252.0"/>
+  <text x="66.0" y="56.0" fill="#2B7A1E" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">緑：不偏かつ高精密 (低Bias・小SE)</text>
+  <text x="66.0" y="72.0" fill="#4682B4" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">青破線：不偏だが低精密 (小nでSE大)</text>
+  <text x="66.0" y="88.0" fill="#CB3C33" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">赤：精密だが系統バイアスあり (選択・交絡)</text>
+  <line x1="434.0" y1="244.7" x2="732.0" y2="244.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="248.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1</text>
+  <line x1="434.0" y1="202.7" x2="732.0" y2="202.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="206.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">5</text>
+  <line x1="434.0" y1="150.2" x2="732.0" y2="150.2" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="154.2" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">10</text>
+  <line x1="434.0" y1="97.8" x2="732.0" y2="97.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="101.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">15</text>
+  <line x1="434.0" y1="45.3" x2="732.0" y2="45.3" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="49.3" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">20</text>
+  <line x1="474.6" y1="252.0" x2="474.6" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="474.6" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">460</text>
+  <line x1="528.8" y1="252.0" x2="528.8" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="528.8" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">480</text>
+  <line x1="583.0" y1="252.0" x2="583.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="583.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">500</text>
+  <line x1="637.2" y1="252.0" x2="637.2" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="637.2" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">520</text>
+  <line x1="691.4" y1="252.0" x2="691.4" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="691.4" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">540</text>
+  <rect x="434.0" y="38.0" width="298.0" height="214.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="583.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">20研究の95% CI：動くのは母数でなく区間</text>
+  <text x="583.0" y="292.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">推定平均と 95% 信頼区間 (真の母平均 μ = 500)</text>
+  <text x="390.0" y="145.0" text-anchor="middle" transform="rotate(-90 390.0 145.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">反復した研究番号</text>
+  <line x1="583.0" y1="38.0" x2="583.0" y2="252.0" stroke="#2A2733" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <line x1="504.7" y1="244.7" x2="598.2" y2="244.7" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="551.5" cy="244.7" r="2.8" fill="#6D3E86"/>
+  <line x1="536.4" y1="234.2" x2="673.3" y2="234.2" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="604.8" cy="234.2" r="2.8" fill="#6D3E86"/>
+  <line x1="510.5" y1="223.7" x2="635.8" y2="223.7" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="573.1" cy="223.7" r="2.8" fill="#6D3E86"/>
+  <line x1="553.6" y1="213.2" x2="673.8" y2="213.2" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="613.7" cy="213.2" r="2.8" fill="#6D3E86"/>
+  <line x1="491.6" y1="202.7" x2="647.4" y2="202.7" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="569.5" cy="202.7" r="2.8" fill="#6D3E86"/>
+  <line x1="533.6" y1="192.2" x2="647.1" y2="192.2" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="590.4" cy="192.2" r="2.8" fill="#6D3E86"/>
+  <line x1="532.4" y1="181.7" x2="653.1" y2="181.7" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="592.8" cy="181.7" r="2.8" fill="#6D3E86"/>
+  <line x1="507.8" y1="171.2" x2="638.6" y2="171.2" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="573.2" cy="171.2" r="2.8" fill="#6D3E86"/>
+  <line x1="503.2" y1="160.7" x2="624.0" y2="160.7" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="563.6" cy="160.7" r="2.8" fill="#6D3E86"/>
+  <line x1="526.3" y1="150.2" x2="634.9" y2="150.2" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="580.6" cy="150.2" r="2.8" fill="#6D3E86"/>
+  <line x1="494.8" y1="139.8" x2="610.2" y2="139.8" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="552.5" cy="139.8" r="2.8" fill="#6D3E86"/>
+  <line x1="492.6" y1="129.3" x2="632.2" y2="129.3" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="562.4" cy="129.3" r="2.8" fill="#6D3E86"/>
+  <line x1="549.8" y1="118.8" x2="659.4" y2="118.8" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="604.6" cy="118.8" r="2.8" fill="#6D3E86"/>
+  <line x1="512.3" y1="108.3" x2="626.9" y2="108.3" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="569.6" cy="108.3" r="2.8" fill="#6D3E86"/>
+  <line x1="558.5" y1="97.8" x2="704.9" y2="97.8" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="631.7" cy="97.8" r="2.8" fill="#6D3E86"/>
+  <line x1="470.2" y1="87.3" x2="602.2" y2="87.3" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="536.2" cy="87.3" r="2.8" fill="#6D3E86"/>
+  <line x1="529.2" y1="76.8" x2="643.8" y2="76.8" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="586.5" cy="76.8" r="2.8" fill="#6D3E86"/>
+  <line x1="506.5" y1="66.3" x2="641.7" y2="66.3" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="574.1" cy="66.3" r="2.8" fill="#6D3E86"/>
+  <line x1="526.3" y1="55.8" x2="630.6" y2="55.8" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="578.5" cy="55.8" r="2.8" fill="#6D3E86"/>
+  <line x1="466.7" y1="45.3" x2="612.1" y2="45.3" stroke="#6D3E86" stroke-width="1.8"/>
+  <circle cx="539.4" cy="45.3" r="2.8" fill="#6D3E86"/>
+  <text x="442.0" y="56.0" fill="#6D3E86" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">紫：真値 500 を含む区間 (20/20本)</text>
+  <text x="612.0" y="56.0" fill="#CB3C33" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">赤：外れた区間 (0/20本)</text>
+</svg>

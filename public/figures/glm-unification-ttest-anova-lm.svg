@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 312" width="760" height="312" role="img" aria-label="2群t検定・1要因ANOVA・単回帰を単一の一般線形モデル y = β₀ + Σβⱼxⱼ + ε として統合する図">
+  <title>2群t検定・1要因ANOVA・単回帰を単一の一般線形モデル y = β₀ + Σβⱼxⱼ + ε として統合する図</title>
+  <rect width="760" height="312" rx="10" fill="#FFFFFF"/>
+  <line x1="50.0" y1="227.4" x2="250.0" y2="227.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="42.0" y="231.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">470</text>
+  <line x1="50.0" y1="165.6" x2="250.0" y2="165.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="42.0" y="169.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">500</text>
+  <line x1="50.0" y1="103.8" x2="250.0" y2="103.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="42.0" y="107.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">530</text>
+  <line x1="50.0" y1="62.6" x2="250.0" y2="62.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="42.0" y="66.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">550</text>
+  <line x1="83.3" y1="248.0" x2="83.3" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="83.3" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0 (統制)</text>
+  <line x1="216.7" y1="248.0" x2="216.7" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="216.7" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">1 (介入)</text>
+  <rect x="50.0" y="42.0" width="200.0" height="206.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="150.0" y="32.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① 2群t検定 = 0/1回帰</text>
+  <text x="150.0" y="288.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0/1 ダミー変数 x</text>
+  <text x="6.0" y="145.0" text-anchor="middle" transform="rotate(-90 6.0 145.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">反応時間 y</text>
+  <line x1="83.3" y1="103.8" x2="216.7" y2="186.2" stroke="#6D3E86" stroke-width="2.6"/>
+  <circle cx="83.3" cy="103.8" r="4.8" fill="#4682B4"/>
+  <circle cx="216.7" cy="186.2" r="4.8" fill="#2B7A1E"/>
+  <line x1="83.3" y1="103.8" x2="216.7" y2="103.8" stroke="#6E6879" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <line x1="216.7" y1="103.8" x2="216.7" y2="186.2" stroke="#CB3C33" stroke-width="2.0"/>
+  <text x="58.0" y="60.0" fill="#2A2733" font-size="9.3" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">β₀ = μ₀ = 530</text>
+  <text x="58.0" y="76.0" fill="#CB3C33" font-size="9.3" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">β₁ = μ₁ - μ₀ = -40</text>
+  <text x="58.0" y="232.0" fill="#6D3E86" font-size="9.3" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">t² = F, η² = R²</text>
+  <line x1="296.0" y1="227.4" x2="496.0" y2="227.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="288.0" y="231.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif"></text>
+  <line x1="296.0" y1="165.6" x2="496.0" y2="165.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="288.0" y="169.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif"></text>
+  <line x1="296.0" y1="103.8" x2="496.0" y2="103.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="288.0" y="107.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif"></text>
+  <line x1="296.0" y1="62.6" x2="496.0" y2="62.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="288.0" y="66.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif"></text>
+  <line x1="324.6" y1="248.0" x2="324.6" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="324.6" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">A(参照)</text>
+  <line x1="396.0" y1="248.0" x2="396.0" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="396.0" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">B</text>
+  <line x1="467.4" y1="248.0" x2="467.4" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="467.4" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">C</text>
+  <rect x="296.0" y="42.0" width="200.0" height="206.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="396.0" y="32.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② ANOVA = ダミー重回帰</text>
+  <text x="396.0" y="288.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">カテゴリ水準 (k-1ダミー列)</text>
+  <line x1="296.0" y1="103.8" x2="496.0" y2="103.8" stroke="#4682B4" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <line x1="324.6" y1="103.8" x2="324.6" y2="103.8" stroke="#4682B4" stroke-width="2.2"/>
+  <circle cx="324.6" cy="103.8" r="4.8" fill="#4682B4"/>
+  <text x="324.6" y="94.8" text-anchor="middle" fill="#4682B4" font-size="9.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">β₀</text>
+  <line x1="396.0" y1="103.8" x2="396.0" y2="155.3" stroke="#6D3E86" stroke-width="2.2"/>
+  <circle cx="396.0" cy="155.3" r="4.8" fill="#6D3E86"/>
+  <text x="396.0" y="146.3" text-anchor="middle" fill="#6D3E86" font-size="9.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">β₀+β_B</text>
+  <line x1="467.4" y1="103.8" x2="467.4" y2="206.8" stroke="#2B7A1E" stroke-width="2.2"/>
+  <circle cx="467.4" cy="206.8" r="4.8" fill="#2B7A1E"/>
+  <text x="467.4" y="197.8" text-anchor="middle" fill="#2B7A1E" font-size="9.2" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">β₀+β_C</text>
+  <text x="304.0" y="232.0" fill="#2A2733" font-size="9.2" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">全体F検定 ＝ ダミー列一括投入比較</text>
+  <line x1="534.0" y1="227.4" x2="734.0" y2="227.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="526.0" y="231.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace"></text>
+  <line x1="534.0" y1="165.6" x2="734.0" y2="165.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="526.0" y="169.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace"></text>
+  <line x1="534.0" y1="103.8" x2="734.0" y2="103.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="526.0" y="107.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace"></text>
+  <line x1="534.0" y1="62.6" x2="734.0" y2="62.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="526.0" y="66.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace"></text>
+  <line x1="534.0" y1="248.0" x2="534.0" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="534.0" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="634.0" y1="248.0" x2="634.0" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="634.0" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">5</text>
+  <line x1="734.0" y1="248.0" x2="734.0" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="734.0" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">10</text>
+  <rect x="534.0" y="42.0" width="200.0" height="206.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="634.0" y="32.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">③ 単回帰 = 連続xの傾き</text>
+  <text x="634.0" y="288.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">連続説明変数 x</text>
+  <circle cx="550.0" cy="125.1" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="559.9" cy="111.8" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="569.8" cy="126.9" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="579.6" cy="154.2" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="589.5" cy="107.1" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="599.4" cy="114.8" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="609.3" cy="128.6" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="619.2" cy="149.3" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="629.1" cy="147.1" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="638.9" cy="182.2" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="648.8" cy="159.1" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="658.7" cy="167.8" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="668.6" cy="158.9" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="678.5" cy="183.8" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="688.4" cy="187.4" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="698.2" cy="177.0" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="708.1" cy="148.4" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <circle cx="718.0" cy="218.4" r="2.7" fill="#9558B2" fill-opacity="0.65"/>
+  <line x1="542.0" y1="88.6" x2="726.0" y2="211.7" stroke="#6D3E86" stroke-width="2.6"/>
+  <text x="542.0" y="60.0" fill="#6D3E86" font-size="9.3" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">E[y|x] = β₀ + β₁x</text>
+  <text x="542.0" y="232.0" fill="#2A2733" font-size="9.2" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">正規誤差なら最小二乗解 ＝ 最尤解</text>
+</svg>

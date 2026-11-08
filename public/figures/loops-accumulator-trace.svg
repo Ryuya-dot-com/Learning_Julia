@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296" width="760" height="296" role="img" aria-label="forループによる配列要素の順次走査と合計変数 total への累積過程">
+  <title>forループによる配列要素の順次走査と合計変数 total への累積過程</title>
+  <rect width="760" height="296" rx="10" fill="#FFFFFF"/>
+  <line x1="64.0" y1="244.0" x2="364.0" y2="244.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="248.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0</text>
+  <line x1="64.0" y1="214.6" x2="364.0" y2="214.6" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="218.6" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">2</text>
+  <line x1="64.0" y1="155.7" x2="364.0" y2="155.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="159.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">6</text>
+  <line x1="64.0" y1="67.4" x2="364.0" y2="67.4" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="71.4" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">12</text>
+  <line x1="64.0" y1="244.0" x2="64.0" y2="249.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="64.0" y="263.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">初期</text>
+  <line x1="154.9" y1="244.0" x2="154.9" y2="249.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="154.9" y="263.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">d=2</text>
+  <line x1="245.8" y1="244.0" x2="245.8" y2="249.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="245.8" y="263.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">d=4</text>
+  <line x1="336.7" y1="244.0" x2="336.7" y2="249.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="336.7" y="263.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">d=6</text>
+  <rect x="64.0" y="38.0" width="300.0" height="206.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="214.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">total = 0 から total += d で足しこむ</text>
+  <text x="214.0" y="284.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">for d in [2, 4, 6] の反復ステップ</text>
+  <text x="20.0" y="141.0" text-anchor="middle" transform="rotate(-90 20.0 141.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">累積合計 total</text>
+  <polyline fill="none" stroke="#6D3E86" stroke-width="2.6" points="64.0,244.0 154.9,214.6 245.8,155.7 336.7,67.4"/>
+  <circle cx="64.0" cy="244.0" r="4.8" fill="#6D3E86"/>
+  <text x="64.0" y="235.0" text-anchor="middle" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0</text>
+  <circle cx="154.9" cy="214.6" r="4.8" fill="#6D3E86"/>
+  <text x="154.9" y="205.6" text-anchor="middle" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2</text>
+  <circle cx="245.8" cy="155.7" r="4.8" fill="#6D3E86"/>
+  <text x="245.8" y="146.7" text-anchor="middle" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">6</text>
+  <circle cx="336.7" cy="67.4" r="4.8" fill="#6D3E86"/>
+  <text x="336.7" y="58.4" text-anchor="middle" fill="#6D3E86" font-size="10.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">12</text>
+  <rect x="406" y="28" width="330" height="236" rx="10" fill="#FAF8F4" stroke="#ECE8DF" stroke-width="1.2"/>
+  <text x="571" y="52" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">println(i) と print(i) の出力の違い</text>
+  <rect x="424" y="70" width="140" height="168" rx="8" fill="#FFFFFF" stroke="#4682B4" stroke-width="1.6"/>
+  <text x="494" y="92" text-anchor="middle" fill="#4682B4" font-size="11" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">println(i)</text>
+  <text x="494" y="112" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">毎回改行する</text>
+  <text x="494" y="144" text-anchor="middle" fill="#2A2733" font-size="15" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1</text>
+  <text x="494" y="174" text-anchor="middle" fill="#2A2733" font-size="15" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2</text>
+  <text x="494" y="204" text-anchor="middle" fill="#2A2733" font-size="15" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">3</text>
+  <rect x="580" y="70" width="140" height="168" rx="8" fill="#FFFFFF" stroke="#2B7A1E" stroke-width="1.6"/>
+  <text x="650" y="92" text-anchor="middle" fill="#2B7A1E" font-size="11" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">print(i)</text>
+  <text x="650" y="112" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">改行せず横につながる</text>
+  <text x="650" y="168" text-anchor="middle" fill="#2A2733" font-size="18" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">123</text>
+</svg>

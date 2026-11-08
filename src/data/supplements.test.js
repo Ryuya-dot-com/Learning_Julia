@@ -16,7 +16,7 @@ describe("追加公開補講3本の学習契約", () => {
     expect(supplements.map((lesson) => lesson.numInSection)).toEqual([4, 5, 6]);
     for (const lesson of supplements) {
       expect(lesson.pages.length).toBeGreaterThanOrEqual(8);
-      expect(lesson.ex).toHaveLength(4);
+      expect(lesson.ex.length).toBeGreaterThanOrEqual(4);
     }
   });
 

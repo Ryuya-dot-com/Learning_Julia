@@ -44,6 +44,11 @@ println(mean(x))`,
 x = [500.0, missing, 540.0]
 println(mean(skipmissing(x)))`,
       out: "520.0",
+      fig: {
+        src: "figures/dict-lookup-skipmissing.svg",
+        alt: "Dict（キーと値の対応表）と欠損値 missing の伝播・skipmissing による除外計算の比較図",
+        cap: "左：辞書 Dict は番号ではなくキー（\"incong\"）で値（\"不一致\"）を引く。右：missing を含む配列の平均はそのままでは missing になり、skipmissing(x) で除けば 520.0（誤って0埋めすると 346.7 に歪む）。",
+      },
       a: [
         "(500 + 540) ÷ 2 = 520。欠損を除いた、2つの値の平均が出ました。「missingが伝染する → skipmissingで飛ばす」はワンセットで覚えましょう。",
         "REPLで確かめよう: `sum([1, missing, 3])` と `sum(skipmissing([1, missing, 3]))` を打ちくらべてみましょう。",

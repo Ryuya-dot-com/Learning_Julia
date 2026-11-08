@@ -30,6 +30,11 @@ else
     println("C")
 end`,
       out: "B",
+      fig: {
+        src: "figures/conditionals-branching-flow.svg",
+        alt: "if / elseif / else による上から順の条件分岐フローと数直線上の判定境界の図解",
+        cap: "左：score = 75 を上から順に判定し、最初に true になった elseif score >= 60 の枝だけを実行して抜ける。右：数直線上の境界と、代入（=）と比較（==）の違い。",
+      },
     },
     {
       t: "比較の記号",

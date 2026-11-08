@@ -8,8 +8,9 @@ export default {
     {
       t: "RCallを使う場面を限定する",
       b: [
-        "RCall.jlはJulia processの中でRを初期化し、Rの式を評価します。Juliaに置き換えること自体を目的にせず、Rで検証済みのpackageや、Julia側に安定した実装がない手法を一部だけ呼ぶために使います。",
-        "前処理から報告までを無計画に両言語へ分散すると、object変換と環境管理が増えます。呼び出すR関数、渡す値、返す最小結果を先に決めます。長時間処理や大きな成果物は、独立したRscriptとfile受け渡しも検討します。",
+        "`RCall.jl` はJuliaプロセスの中でRを初期化し、Rの式を評価します。すべてをJuliaに置き換えること自体を目的にせず、Rで実績のあるパッケージや、Julia側に安定した実装がない手法を一部だけ呼ぶために使います。",
+        "前処理から報告までを無計画に両言語へ分散すると、オブジェクト変換と環境管理が増えます。呼び出すR関数、渡す値、返す最小結果を先に決めます。長時間処理や大きな成果物は、独立した `Rscript` とファイル受け渡しも検討します。",
+        "この章のRCall例は、教材の自動検証である定期CIの実行対象ではありません。配布テンプレートで自動検証しているRscript経由の連携とは別です。手元で試す際は、R・Julia・RCallのバージョンと、渡した値が意図した型で戻ることを確認してください。",
       ],
     },
     {
@@ -62,6 +63,11 @@ coef_names <- names(coef(fit))
 @rget coef_values coef_names
 println((names = coef_names, estimates = coef_values))`,
       out: `(names = ["(Intercept)", "conditiontreatment"], estimates = [515.0, -40.0])`,
+      fig: {
+        src: "figures/rcall-rput-rget-boundary.svg",
+        alt: "RCallによる @rput・R評価・@rget / rcopy の値受け渡しとコード補間分離の境界図",
+        cap: "左：@rput でJuliaの値をRへ渡し、R側でfactor参照水準を明示して推定後、@rget / rcopy で最小の結果だけを戻す。右：自由入力文字列はRコードへ直接連結せず、許可リスト照合と値補間で分離する。",
+      },
     },
     {
       t: "R\"...\"の返り値はRObjectである",
@@ -118,6 +124,7 @@ restored_coef = rcopy(R"unname(coef(restored_fit))")`,
   ex: [
     {
       k: "fill",
+      afterPage: "値は@rputで渡し、@rgetで戻す",
       q: "Juliaの変数xを同じ名前でRへ渡します。空欄を埋めましょう。",
       code: "〔?〕 x",
       accept: ["@rput"],
@@ -128,6 +135,7 @@ restored_coef = rcopy(R"unname(coef(restored_fit))")`,
     },
     {
       k: "choice",
+      afterPage: "R\"...\"の返り値はRObjectである",
       q: "R\"mean($x)\"の結果をJuliaの通常の値へ変換する関数はどれでしょう?",
       opts: ["rcopy", "copy", "convertR"],
       ans: 0,
@@ -136,6 +144,7 @@ restored_coef = rcopy(R"unname(coef(restored_fit))")`,
     },
     {
       k: "choice",
+      afterPage: "codeではなく値を補間する",
       q: "利用者が選んだ列名をRへ渡す方法として安全なのはどれでしょう?",
       opts: ["許可した列名と照合し、値として渡す", "R codeの文字列へそのまま連結する", "入力をsystem commandへ渡して判定する"],
       ans: 0,
@@ -144,6 +153,7 @@ restored_coef = rcopy(R"unname(coef(restored_fit))")`,
     },
     {
       k: "tf",
+      afterPage: "失敗をJuliaの値で覆い隠さない",
       q: "RCallの運用について、それぞれ正しいか判定しましょう。",
       items: [
         {

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 304" width="760" height="304" role="img" aria-label="1万回のモンテカルロ仮想実験による検定力推定（n=20で32.93%）とサンプルサイズ n による検定力曲線">
+  <title>1万回のモンテカルロ仮想実験による検定力推定（n=20で32.93%）とサンプルサイズ n による検定力曲線</title>
+  <rect width="760" height="304" rx="10" fill="#FFFFFF"/>
+  <line x1="64.0" y1="248.0" x2="356.0" y2="248.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="252.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0%</text>
+  <line x1="64.0" y1="178.8" x2="356.0" y2="178.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="182.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">32.9%</text>
+  <line x1="64.0" y1="107.2" x2="356.0" y2="107.2" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="111.2" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">67.1%</text>
+  <line x1="64.0" y1="38.0" x2="356.0" y2="38.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="56.0" y="42.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">100%</text>
+  <line x1="149.2" y1="248.0" x2="149.2" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="149.2" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">p &lt; 0.05 (検出成功)</text>
+  <line x1="270.8" y1="248.0" x2="270.8" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="270.8" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">p ≥ 0.05 (見逃し β)</text>
+  <rect x="64.0" y="38.0" width="292.0" height="210.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="210.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">① n=20 では本当の効果を3回に2回見逃す</text>
+  <text x="210.0" y="288.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">1万回の仮想実験（n = 20/群, d = 0.5）</text>
+  <text x="20.0" y="143.0" text-anchor="middle" transform="rotate(-90 20.0 143.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">割合 (%)</text>
+  <rect x="115.2" y="178.8" width="68" height="69.2" rx="5" fill="#2B7A1E" fill-opacity="0.82"/>
+  <text x="149.2" y="170.8" text-anchor="middle" fill="#2B7A1E" font-size="10.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">32.93% (±0.47%)</text>
+  <rect x="236.8" y="107.2" width="68" height="140.8" rx="5" fill="#CB3C33" fill-opacity="0.82"/>
+  <text x="270.8" y="99.2" text-anchor="middle" fill="#CB3C33" font-size="10.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">67.07% (第II種過誤)</text>
+  <line x1="436.0" y1="248.0" x2="732.0" y2="248.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="428.0" y="252.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">0%</text>
+  <line x1="436.0" y1="206.0" x2="732.0" y2="206.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="428.0" y="210.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">20%</text>
+  <line x1="436.0" y1="143.0" x2="732.0" y2="143.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="428.0" y="147.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">50%</text>
+  <line x1="436.0" y1="80.0" x2="732.0" y2="80.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="428.0" y="84.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">80%</text>
+  <line x1="436.0" y1="38.0" x2="732.0" y2="38.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="428.0" y="42.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">100%</text>
+  <line x1="454.5" y1="248.0" x2="454.5" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="454.5" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">10人</text>
+  <line x1="491.5" y1="248.0" x2="491.5" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="491.5" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">20人</text>
+  <line x1="565.5" y1="248.0" x2="565.5" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="565.5" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">40人</text>
+  <line x1="713.5" y1="248.0" x2="713.5" y2="253.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="713.5" y="267.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">80人</text>
+  <rect x="436.0" y="38.0" width="296.0" height="210.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="584.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">② n を増やすと検定力はどう上がるか</text>
+  <text x="584.0" y="288.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">1群あたりの人数 n (効果量 d = 0.5)</text>
+  <text x="392.0" y="143.0" text-anchor="middle" transform="rotate(-90 392.0 143.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">検定力 Power (%)</text>
+  <line x1="436.0" y1="80.0" x2="732.0" y2="80.0" stroke="#2B7A1E" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <polyline fill="none" stroke="#6D3E86" stroke-width="2.8" points="454.5,208.9 491.5,178.8 565.5,120.6 713.5,63.5"/>
+  <circle cx="454.5" cy="208.9" r="5.0" fill="#6D3E86"/>
+  <text x="454.5" y="198.9" text-anchor="middle" fill="#6D3E86" font-size="10.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">18.63%</text>
+  <circle cx="491.5" cy="178.8" r="5.0" fill="#6D3E86"/>
+  <text x="491.5" y="168.8" text-anchor="middle" fill="#6D3E86" font-size="10.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">32.93%</text>
+  <circle cx="565.5" cy="120.6" r="5.0" fill="#6D3E86"/>
+  <text x="565.5" y="110.6" text-anchor="middle" fill="#6D3E86" font-size="10.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">60.68%</text>
+  <circle cx="713.5" cy="63.5" r="5.0" fill="#6D3E86"/>
+  <text x="713.5" y="53.5" text-anchor="middle" fill="#6D3E86" font-size="10.0" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">87.85%</text>
+</svg>

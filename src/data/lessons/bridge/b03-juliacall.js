@@ -8,8 +8,9 @@ export default {
     {
       t: "入口を使う側の言語に合わせる",
       b: [
-        "研究室の正式な解析scriptがRにあり、一部のsimulationやJulia packageだけを使いたい場合は、RからJuliaを呼ぶ方が自然です。R利用者にJuliaのdriver scriptまで管理させず、Rの経路を入口として保てます。",
-        "JuliaCallはR processへJuliaを組み込みます。JuliaからRを呼ぶRCallと向きが逆です。一つの処理で両方向の呼び出しを重ねる構成は避け、どちらが全体を進めるdriverか一つに決めます。",
+        "研究室の正式な解析スクリプトがRにあり、一部のシミュレーションやJuliaパッケージだけを使いたい場合は、RからJuliaを呼ぶ方が自然です。R利用者にJulia側の実行スクリプトまで管理させず、Rの経路を入口として保てます。",
+        "JuliaCallはRプロセスへJuliaを組み込みます。JuliaからRを呼ぶRCallと向きが逆です。一つの処理で両方向の呼び出しを重ねる構成は避け、どちらが全体を進める入口か一つに決めます。",
+        "この章のJuliaCall例は、教材の自動検証である定期CIの実行対象ではありません。配布テンプレートで自動検証しているRscript経由の連携とは別です。手元で試す際は、R・Julia・JuliaCallのバージョンと、小さな引数・返り値の変換を確認してください。",
       ],
     },
     {
@@ -42,6 +43,11 @@ result$minimum
 result$maximum`,
       out: `[1] 4
 [1] 42`,
+      fig: {
+        src: "figures/juliacall-r-entry-workflow.svg",
+        alt: "Rを解析の入口に保ったまま JuliaCall（julia_setup・julia_call）で高速関数だけを呼ぶ構成図",
+        cap: "Rスクリプトを全体の入口に保ち、julia_setup() と Pkg.activate で固定した環境から計算ボトルネックの純粋関数だけを julia_call で呼び出す。",
+      },
     },
     {
       t: "研究用関数はJulia fileに置く",
@@ -84,14 +90,16 @@ result <- julia_call("summarize_trials", trial_vector)`,
   ex: [
     {
       k: "choice",
+      afterPage: "入口を使う側の言語に合わせる",
       q: "R中心の解析から一部のJulia関数だけを使う場合、全体のdriverとして自然なのはどれでしょう?",
-      opts: ["R scriptからJuliaCallで呼ぶ", "JuliaとRが互いを交互に呼ぶ", "結果fileを両言語で上書きする"],
+      opts: ["R scriptからJuliaCallで呼ぶ", "JuliaとRの双方が互いの関数をループ内で交互に呼び合う", "結果fileを両言語で上書きする"],
       ans: 0,
       why: "正式な解析経路がRなら、RをdriverとしてJuliaの限定した関数を呼ぶと、入口と責任が一つに定まります。",
       hint: "既存の正式な解析scriptを入口として保つ選択肢です。",
     },
     {
       k: "fill",
+      afterPage: "R sessionごとにJuliaを初期化する",
       q: "R sessionでJuliaCallの初期化を行う関数名を答えましょう。",
       code: "julia <- 〔?〕()",
       accept: ["julia_setup", "juliacall::julia_setup"],
@@ -102,14 +110,16 @@ result <- julia_call("summarize_trials", trial_vector)`,
     },
     {
       k: "choice",
+      afterPage: "研究用関数はJulia fileに置く",
       q: "project directoryをJuliaへ渡す方法として適切なのはどれでしょう?",
-      opts: ["julia_assignで値として渡し、Pkg.activateで使う", "利用者入力をJulia code文字列へ直接連結する", "毎回別のprojectを自動生成する"],
+      opts: ["julia_assignで値として渡し、Pkg.activateで使う", "エスケープせずに利用者入力をJulia code文字列へ直接連結して実行する", "毎回別のprojectを自動生成する"],
       ans: 0,
       why: "pathをcodeから分けて値として渡すと、引用符や意図しないcode実行の問題を避けられます。",
       hint: "codeと値を分離する方法を選びます。",
     },
     {
       k: "tf",
+      afterPage: "失敗時に確認する順序を決める",
       q: "RからJuliaを使う運用について、それぞれ正しいか判定しましょう。",
       items: [
         {

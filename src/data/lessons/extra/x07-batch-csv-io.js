@@ -36,6 +36,11 @@ end
 files = discover_csvs("data/raw")
 println(basename.(files))`,
       out: `["trials_01.csv", "trials_02.csv"]`,
+      fig: {
+        src: "figures/batch-csv-audit-roundtrip.svg",
+        alt: "複数CSVの列挙・source列つき厳密読込・主キー重複検査・役割別成果物出力とround trip検証の6段階図",
+        cap: "①名前順列挙と0件停止 → ②types+strict検査 → ③source列つき連結 → ④主キー重複と範囲監査 → ⑤役割別テーブル出力 → ⑥別プロセスround trip検証の6段階。",
+      },
     },
     {
       t: "CSV.Fileは複数入力とsource列を直接扱える",
@@ -208,7 +213,9 @@ println((rows = nrow(joined),
         "分析用data、入力監査、記述要約、model係数、区間、予測、診断、除外記録は更新単位と列の意味が違います。一枚の巨大なCSVへ押し込まず、単純な表へ分けます。図はSVG／PNG、実行条件はTOMLなどへ保存し、同じrun IDで結びます。",
         "model objectだけを保存すると、package versionが変わったとき読めないことがあります。係数名、推定値、SE、区間、予測値、診断量を言語中立の表でも残します。型つきの大きな表はArrow、確認・交換用にはCSVという役割分担を使えます。",
       ],
-      code: `observed = dropmissing(data, :rt_ms)
+      code: `using Statistics
+
+observed = dropmissing(data, :rt_ms)
 condition_summary = combine(
     groupby(observed, :condition),
     nrow => :n,
@@ -223,7 +230,7 @@ end`,
       out: `(condition = "control", n = 2, mean_rt_ms = 510.0)
 (condition = "treatment", n = 1, mean_rt_ms = 620.0)`,
       a: [
-        "欠測行を除いた理由と件数は、condition_summaryだけからは復元できません。input_file_auditと除外記録を同じ成果物集合に含めます。",
+        "欠測行を除いた理由と件数は、`condition_summary` だけからは復元できません。ファイルごとの行数・欠測数を記録した入力監査表(`input_file_audit.csv` など)と除外記録を同じ成果物集合に含めます。",
       ],
     },
     {
@@ -283,7 +290,7 @@ println((same = isequal(restored, condition_summary),
     {
       t: "一括入出力の完了条件をpipelineの順に固定する",
       b: [
-        "①directoryと対象pattern、②file数と順序、③列名・型・欠測表現、④source_file、⑤全体とfile別の行数、⑥主キー・水準・範囲、⑦joinのcardinality、⑧役割別の結果表、⑨上書き規則、⑩round tripとrun metadataを順に確認します。",
+        "①フォルダと対象パターン、②ファイル数と順序、③列名・型・欠測表現、④`source_file`、⑤全体とファイル別の行数、⑥主キー・水準・範囲、⑦joinの対応関係(cardinality: 1対1・多対1など)、⑧役割別の結果表、⑨上書き規則、⑩round tripとrun metadataを順に確認します。",
         "成功例だけでなく、CSV 0件、必須列欠落、数値列の文字列、file間のkey重複、右表のkey重複、既存出力への再書込をtestします。止まるべき入力で止まれることが、再現可能なpipelineの機能です。",
         "ここまでできれば、30個のCSVを一つにできたことより、どの30個をどの契約で読み、どの成果物へ変えたかを第三者が追跡できます。次は分布の推定と予測診断で、この整ったdataをmodelへ渡します。",
       ],
@@ -292,11 +299,12 @@ println((same = isequal(restored, condition_summary),
   ex: [
     {
       k: "choice",
+      afterPage: "readdirで対象を列挙し、順序と0件を検査する",
       q: "data/rawから複数CSVを列挙するとき、最も再現しやすい手順はどれですか？",
       opts: [
         "join=true・sort=trueでpathを取得し、isfileと拡張子で絞って0件を停止する",
-        "OSが返した順の全entryをCSVとして読む",
-        "見つからなければ空のDataFrameを解析へ渡す",
+        "OSのファイルシステムが返した不定順の全entryを隠しファイルごとそのまま無検査でCSV.readへ渡す",
+        "対象CSVが1件も見つからなければ警告を出さずに空のDataFrameを後続の解析へ渡す",
       ],
       ans: 0,
       why: "対象、path、順序、0件時の挙動を明示すると、余計なfileや空入力を早く検出できます。",
@@ -304,6 +312,7 @@ println((same = isequal(restored, condition_summary),
     },
     {
       k: "fill",
+      afterPage: "readdirで対象を列挙し、順序と0件を検査する",
       q: "directory内の名前をpathへ結合し、並べ替えて取得する関数名を入力してください。",
       code: `files = 〔?〕(input_dir; join = true, sort = true)`,
       accept: ["readdir"],
@@ -314,6 +323,7 @@ println((same = isequal(restored, condition_summary),
     },
     {
       k: "fill",
+      afterPage: "CSV.Fileは複数入力とsource列を直接扱える",
       q: "複数入力の各行へ入力元を示す列を加えるCSV.Fileのkeywordを入力してください。",
       code: `table = CSV.File(files; 〔?〕 = :source_file)`,
       accept: ["source"],
@@ -324,11 +334,12 @@ println((same = isequal(restored, condition_summary),
     },
     {
       k: "choice",
-      q: "rt_msにnot-a-numberが入っていた場合の入口として適切なのはどれですか？",
+      afterPage: "型推測を入口の契約に置き換える",
+      q: "`rt_ms` 列に文字列 `\"not-a-number\"` が混入していた場合の入口として適切なのはどれですか？",
       opts: [
         "typesでFloat64を指定し、strict=trueでfile名とともに停止する",
-        "警告を消してmissingへ置換し、そのまま平均を出す",
-        "すべてStringとして読み、数値かどうかは確認しない",
+        "変換警告をすべて抑制して黙ってmissingへ置換し、そのまま残りの行だけで平均を出す",
+        "すべての列をString型として読みこみ、数値として妥当かどうかは最後まで確認しない",
       ],
       ans: 0,
       why: "型違反を欠測と同一視せず、原因となった入力を修正・再生成できる状態で停止します。",
@@ -336,6 +347,7 @@ println((same = isequal(restored, condition_summary),
     },
     {
       k: "fill",
+      afterPage: "vcatの列契約とsourceを明示する",
       q: "全DataFrameが同じ列集合を持つことを要求するvcatのcols指定を入力してください。",
       code: `data = vcat(parts...; cols = 〔?〕)`,
       accept: [":setequal", "setequal"],
@@ -346,6 +358,7 @@ println((same = isequal(restored, condition_summary),
     },
     {
       k: "tf",
+      afterPage: "書けたかではなく、別の読込でround tripを検査する",
       q: "一括入出力について、それぞれ正しいか判定しましょう。",
       items: [
         {

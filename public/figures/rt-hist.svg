@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 290" width="560" height="290" role="img" aria-label="rt_data.csv の反応時間ヒストグラム（450〜650 msの4区間、度数 2, 4, 4, 2）">
+  <title>rt_data.csv の反応時間ヒストグラム（450〜650 msの4区間、度数 2, 4, 4, 2）</title>
+  <rect width="560" height="290" rx="10" fill="#FFFFFF"/>
+  <line x1="66.0" y1="236.0" x2="532.0" y2="236.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="240.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="66.0" y1="189.9" x2="532.0" y2="189.9" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="193.9" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1</text>
+  <line x1="66.0" y1="143.8" x2="532.0" y2="143.8" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="147.8" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2</text>
+  <line x1="66.0" y1="97.7" x2="532.0" y2="97.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="101.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">3</text>
+  <line x1="66.0" y1="51.7" x2="532.0" y2="51.7" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="58.0" y="55.7" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">4</text>
+  <line x1="96.4" y1="236.0" x2="96.4" y2="241.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="96.4" y="255.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">450</text>
+  <line x1="197.7" y1="236.0" x2="197.7" y2="241.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="197.7" y="255.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">500</text>
+  <line x1="299.0" y1="236.0" x2="299.0" y2="241.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="299.0" y="255.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">550</text>
+  <line x1="400.3" y1="236.0" x2="400.3" y2="241.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="400.3" y="255.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">600</text>
+  <line x1="501.6" y1="236.0" x2="501.6" y2="241.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="501.6" y="255.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">650</text>
+  <rect x="66.0" y="24.0" width="466.0" height="212.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="299.0" y="276.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">RT (ms)</text>
+  <text x="22.0" y="130.0" text-anchor="middle" transform="rotate(-90 22.0 130.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">count</text>
+  <rect x="96.4" y="143.8" width="101.3" height="92.2" fill="#5B8FD4" fill-opacity="0.82" stroke="#2A2733" stroke-width="1.3"/>
+  <text x="147.0" y="136.8" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2</text>
+  <rect x="197.7" y="51.7" width="101.3" height="184.3" fill="#5B8FD4" fill-opacity="0.82" stroke="#2A2733" stroke-width="1.3"/>
+  <text x="248.3" y="44.7" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">4</text>
+  <rect x="299.0" y="51.7" width="101.3" height="184.3" fill="#5B8FD4" fill-opacity="0.82" stroke="#2A2733" stroke-width="1.3"/>
+  <text x="349.7" y="44.7" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">4</text>
+  <rect x="400.3" y="143.8" width="101.3" height="92.2" fill="#5B8FD4" fill-opacity="0.82" stroke="#2A2733" stroke-width="1.3"/>
+  <text x="451.0" y="136.8" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2</text>
+</svg>

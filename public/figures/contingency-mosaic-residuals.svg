@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 275" width="660" height="275" role="img" aria-label="3×3クロス集計表 [30 12 8; 18 20 12; 10 18 32] の行割合構成（左）と調整済み残差・Holm補正p値マップ（右）">
+  <title>3×3クロス集計表 [30 12 8; 18 20 12; 10 18 32] の行割合構成（左）と調整済み残差・Holm補正p値マップ（右）</title>
+  <rect width="660" height="275" rx="10" fill="#FFFFFF"/>
+  <text x="165" y="28" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">行ごとの構成比（行割合）</text>
+  <text x="48" y="69.0" text-anchor="end" fill="#2A2733" font-size="11" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">行1</text>
+  <rect x="56.0" y="48.0" width="138.0" height="34" fill="#4682B4" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="125.0" y="69.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">60%</text>
+  <rect x="194.0" y="48.0" width="55.2" height="34" fill="#8A8296" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="221.6" y="69.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">24%</text>
+  <rect x="249.2" y="48.0" width="36.8" height="34" fill="#CB3C33" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="267.6" y="69.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">16%</text>
+  <text x="48" y="127.0" text-anchor="end" fill="#2A2733" font-size="11" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">行2</text>
+  <rect x="56.0" y="106.0" width="82.8" height="34" fill="#4682B4" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="97.4" y="127.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">36%</text>
+  <rect x="138.8" y="106.0" width="92.0" height="34" fill="#8A8296" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="184.8" y="127.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">40%</text>
+  <rect x="230.8" y="106.0" width="55.2" height="34" fill="#CB3C33" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="258.4" y="127.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">24%</text>
+  <text x="48" y="185.0" text-anchor="end" fill="#2A2733" font-size="11" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">行3</text>
+  <rect x="56.0" y="164.0" width="38.3" height="34" fill="#4682B4" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="75.2" y="185.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">17%</text>
+  <rect x="94.3" y="164.0" width="69.0" height="34" fill="#8A8296" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="128.8" y="185.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">30%</text>
+  <rect x="163.3" y="164.0" width="122.7" height="34" fill="#CB3C33" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="224.7" y="185.0" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">53%</text>
+  <rect x="66.0" y="226" width="12" height="12" rx="2" fill="#4682B4" fill-opacity="0.85"/>
+  <text x="83.0" y="236" fill="#6E6879" font-size="10.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">列1</text>
+  <rect x="142.0" y="226" width="12" height="12" rx="2" fill="#8A8296" fill-opacity="0.85"/>
+  <text x="159.0" y="236" fill="#6E6879" font-size="10.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">列2</text>
+  <rect x="218.0" y="226" width="12" height="12" rx="2" fill="#CB3C33" fill-opacity="0.85"/>
+  <text x="235.0" y="236" fill="#6E6879" font-size="10.5" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">列3</text>
+  <text x="492" y="28" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">調整済み残差 z（* は Holm p &lt; 0.05）</text>
+  <text x="408.0" y="42.0" text-anchor="middle" fill="#6E6879" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">列1</text>
+  <text x="492.0" y="42.0" text-anchor="middle" fill="#6E6879" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">列2</text>
+  <text x="576.0" y="42.0" text-anchor="middle" fill="#6E6879" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">列3</text>
+  <text x="358.0" y="78.0" text-anchor="end" fill="#6E6879" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">行1</text>
+  <rect x="368.0" y="50.0" width="80.0" height="48.0" rx="6" fill="#E4F2E7" stroke="#2B7A1E" stroke-width="1.4"/>
+  <text x="408.0" y="71.0" text-anchor="middle" fill="#2B7A1E" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">+4.21*</text>
+  <text x="408.0" y="88.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=30 (E=18.1)</text>
+  <rect x="452.0" y="50.0" width="80.0" height="48.0" rx="6" fill="#F7F5F0" stroke="#ECE8DF" stroke-width="1.4"/>
+  <text x="492.0" y="71.0" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">-1.33</text>
+  <text x="492.0" y="88.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=12 (E=15.6)</text>
+  <rect x="536.0" y="50.0" width="80.0" height="48.0" rx="6" fill="#FBEDEC" stroke="#CB3C33" stroke-width="1.4"/>
+  <text x="576.0" y="71.0" text-anchor="middle" fill="#CB3C33" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">-3.00*</text>
+  <text x="576.0" y="88.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=8 (E=16.2)</text>
+  <text x="358.0" y="130.0" text-anchor="end" fill="#6E6879" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">行2</text>
+  <rect x="368.0" y="102.0" width="80.0" height="48.0" rx="6" fill="#F7F5F0" stroke="#ECE8DF" stroke-width="1.4"/>
+  <text x="408.0" y="123.0" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">-0.04</text>
+  <text x="408.0" y="140.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=18 (E=18.1)</text>
+  <rect x="452.0" y="102.0" width="80.0" height="48.0" rx="6" fill="#F7F5F0" stroke="#ECE8DF" stroke-width="1.4"/>
+  <text x="492.0" y="123.0" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">+1.61</text>
+  <text x="492.0" y="140.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=20 (E=15.6)</text>
+  <rect x="536.0" y="102.0" width="80.0" height="48.0" rx="6" fill="#F7F5F0" stroke="#ECE8DF" stroke-width="1.4"/>
+  <text x="576.0" y="123.0" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">-1.55</text>
+  <text x="576.0" y="140.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=12 (E=16.2)</text>
+  <text x="358.0" y="182.0" text-anchor="end" fill="#6E6879" font-size="10.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">行3</text>
+  <rect x="368.0" y="154.0" width="80.0" height="48.0" rx="6" fill="#FBEDEC" stroke="#CB3C33" stroke-width="1.4"/>
+  <text x="408.0" y="175.0" text-anchor="middle" fill="#CB3C33" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">-3.99*</text>
+  <text x="408.0" y="192.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=10 (E=21.8)</text>
+  <rect x="452.0" y="154.0" width="80.0" height="48.0" rx="6" fill="#F7F5F0" stroke="#ECE8DF" stroke-width="1.4"/>
+  <text x="492.0" y="175.0" text-anchor="middle" fill="#2A2733" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">-0.26</text>
+  <text x="492.0" y="192.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=18 (E=18.8)</text>
+  <rect x="536.0" y="154.0" width="80.0" height="48.0" rx="6" fill="#E4F2E7" stroke="#2B7A1E" stroke-width="1.4"/>
+  <text x="576.0" y="175.0" text-anchor="middle" fill="#2B7A1E" font-size="11.5" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">+4.36*</text>
+  <text x="576.0" y="192.0" text-anchor="middle" fill="#6E6879" font-size="9.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">n=32 (E=19.5)</text>
+  <text x="492" y="236" text-anchor="middle" fill="#6E6879" font-size="10" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">全体 χ² = 27.71 (df=4), Cramér V = 0.304 → 対角セル(行1×列1, 行3×列3)が超過</text>
+</svg>

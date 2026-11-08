@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 308" width="760" height="308" role="img" aria-label="スレッド共有RNGの競合による非再現性と、trial_rng(seed, i) による反復単位の決定論的乱数設計">
+  <title>スレッド共有RNGの競合による非再現性と、trial_rng(seed, i) による反復単位の決定論的乱数設計</title>
+  <rect width="760" height="308" rx="10" fill="#FFFFFF"/>
+  <rect x="28" y="34" width="336" height="236" rx="10" fill="#FFFFFF" stroke="#8A8296" stroke-width="1.5"/>
+  <text x="196" y="55" text-anchor="middle" fill="#CB3C33" font-size="11.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✕ NG：1つの rng と push! をスレッド間で共有</text>
+  <rect x="46" y="66" width="300" height="62" rx="6" fill="#FBE3E0" stroke="#CB3C33" stroke-width="1.2"/>
+  <text x="196" y="86" text-anchor="middle" fill="#CB3C33" font-size="9.8" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">rng = Xoshiro(2026); results = Float64[]</text>
+  <text x="196" y="103" text-anchor="middle" fill="#2A2733" font-size="9.4" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Thread 1 と Thread 2 が同じ内部状態を同時更新</text>
+  <text x="196" y="119" text-anchor="middle" fill="#CB3C33" font-size="9.4" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">→ 実行のたびに結果が変わり、push! で要素欠落・破損</text>
+  <text x="196" y="150" text-anchor="middle" fill="#2B7A1E" font-size="11.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">✓ OK：反復ID i から trial_rng(seed, i) を生成</text>
+  <rect x="46" y="160" width="300" height="96" rx="6" fill="#E3F3E8" stroke="#2B7A1E" stroke-width="1.2"/>
+  <text x="196" y="180" text-anchor="middle" fill="#2B7A1E" font-size="9.8" font-weight="700" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">trial_rng(seed, i) = Xoshiro(seed, i)</text>
+  <text x="196" y="198" text-anchor="middle" fill="#2A2733" font-size="9.4" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">i=1 → out[1],  i=2 → out[2], ..., i=4812 → out[4812]</text>
+  <text x="196" y="216" text-anchor="middle" fill="#2B7A1E" font-size="9.4" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">→ スレッド数が1でも8でも全反復がビット単位で一致！</text>
+  <text x="196" y="234" text-anchor="middle" fill="#6D3E86" font-size="9.3" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">→ 未収束の i=4812 だけを単独で瞬時に再現・デバッグ可能</text>
+  <line x1="434.0" y1="245.3" x2="732.0" y2="245.3" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="249.3" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1x</text>
+  <line x1="434.0" y1="211.9" x2="732.0" y2="211.9" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="215.9" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2x</text>
+  <line x1="434.0" y1="145.0" x2="732.0" y2="145.0" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="149.0" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">4x</text>
+  <line x1="434.0" y1="78.1" x2="732.0" y2="78.1" stroke="#ECE8DF" stroke-width="1"/>
+  <text x="426.0" y="82.1" text-anchor="end" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">6x</text>
+  <line x1="434.0" y1="252.0" x2="434.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="434.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">1</text>
+  <line x1="476.6" y1="252.0" x2="476.6" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="476.6" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">2</text>
+  <line x1="561.7" y1="252.0" x2="561.7" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="561.7" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">4</text>
+  <line x1="646.9" y1="252.0" x2="646.9" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="646.9" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">6</text>
+  <line x1="732.0" y1="252.0" x2="732.0" y2="257.0" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="732.0" y="271.0" text-anchor="middle" fill="#6E6879" font-size="11.5" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">8</text>
+  <rect x="434.0" y="38.0" width="298.0" height="214.0" fill="none" stroke="#8A8296" stroke-width="1.2"/>
+  <text x="583.0" y="28.0" text-anchor="middle" fill="#2A2733" font-size="13" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">割当ゼロ設計 vs GC・BLAS競合の並列効率</text>
+  <text x="583.0" y="292.0" text-anchor="middle" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">Julia スレッド数 (Threads.nthreads())</text>
+  <text x="390.0" y="145.0" text-anchor="middle" transform="rotate(-90 390.0 145.0)" fill="#2A2733" font-size="12.5" font-weight="600" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">実行速度倍率 (Speedup)</text>
+  <polyline fill="none" stroke="#8A8296" stroke-width="1.4" stroke-dasharray="4 3" points="434.0,245.3 476.6,211.9 561.7,145.0 646.9,78.1 732.0,44.7"/>
+  <polyline fill="none" stroke="#2B7A1E" stroke-width="2.6" points="434.0,245.3 476.6,214.6 561.7,156.7 646.9,108.2 732.0,66.4"/>
+  <polyline fill="none" stroke="#CB3C33" stroke-width="2.4" points="434.0,245.3 476.6,233.6 561.7,224.6 646.9,229.3 732.0,237.0"/>
+  <circle cx="434.0" cy="245.3" r="3.6" fill="#2B7A1E"/>
+  <circle cx="434.0" cy="245.3" r="3.6" fill="#CB3C33"/>
+  <circle cx="476.6" cy="214.6" r="3.6" fill="#2B7A1E"/>
+  <circle cx="476.6" cy="233.6" r="3.6" fill="#CB3C33"/>
+  <circle cx="561.7" cy="156.7" r="3.6" fill="#2B7A1E"/>
+  <circle cx="561.7" cy="224.6" r="3.6" fill="#CB3C33"/>
+  <circle cx="646.9" cy="108.2" r="3.6" fill="#2B7A1E"/>
+  <circle cx="646.9" cy="229.3" r="3.6" fill="#CB3C33"/>
+  <circle cx="732.0" cy="66.4" r="3.6" fill="#2B7A1E"/>
+  <circle cx="732.0" cy="237.0" r="3.6" fill="#CB3C33"/>
+  <text x="442.0" y="56.0" fill="#2B7A1E" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">緑：独立RNG＋事前確保配列＋BLAS.set_num_threads(1)</text>
+  <text x="442.0" y="72.0" fill="#CB3C33" font-size="9.5" font-weight="700" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', Meiryo, system-ui, sans-serif">赤：反復内で大量ヒープ割当 (GC停止) / BLAS多重競合</text>
+</svg>

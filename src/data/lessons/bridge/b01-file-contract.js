@@ -36,6 +36,11 @@ restored = CSV.read("bridge/trials.csv", DataFrame;
 
 @assert names(restored) == names(trials)
 @assert nrow(restored) == nrow(trials)`,
+      fig: {
+        src: "figures/bridge-schema-roundtrip-contract.svg",
+        alt: "Julia・R・Stan間でデータを渡す前のスキーマ契約・SHA-256・往復検査（round trip）の設計図",
+        cap: "Juliaで前処理した表をRやStanへ渡す際は、schema.toml（型・水準・主キー・単位）とSHA-256を添え、別プロセス読戻し（round trip）で一致を確認してから外部エンジンへ接続する。",
+      },
       a: [
         "R側でも列名、行数、ID×条件の一意性、欠損数を検査します。型推測が両言語で同じになるとは仮定しません。",
       ],
@@ -107,9 +112,9 @@ missing = false`,
     {
       t: "埋め込み連携とfile連携を使い分ける",
       b: [
-        "RCallやJuliaCallは、対話的に小さな値を往復し、その場で結果を確認する用途に向きます。一方、長時間のfit、大きなデータ、計算機cluster、共同研究者との受け渡しでは、独立processとfile境界の方が障害を切り分けやすくなります。",
-        "最初はCSVと独立scriptで一往復を通し、それから埋め込み連携へ進みます。packageを増やす前に境界を確かめる方が、問題がJulia、R、変換、modelのどこにあるか判断できます。",
-        "配布templateには、合成入力、Juliaのdriver、base Rの集計script、Stanの最小modelを収録しています。通常のJulia分析、Rscriptとの往復、Stanの任意実行を別々に試せます。",
+        "RCallやJuliaCallは、対話的に小さな値を往復し、その場で結果を確認する用途に向きます。一方、長時間のfit、大きなデータ、計算機クラスタ、共同研究者との受け渡しでは、独立プロセスとファイル境界の方が障害を切り分けやすくなります。",
+        "最初はCSVと独立スクリプトで一往復を通し、それから埋め込み連携へ進みます。パッケージを増やす前に境界を確かめる方が、問題がJulia、R、変換、モデルのどこにあるか判断できます。",
+        "配布テンプレートには、合成入力、Juliaの実行スクリプト、基本Rの集計スクリプト、Stanの最小モデルを収録しています。通常のJulia分析、`Rscript` との往復、Stanの任意実行を別々に試せます。",
       ],
       download: {
         path: "templates/reproducible-study-template.tar",
@@ -120,22 +125,25 @@ missing = false`,
   ex: [
     {
       k: "choice",
+      afterPage: "schemaは、列名の一覧より詳しく書く",
       q: "JuliaからRへ試行表を渡す前に、最初に決めるものはどれでしょう?",
-      opts: ["一行の観測単位・列型・主key", "グラフの配色", "Rの作業履歴を保存する設定"],
+      opts: ["一行の観測単位・列型・主key", "グラフの配色", "Rコンソールの作業履歴を自動保存する設定"],
       ans: 0,
       why: "観測単位、列型、欠損、水準、主keyが受け渡し契約です。packageや作図の前に、何を渡すかを固定します。",
       hint: "受け手がfileを正しく読めるために必要な情報です。",
     },
     {
       k: "choice",
+      afterPage: "欠損値と日付は、黙って推測させない",
       q: "CSVを書き出した後のround trip確認として十分なのはどれでしょう?",
-      opts: ["別の読込処理で列名・行数・key・欠損を照合する", "fileが存在することだけ確認する", "先頭行を目で見る"],
+      opts: ["別の読込処理で列名・行数・key・欠損を照合する", "出力先のfileが存在しサイズが0でないことだけ確認する", "先頭行を目で見る"],
       ans: 0,
       why: "fileの存在だけでは、型の変化、行の欠落、重複、欠損表現のずれを見つけられません。読戻し後の構造と意味を照合します。",
       hint: "『書けた』ではなく『同じ意味で戻った』ことを確かめます。",
     },
     {
       k: "tf",
+      afterPage: "fileごとに所有者を一つ決める",
       q: "言語間の受け渡しについて、それぞれ正しいか判定しましょう。",
       items: [
         {
@@ -158,6 +166,7 @@ missing = false`,
     },
     {
       k: "fill",
+      afterPage: "実行記録を結果と一緒に残す",
       q: "内容が同じ入力fileか照合するために保存する値を答えましょう。",
       code: "input_sha256 = bytes2hex(〔?〕(read(input_path)))",
       accept: ["sha256", "sha.sha256"],
